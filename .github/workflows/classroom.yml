@@ -12,9 +12,9 @@ jobs:
     name: Autograding
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: update pip setuptools and wheel
-        run: sudo python -m pip install --upgrade pip setuptools wheel
-      - name: Install local code in edit mode
-        run: python -m pip install --user -e .
+      - name: Set-up for grading
+        uses: ImperialCollegeLondon/y2cl-setup
+        with:
+          project: A
+          src_dir: raytracer
       - uses: education/autograding@v1
