@@ -349,29 +349,6 @@ class TestTask7:
         except: pass
         assert mock_pr.call_count > 1
 
-    @pytest.mark.skip(reason="dont remember what this was testing.")
-    def test_plot(self, rays, elements):
-        ray = rays.Ray([0., 0., 0.], [0., 0., 1.])
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=50.)
-        sr.propagate_ray(ray)
-
-    @pytest.mark.skip(reason="Unfinished idea.")
-    def test_get_data(self):
-        x = np.arange(1,10,0.2)
-        y=x**2
-        import matplotlib.pyplot as plt
-        import scipy.stats as sps
-        fig = plt.figure()
-        plt.plot(x, y, 'r--')
-        a = fig.gca().lines[0].get_xydata()[:,0]
-        b = fig.gca().lines[0].get_ydata()
-        print(a)
-        print(b)
-        rand = sps.norm.rvs(loc=1, scale=0.2, size=len(x))
-        print(sps.ks_2samp(b, x**2 * rand).pvalue)
-        plt.plot(x, x**2 * rand, 'b--')
-        plt.show()
-        assert 1 == a
 
 class TestTask8:
     def test_op_exists(self, elements):
