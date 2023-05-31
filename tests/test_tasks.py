@@ -578,7 +578,7 @@ class TestTask15:
         op = MagicMock(wraps=elements.OutputPlane)
         monkeypatch.setattr(elements, "SphericalRefraction", sr)
         monkeypatch.setattr(elements, "OutputPlane", op)
-        an = import_module("analysis")
+        an = import_module("raytracer.analysis")
         an.task15()
         assert sr.call_count >= 2
         assert op.called

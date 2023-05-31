@@ -45,7 +45,7 @@ def lenses():
 
 @pytest.fixture
 def an():
-    yield import_module("analysis")
+    yield import_module("raytracer.analysis")
     plt.close()
 
 @pytest.fixture
