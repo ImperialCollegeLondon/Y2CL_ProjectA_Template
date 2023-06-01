@@ -550,12 +550,19 @@ class TestTask15:
         fig = an.task15()
         assert isinstance(fig, mpl.figure.Figure)
 
-    def test_2SR_objects_created(self, elements, monkeypatch):
+    def test_2SR_objects_created(self, elements, lenses, monkeypatch):
         sr = MagicMock(wraps=elements.SphericalRefraction)
         op = MagicMock(wraps=elements.OutputPlane)
         monkeypatch.setattr(elements, "SphericalRefraction", sr)
         monkeypatch.setattr(elements, "OutputPlane", op)
+        if hasattr(lenses, "SphericalRefraction"):
+            monkeypatch.setattr(lenses, "SphericalRefraction", sr)
+
         an = import_module("raytracer.analysis")
+        if hasattr(an, "SphericalRefraction"):
+            monkeypatch.setattr(an, "SphericalRefraction", sr)
+        if hasattr(an, "OutputPlane"):
+            monkeypatch.setattr(an, "OutputPlane", op)
         an.task15()
         assert sr.call_count >= 2
         assert op.called
