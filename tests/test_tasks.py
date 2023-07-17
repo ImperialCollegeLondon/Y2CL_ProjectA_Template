@@ -1,11 +1,14 @@
-from fixtures import *
+# pylint: disable=redefined-outer-name, unused-import
 from inspect import signature
 from types import FunctionType
+from importlib import import_module
 from unittest.mock import MagicMock
+import numpy as np
 import matplotlib as mpl
-from matplotlib.testing.decorators import check_figures_equal
 import pytest
 from utils import check_figures_equal
+from fixtures import (ph, rays, elements, lenses, an,
+                      test_ray, default_ray, var_name_map)
 
 class TestTask1:
     def test_docstring_present(self, ph):
@@ -540,6 +543,11 @@ class TestTask14:
         fig, _ = an.task14()
         assert isinstance(fig, mpl.figure.Figure)
 
+    @check_figures_equal(ref_path="task14", tol=33)
+    def test_plot14(self, an):
+        fig, _ = an.task14()
+        return fig
+
     def test_difraction(self, an):
         _, diffraction_scale = an.task14()
         assert np.isclose(diffraction_scale, 0.01176)
@@ -547,8 +555,24 @@ class TestTask14:
 class TestTask15:
 
     def test_output_fig(self, an):
-        fig = an.task15()
+        fig, _, _ = an.task15()
         assert isinstance(fig, mpl.figure.Figure)
+
+    def test_pc_focalpoint(self, an):
+        _, pc, _ = an.task15()
+        assert np.isclose(pc, 198.45281250408226)
+
+    def test_cp_focalpoint(self, an):
+        _, _, cp = an.task15()
+        assert np.isclose(cp, 201.74922600619198)
+
+    def test_convexplano_exists(self, elements, lenses):
+        assert hasattr(lenses, "ConvexPlano")
+        assert issubclass(lenses.ConvexPlano, elements.OpticalElement)
+
+    def test_planoconvex_exists(self, elements, lenses):
+        assert hasattr(lenses, "PlanoConvex")
+        assert issubclass(lenses.PlanoConvex, elements.OpticalElement)
 
     def test_2SR_objects_created(self, elements, lenses, monkeypatch):
         sr = MagicMock(wraps=elements.SphericalRefraction)
@@ -558,6 +582,7 @@ class TestTask15:
         if hasattr(lenses, "SphericalRefraction"):
             monkeypatch.setattr(lenses, "SphericalRefraction", sr)
 
+        # need to import after we patch
         an = import_module("raytracer.analysis")
         if hasattr(an, "SphericalRefraction"):
             monkeypatch.setattr(an, "SphericalRefraction", sr)
@@ -566,3 +591,23 @@ class TestTask15:
         an.task15()
         assert sr.call_count >= 2
         assert op.called
+
+    @check_figures_equal(ref_path="task15", tol=33)
+    def test_plot15(self, an):
+        fig, _, _ = an.task15()
+        return fig
+
+class TestTask16:
+
+    def test_output_fig(self, an):
+        fig, _ = an.task16()
+        assert isinstance(fig, mpl.figure.Figure)
+
+    def test_rms_less_than_cp(self, an):
+        _, rms = an.task16()
+        assert rms < 0.00934178968116802
+
+    @check_figures_equal(ref_path="task16", tol=33)
+    def test_plot15(self, an):
+        fig, _ = an.task16()
+        return fig

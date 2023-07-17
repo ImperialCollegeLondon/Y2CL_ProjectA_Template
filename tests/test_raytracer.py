@@ -30,12 +30,6 @@ class TestSphericalRefraction:
     def test_num_parameters(self, elements):
         assert len(signature(elements.SphericalRefraction).parameters) == 5
 
-    def test_alex(self, rt):
-        # test combine environment
-        assert "Ray" in rt
-        assert "OpticalElement" in rt
-        r = rt.Ray()
-        assert r.direc().dtype == "float"
 
 class TestOutputPlane:
     def test_op_exists(self, elements):

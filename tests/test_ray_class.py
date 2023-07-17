@@ -1,5 +1,4 @@
 from inspect import signature
-from types import NoneType
 import numpy as np
 import pytest
 from fixtures import *
@@ -107,5 +106,5 @@ class TestInternals:
         params = signature(rays.Ray.__init__).parameters
         pos_default = params["pos"].default
         direc_default = params["direc"].default
-        assert isinstance(pos_default, (NoneType, list, np.ndarray))        
-        assert isinstance(direc_default, (NoneType, list, np.ndarray))
+        assert isinstance(pos_default, (type(None), list, np.ndarray))        
+        assert isinstance(direc_default, (type(None), list, np.ndarray))
