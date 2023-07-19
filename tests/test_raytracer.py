@@ -1,6 +1,5 @@
 from inspect import signature
 import pytest
-from fixtures import *
 
 class TestOpticalElement:
     def test_oe_exists(self, elements):
