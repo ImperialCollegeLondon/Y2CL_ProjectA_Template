@@ -1,6 +1,6 @@
 class OpticalElement():
     def propagate_ray(self):
-        # raise error
+        raise NotImplementedError('Needs to be implemented in child class')
 
 class SphericalRefraction(OpticalElement):
     def __init__(self, z_0, aperture, curvature, n_1, n_2):
