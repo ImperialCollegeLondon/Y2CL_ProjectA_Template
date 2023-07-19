@@ -1,7 +1,6 @@
 from inspect import signature
 import numpy as np
 import pytest
-from fixtures import *
 
 class TestInternals:
 

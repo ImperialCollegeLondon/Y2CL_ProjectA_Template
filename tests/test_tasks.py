@@ -1,4 +1,3 @@
-# pylint: disable=redefined-outer-name, unused-import
 from inspect import signature
 from types import FunctionType
 from importlib import import_module
@@ -7,8 +6,6 @@ import numpy as np
 import matplotlib as mpl
 import pytest
 from utils import check_figures_equal
-from fixtures import (ph, rays, elements, lenses, an,
-                      test_ray, default_ray, var_name_map)
 
 class TestTask1:
     def test_docstring_present(self, ph):
@@ -608,6 +605,6 @@ class TestTask16:
         assert rms < 0.00934178968116802
 
     @check_figures_equal(ref_path="task16", tol=33)
-    def test_plot15(self, an):
+    def test_plot16(self, an):
         fig, _ = an.task16()
         return fig
