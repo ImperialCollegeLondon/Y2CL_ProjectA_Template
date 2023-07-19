@@ -153,34 +153,34 @@ class TestTask4:
 
     def test_no_intercept(self, rays, elements):
         ray = rays.Ray(pos=[10., 0., 0.])
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=5.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=5.)
         assert sr.intercept(ray) is None
 
     def test_intercept_array(self, default_ray, elements):
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         assert isinstance(sr.intercept(default_ray), np.ndarray)
 
     def test_onaxis_ray_convex_intercept(self, rays, elements):
         ray = rays.Ray(pos=[0.,0.,0.])
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray), [0., 0., 10.])
 
     def test_onaxis_ray_concave_intercept(self, rays, elements):
         ray = rays.Ray(pos=[0.,0.,0.])
-        sr = elements.SphericalRefraction(z0=10, curvature=-0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray), [0., 0., 10.])
 
     def test_offaxis_convex_intercept(self, rays, elements):
         ray1 = rays.Ray(pos=[1., 0., 0.])
         ray2 = rays.Ray(pos=[-1., 0., 0.])
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray1), [1., 0., 10.010001])
         assert np.allclose(sr.intercept(ray2), [-1., 0., 10.010001])
 
     def test_offaxis_concave_intercept(self, rays, elements):
         ray1 = rays.Ray(pos=[1., 0., 0.])
         ray2 = rays.Ray(pos=[-1., 0., 0.])
-        sr = elements.SphericalRefraction(z0=10, curvature=-0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray1), [1., 0., 9.989999])
         assert np.allclose(sr.intercept(ray2), [-1., 0., 9.989999])
 
@@ -188,7 +188,7 @@ class TestTask4:
         pos_mock = MagicMock(return_value=np.array([0., 0., 10.]))
         monkeypatch.setattr(rays.Ray, "pos", pos_mock)
         r = rays.Ray()
-        sr = elements.SphericalRefraction(z0=10, curvature=-0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
         sr.intercept(r)
         pos_mock.assert_called_once()
 
@@ -196,7 +196,7 @@ class TestTask4:
         direc_mock = MagicMock(return_value=np.array([0., 0., 10.]))
         monkeypatch.setattr(rays.Ray, "direc", direc_mock)
         r = rays.Ray()
-        sr = elements.SphericalRefraction(z0=10, curvature=-0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
         sr.intercept(r)
         direc_mock.assert_called_once()
 
@@ -264,7 +264,7 @@ class TestTask6:
     def test_pr_calls_intercept(self, elements, monkeypatch):
         intercept_mock = MagicMock(return_value=np.array([0., 0., 10.]))
         monkeypatch.setattr(elements.SphericalRefraction, "intercept", intercept_mock)
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         ray = elements.Ray([0.,0.,0.], [0.,0.,1.])
         sr.propagate_ray(ray)
         intercept_mock.assert_called_once_with(ray)
@@ -274,7 +274,7 @@ class TestTask6:
         monkeypatch.setattr(ph, "refract", refract_mock)
         if hasattr(elements, "refract"):
             monkeypatch.setattr(elements, "refract", refract_mock)
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         ray = rays.Ray([0.,0.,0.], [0.,0.,1.])
         sr.propagate_ray(ray)
         refract_mock.assert_called_once()
@@ -288,7 +288,7 @@ class TestTask6:
     def test_pr_calls_append(self, rays, elements, monkeypatch):
         append_mock = MagicMock(return_value=None)
         monkeypatch.setattr(rays.Ray, "append", append_mock)
-        sr = elements.SphericalRefraction(z0=10, curvature=0.02, n1=1., n2=1.5, aperture=50.)
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         sr.propagate_ray(rays.Ray([1., 2., 0.], [0., 0., 1.]))
         append_mock.assert_called_once()
         new_pos, new_direc = append_mock.call_args.args
@@ -366,7 +366,7 @@ class TestTask8:
     def test_pr_calls_intercept(self, default_ray, elements, monkeypatch):
         intercept_patch = MagicMock(return_value=np.array([1., 2., 3.]))
         monkeypatch.setattr(elements.OutputPlane, "intercept", intercept_patch)
-        op = elements.OutputPlane(10)
+        op = elements.OutputPlane(z_0=10)
         op.propagate_ray(default_ray)
         intercept_patch.assert_called_once_with(default_ray)
 
@@ -376,14 +376,14 @@ class TestTask8:
         monkeypatch.setattr(ph, "refract", refract_mock)
         if hasattr(elements, "refract"):
             monkeypatch.setattr(elements, "refract", refract_mock)
-        op = elements.OutputPlane(z0=10)
+        op = elements.OutputPlane(z_0=10)
         op.propagate_ray(default_ray)
         refract_mock.assert_not_called()
        
     def test_pr_calls_append(self, default_ray, rays, elements, monkeypatch):
         append_mock = MagicMock(return_value=None)
         monkeypatch.setattr(rays.Ray, "append", append_mock)
-        op = elements.OutputPlane(z0=10)
+        op = elements.OutputPlane(z_0=10)
         intercept = op.intercept(default_ray)
         op.propagate_ray(default_ray)
         append_mock.assert_called_once()
@@ -392,13 +392,13 @@ class TestTask8:
 
     def test_parallel_intercept(self, rays, elements):
         ray = rays.Ray(pos=[0., 10., 0.])
-        op = elements.OutputPlane(z0=10)
+        op = elements.OutputPlane(z_0=10)
         intercept = op.intercept(ray)
         assert np.allclose(intercept, [0., 10., 10.])
 
     def test_nonparallel_intercept(self, rays, elements):
         ray = rays.Ray(pos=[1., 10., 2.], direc=[-0.15, -0.5, 1.])
-        op = elements.OutputPlane(z0=10)
+        op = elements.OutputPlane(z_0=10)
         intercept = op.intercept(ray)
         assert np.allclose(intercept, [-0.2, 6., 10.])
 
