@@ -1,4 +1,3 @@
-from inspect import signature
 from types import FunctionType
 from importlib import import_module
 from unittest.mock import MagicMock
@@ -14,10 +13,7 @@ class TestTask1:
         assert ph.__doc__ != ""
 
 class TestTask2:
-    def test_p_exists(self, rays):
-        assert hasattr(rays.Ray, "pos")
-
-    def test_pos_method(self, rays):
+    def test_pos_method(self, rays):  # Check method not overridden by variable
         assert isinstance(rays.Ray.pos, FunctionType)
 
     def test_default_p_array(self, rays):
@@ -30,10 +26,7 @@ class TestTask2:
     def test_p_set(self, test_ray):
         assert np.allclose(test_ray.pos(), [1., 2., 3.])
 
-    def test_k_exists(self, rays):
-        assert hasattr(rays.Ray, "direc")
-
-    def test_direc_method(self, rays):
+    def test_direc_method(self, rays):  # Check method not overridden by variable
         assert isinstance(rays.Ray.direc, FunctionType)
 
     def test_k_array(self, test_ray):
@@ -43,12 +36,6 @@ class TestTask2:
         test_k = np.array([4.,5.,6.])
         test_k /= np.linalg.norm(test_k)
         assert np.allclose(test_ray.direc(), test_k)
-
-    def test_append_exists(self, rays):
-        assert hasattr(rays.Ray, "append")
-
-    def test_append_method(self, rays):
-        assert isinstance(rays.Ray.append, FunctionType)
 
     def test_append_increases_length(self, default_ray, var_name_map):
         pos = getattr(default_ray, var_name_map['pos'])
@@ -109,10 +96,7 @@ class TestTask2:
         with pytest.raises(Exception):
             default_ray.append(pos=[1.,2.,3.], direc=[1., 2.])
 
-    def test_vertices_exists(self, rays):
-        assert hasattr(rays.Ray, "vertices")
-
-    def test_vertices_method(self, rays):
+    def test_vertices_method(self, rays):  # Check method not overridden by variable
         assert isinstance(rays.Ray.vertices, FunctionType)
 
     def test_vertices_list(self, default_ray):
@@ -136,18 +120,12 @@ class TestTask2:
 class TestTask3:
     def test_sr_class_exists(self, elements):
         assert hasattr(elements, "SphericalRefraction")
+
     def test_inheritance(self, elements):
         assert elements.OpticalElement in elements.SphericalRefraction.mro()
-    def test_num_parameters(self, elements):
-        assert len(signature(elements.SphericalRefraction).parameters) == 5
+
 
 class TestTask4:
-    def test_intercept_exists(self, elements):
-        assert hasattr(elements.SphericalRefraction, "intercept")
-
-    def test_num_parameters(self, elements):
-        assert len(signature(elements.SphericalRefraction.intercept).parameters) == 2
-
     def test_no_intercept(self, rays, elements):
         ray = rays.Ray(pos=[10., 0., 0.])
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=5.)
@@ -202,9 +180,6 @@ class TestTask5:
     def test_refract_exists(self, ph):
         assert hasattr(ph, "refract")
 
-    def test_num_params(self, ph):
-        assert len(signature(ph.refract).parameters) == 4
-
     def test_returns_unitvector(self, ph):
         dir = np.array([0., 0.05, 1.])
         norm = np.array([0., -1.9, -1.])
@@ -252,12 +227,6 @@ class TestTask5:
         assert ph.refract(dir, norm, 1.5, 1.0) is None
 
 class TestTask6:
-    def test_pr_exists(self, elements):
-        assert hasattr(elements.SphericalRefraction, "propagate_ray")
-
-    def test_num_parameters(self, elements):
-        assert len(signature(elements.SphericalRefraction.propagate_ray).parameters) == 2
-
     def test_pr_calls_intercept(self, elements, monkeypatch):
         intercept_mock = MagicMock(return_value=np.array([0., 0., 10.]))
         monkeypatch.setattr(elements.SphericalRefraction, "intercept", intercept_mock)
@@ -293,9 +262,6 @@ class TestTask6:
         assert np.allclose(new_direc, [-0.00667112, -0.01334223, 0.99988873])
 
 class TestTask7:
-    def test_exists(self, an):
-        assert hasattr(an, "task7")
-
     def test_doesnt_crash(self, an):
         an.task7()
 
@@ -354,11 +320,8 @@ class TestTask8:
     def test_op_exists(self, elements):
         assert hasattr(elements, "OutputPlane")
 
-    def test_intercept_exists(self, elements):
-        assert hasattr(elements.OutputPlane, "intercept")
-
-    def test_propagate_exists(self, elements):
-        assert hasattr(elements.OutputPlane, "propagate_ray")
+    def test_inheritance(self, elements):
+        assert elements.OpticalElement in elements.OutputPlane.mro()
 
     def test_pr_calls_intercept(self, default_ray, elements, monkeypatch):
         intercept_patch = MagicMock(return_value=np.array([1., 2., 3.]))
@@ -401,10 +364,6 @@ class TestTask8:
 
 
 class TestTask9:
-
-    def test_task9_exists(self, an):
-        assert hasattr(an, "task9")
-
     def test_sr_called(self, an, elements, monkeypatch):
         sr = MagicMock(wraps=elements.SphericalRefraction)
         monkeypatch.setattr(elements, "SphericalRefraction", sr)
@@ -485,11 +444,8 @@ class TestTask9:
     def test_plot9(self, an):
         return an.task9()
 
+
 class TestTask10:
-
-    def test_task10_exists(self, an):
-        assert hasattr(an, "task10")
-
     def test_focal_point(self, an):
         _, fp = an.task10()
         assert np.isclose(fp, 200.)
@@ -504,71 +460,62 @@ class TestTask10:
         return fig
 
 
-class TestTask12:
-
-    def test_task12_exists(self, an):
-        assert hasattr(an, "task12")
-
+class TestTask11:
     def test_ouput_fig(self, an):
-        fig = an.task12()
+        fig = an.task11()
         assert isinstance(fig, mpl.figure.Figure)
 
-    @check_figures_equal(ref_path="task12", tol=32)
-    def test_plot12(self, an):
-        return an.task12()
+    @check_figures_equal(ref_path="task11", tol=32)
+    def test_plot11(self, an):
+        return an.task11()
 
-class TestTask13:
-    def test_task13_exists(self, an):
-        assert hasattr(an, "task13")
-
+class TestTask12:
     def test_rms(self, an):
-        _, rms = an.task13()
+        _, rms = an.task12()
         assert np.isclose(rms, 0.0020035841289414527)
 
     def test_output_fig(self, an):
-        fig, _ = an.task13()
+        fig, _ = an.task12()
+        assert isinstance(fig, mpl.figure.Figure)
+
+    @check_figures_equal(ref_path="task12", tol=33)
+    def test_plot12(self, an):
+        fig, _ = an.task12()
+        return fig
+
+class TestTask13:
+
+    def test_output_fig(self, an):
+        fig = an.task13()
         assert isinstance(fig, mpl.figure.Figure)
 
     @check_figures_equal(ref_path="task13", tol=33)
     def test_plot13(self, an):
-        fig, _ = an.task13()
+        fig = an.task13()
         return fig
 
 class TestTask14:
 
-    def test_output_fig(self, an):
-        fig, _ = an.task14()
+    def test_output_pcfig(self, an):
+        fig, _, _, _ = an.task14()
         assert isinstance(fig, mpl.figure.Figure)
 
-    @check_figures_equal(ref_path="task14", tol=33)
-    def test_plot14(self, an):
-        fig, _ = an.task14()
-        return fig
-
-    def test_difraction(self, an):
-        _, diffraction_scale = an.task14()
-        assert np.isclose(diffraction_scale, 0.01176)
-
-class TestTask15:
-
-    def test_output_fig(self, an):
-        fig, _, _ = an.task15()
+    def test_output_cpfig(self, an):
+        _, _, fig, _ = an.task14()
         assert isinstance(fig, mpl.figure.Figure)
 
     def test_pc_focalpoint(self, an):
-        _, pc, _ = an.task15()
-        assert np.isclose(pc, 198.45281250408226)
+        _, pc, _, _ = an.task14()
+        assert np.isclose(pc, 201.74922600619198)
 
     def test_cp_focalpoint(self, an):
-        _, _, cp = an.task15()
-        assert np.isclose(cp, 201.74922600619198)
+        _, _, _, cp = an.task14()
+        assert np.isclose(cp, 198.45281250408226)
 
-    def test_convexplano_exists(self, elements, lenses):
-        assert hasattr(lenses, "ConvexPlano")
-        assert issubclass(lenses.ConvexPlano, elements.OpticalElement)
-
-    def test_planoconvex_exists(self, elements, lenses):
+    def test_planoconvex_exists(self, lenses):
         assert hasattr(lenses, "PlanoConvex")
+
+    def test_planoconvex_inheritance(self, elements, lenses):
         assert issubclass(lenses.PlanoConvex, elements.OpticalElement)
 
     def test_2SR_objects_created(self, elements, lenses, monkeypatch):
@@ -589,22 +536,23 @@ class TestTask15:
         assert sr.call_count >= 2
         assert op.called
 
-    @check_figures_equal(ref_path="task15", tol=33)
-    def test_plot15(self, an):
-        fig, _, _ = an.task15()
+    @check_figures_equal(ref_path="task14pc", tol=33)
+    def test_plot14pc(self, an):
+        fig, _, _, _ = an.task14()
         return fig
 
-class TestTask16:
+    @check_figures_equal(ref_path="task14cp", tol=33)
+    def test_plot14cp(self, an):
+        _, _, fig, _ = an.task14()
+        return fig
 
+
+class TestTask15:
     def test_output_fig(self, an):
-        fig, _ = an.task16()
-        assert isinstance(fig, mpl.figure.Figure)
-
-    def test_rms_less_than_cp(self, an):
-        _, rms = an.task16()
-        assert rms < 0.00934178968116802
-
-    @check_figures_equal(ref_path="task16", tol=33)
-    def test_plot16(self, an):
-        fig, _ = an.task16()
+        fig = an.task15()
+        assert isinstance(fig, mpl.figure.Figure)    
+    
+    @check_figures_equal(ref_path="task15", tol=33)
+    def test_plot15(self, an):
+        fig = an.task15()
         return fig
