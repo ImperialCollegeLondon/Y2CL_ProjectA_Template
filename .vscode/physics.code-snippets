@@ -1,0 +1,11 @@
+{
+    "refract function": {
+        "prefix": "def",
+        "body": [
+            "def refract(direc, normal, n_1, n_2):",
+            "\t# return normalised new direction vector OR None if TIR occurs",
+            "\t${1:pass}"
+        ],
+        "description": "refract function."
+    }
+}

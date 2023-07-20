@@ -1,0 +1,11 @@
+{
+    "PlanoConvex Class": {
+        "prefix": "class",
+        "body": [
+            "class PlanoConvex(${1:inherits_from}):",
+            "\tdef __init__(self, z_0, thickness, aperture, curv, n_out, n_in):",
+            "\t\t${2:pass}"
+        ],
+        "description": "PlanoConvex class template."
+    }
+}
