@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import numpy as np
 import matplotlib as mpl
 import pytest
-from tests.utils import check_figures_equal
+from utils import check_figures_equal
 
 class TestTask1:
     def test_docstring_present(self, ph):
