@@ -1,5 +1,4 @@
 
-
 def task7():
     # no returns
     pass

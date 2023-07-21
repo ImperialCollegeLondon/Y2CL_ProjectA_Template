@@ -47,5 +47,6 @@ class TestDocumentation:
         res = run(cmd, shell=True, capture_output=True, check=False, text=True)
         print(res.stdout)
         malformed_docs = len(res.stdout.splitlines()) - 1
-        print(malformed_docs)
+        if malformed_docs:
+            print(malformed_docs)
         assert malformed_docs == 0
