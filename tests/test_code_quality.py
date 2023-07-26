@@ -8,7 +8,7 @@ class TestStyle:
 
     def setup_class(self):
         project_path = os.path.split(os.path.dirname(__file__))[0]
-        course_file = glob(repr(path) for path in os.path.join(project_path, "raytracer", "[a-zA-Z]*.py"))
+        course_file = glob(os.path.join(project_path, "raytracer", "[a-zA-Z]*.py"))
 
         pylint_results = Run(course_file, exit=False)
         self.style_result = pylint_results.linter.stats.global_note
