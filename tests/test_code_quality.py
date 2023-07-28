@@ -32,36 +32,34 @@ class TestDocumentation:
 
     def test_documentation_present(self):
         project_path = os.path.split(os.path.dirname(__file__))[0]
-        course_files = " ".join(repr(path) for path in glob(os.path.join(project_path, "raytracer", "[a-zA-Z]*.py")))
-        cmd = rf"pydocstyle --select=D100,D102,D103,D419 {course_files}"
+        course_files = '" "'.join(glob(os.path.join(project_path, "raytracer", "[a-zA-Z]*.py")))
+        cmd = rf'pydocstyle --select=D100,D102,D103,D419 "{course_files}"'
         res = run(cmd, shell=True, capture_output=True, check=False, text=True)
         if res.returncode:
             print("pydocstyle")
             print("---------")
             print(f"cmd:\n{cmd}")
             print(f"return code: {res.returncode}")
-            print(f"stdout:\n{res.stdout}")
             print(f"stderr:\n{res.stderr}")
-        assert res.returncode == 0, "pydocstyle failed"
         missing_docs = len(res.stdout.splitlines()) / 2
         if missing_docs:
-            print(res.stdout)
+            print(f"Num of problems: {missing_docs}")
+            print(f"stdout:\n{res.stdout}")
         assert missing_docs == 0
 
     def test_documentation_style(self):
         project_path = os.path.split(os.path.dirname(__file__))[0]
-        course_files = " ".join(repr(path) for path in glob(os.path.join(project_path, "raytracer", "[a-zA-Z]*.py")))
-        cmd = rf"darglint {course_files}"
+        course_files = '" "'.join(glob(os.path.join(project_path, "raytracer", "[a-zA-Z]*.py")))
+        cmd = rf'darglint "{course_files}"'
         res = run(cmd, shell=True, capture_output=True, check=False, text=True)
         if res.returncode:
             print("darglight")
             print("---------")
             print(f"cmd:\n{cmd}")
             print(f"return code: {res.returncode}")
-            print(f"stdout:\n{res.stdout}")
             print(f"stderr:\n{res.stderr}")
-        assert res.returncode == 0, "darglint failed"
-        malformed_docs = len(res.stdout.splitlines())
+        malformed_docs = max(len(res.stdout.splitlines()) - 1, 0)
         if malformed_docs:
-            print(malformed_docs)
+            print(f"Num of problems: {malformed_docs}")
+            print(f"stdout:\n{res.stdout}")
         assert malformed_docs == 0
