@@ -1,5 +1,6 @@
 """Pytest fixtures."""
 from importlib import import_module
+from pathlib import Path
 import pytest
 import numpy as np
 import matplotlib.pyplot as plt
@@ -90,3 +91,15 @@ def test_ray_direc(rays, var_name_map):
 @pytest.fixture
 def ray_bundle(rays):
     return getattr(rays, "RayBundle", getattr(rays, "Bundle", None))
+
+@pytest.fixture(scope="module")
+def source_files():
+    excluded_files = ("coffeecake.py", "mymodule.py")
+    src_files = [str(file_) for file_ in Path(__file__).parent.parent.glob("raytracer/[a-zA-Z]*.py")
+                 if file_.name not in excluded_files]
+    assert src_files, "No source files found to check!"
+    return src_files
+
+@pytest.fixture(scope="module")
+def source_files_str(source_files):
+    return ' '.join(source_files)
