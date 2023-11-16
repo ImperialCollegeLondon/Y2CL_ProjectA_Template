@@ -59,6 +59,7 @@ class TestDocumentation:
             print(f"cmd:\n{cmd}")
             print(f"return code: {res.returncode}")
             print(f"stderr:\n{res.stderr}")
+            assert not res.stderr, "Problem running darglint command."
         malformed_docs = max(len(res.stdout.splitlines()) - 1, 0)
         if malformed_docs:
             print(f"Num of problems: {malformed_docs}")
