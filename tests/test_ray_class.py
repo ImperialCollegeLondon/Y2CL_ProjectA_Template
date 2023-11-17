@@ -107,3 +107,28 @@ class TestInternals:
         direc_default = params["direc"].default
         assert isinstance(pos_default, (type(None), list, np.ndarray))        
         assert isinstance(direc_default, (type(None), list, np.ndarray))
+
+    def test_append_pos_iterable_check(self, default_ray):
+        with pytest.raises(Exception):
+            default_ray.append(pos=12, direc=[1.,2.,3.])
+
+    def test_append_pos_too_long_check(self, default_ray):
+        with pytest.raises(Exception):
+            default_ray.append(pos=[1., 2., 3., 4.], direc=[1.,2.,3.])
+
+    def test_append_pos_too_short_check(self, default_ray):
+        with pytest.raises(Exception):
+            default_ray.append(pos=[1., 2.], direc=[1.,2.,3.])
+
+    def test_append_direc_iterable_check(self, default_ray):
+        with pytest.raises(Exception):
+            default_ray.append(pos=[1.,2.,3.], direc=12)
+
+    def test_append_direc_too_long_check(self, default_ray):
+        with pytest.raises(Exception):
+            default_ray.append(pos=[1.,2.,3.], direc=[1., 2., 3., 4.])
+
+    def test_append_direc_too_short_check(self, default_ray):
+        with pytest.raises(Exception):
+            default_ray.append(pos=[1.,2.,3.], direc=[1., 2.])
+

@@ -72,30 +72,6 @@ class TestTask2:
         assert np.allclose(direc, test_k)
         assert np.allclose(default_ray.direc(), test_k)
 
-    def test_append_pos_iterable_check(self, default_ray):
-        with pytest.raises(Exception):
-            default_ray.append(pos=12, direc=[1.,2.,3.])
-
-    def test_append_pos_too_long_check(self, default_ray):
-        with pytest.raises(Exception):
-            default_ray.append(pos=[1., 2., 3., 4.], direc=[1.,2.,3.])
-
-    def test_append_pos_too_short_check(self, default_ray):
-        with pytest.raises(Exception):
-            default_ray.append(pos=[1., 2.], direc=[1.,2.,3.])
-
-    def test_append_direc_iterable_check(self, default_ray):
-        with pytest.raises(Exception):
-            default_ray.append(pos=[1.,2.,3.], direc=12)
-
-    def test_append_direc_too_long_check(self, default_ray):
-        with pytest.raises(Exception):
-            default_ray.append(pos=[1.,2.,3.], direc=[1., 2., 3., 4.])
-
-    def test_append_direc_too_short_check(self, default_ray):
-        with pytest.raises(Exception):
-            default_ray.append(pos=[1.,2.,3.], direc=[1., 2.])
-
     def test_vertices_method(self, rays):  # Check method not overridden by variable
         assert isinstance(rays.Ray.vertices, FunctionType)
 

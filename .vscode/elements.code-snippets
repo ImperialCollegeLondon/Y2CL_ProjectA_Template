@@ -3,8 +3,13 @@
         "prefix": "class",
         "body": [
             "class OpticalElement:",
+            "",
+            "\tdef intercept(self, ray):",
+            "\t\traise NotImplementedError('intercept() needs to be implemented in child class')",
+            "",
             "\tdef propagate_ray(self, ray):",
-            "\t\traise NotImplementedError('Needs to be implemented in child class')",
+            "\t\traise NotImplementedError('propagate_ray() needs to be implemented in child class')",
+            ""
         ],
         "description": "OpticalElement interface."
     },
