@@ -32,11 +32,11 @@ def rt():
 def ph():
     return import_module("raytracer.physics")
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def rays():
     return import_module("raytracer.rays")
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def elements():
     return import_module("raytracer.elements")
 
@@ -44,7 +44,7 @@ def elements():
 def lenses():
     return import_module("raytracer.lenses")
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def an():
     yield import_module("raytracer.analysis")
     plt.close()
@@ -103,3 +103,60 @@ def source_files():
 @pytest.fixture(scope="module")
 def source_files_str(source_files):
     return ' '.join(source_files)
+
+from unittest.mock import MagicMock, patch
+
+
+
+@pytest.fixture()
+def sr_mock(elements, an):
+    sr = MagicMock(wraps=elements.SphericalRefraction)
+    with patch.object(elements, "SphericalRefraction", sr), \
+         patch.object(an, "SphericalRefraction", sr):
+        yield sr
+
+@pytest.fixture()
+def op_mock(elements, an):
+    op = MagicMock(wraps=elements.OutputPlane)
+    with patch.object(elements, "OutputPlane", op), \
+         patch.object(an, "OutputPlane", op):
+        yield op
+
+@pytest.fixture()
+def ray_mock(rays, an):
+    ray = MagicMock(wraps=rays.Ray)
+    with patch.object(rays, "Ray", ray), \
+         patch.object(an, "Ray", ray):
+        yield ray
+
+@pytest.fixture()
+def pr_mock(elements, an):
+    pr = MagicMock()
+    with patch.object(elements.SphericalRefraction, "propagate_ray", pr):
+        if hasattr(an, "SphericalRefraction"):
+            with patch.object(an.SphericalRefraction, "propagate_ray", pr):
+                yield pr
+        else:
+            yield pr
+
+
+@pytest.fixture()
+def task9_output(an):
+    yield an.task9()
+    plt.close("all")
+
+
+@pytest.fixture(scope="class")
+def task10_output(an):
+    yield an.task10()
+    plt.close("all")
+
+@pytest.fixture(scope="class")
+def task11_output(an):
+    yield an.task11()
+    plt.close("all")
+
+@pytest.fixture(scope="class")
+def task12_output(an):
+    yield an.task12()
+    plt.close("all")

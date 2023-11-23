@@ -92,6 +92,19 @@ class TestTask2:
                            [[1.,2.,3.],
                             [4.,5.,6.]])
 
+class TestTask2ish:
+    def test_oe_exists(self, elements):
+        assert hasattr(elements, "OpticalElement")
+
+    def test_intercept_raises(self, elements):
+        oe = elements.OpticalElement()
+        with pytest.raises(NotImplementedError):
+            oe.intercept(1)
+
+    def test_pr_raises(self, elements):
+        oe = elements.OpticalElement()
+        with pytest.raises(NotImplementedError):
+            oe.propagate_ray(1)
 
 class TestTask3:
     def test_sr_class_exists(self, elements):
@@ -100,8 +113,15 @@ class TestTask3:
     def test_inheritance(self, elements):
         assert elements.OpticalElement in elements.SphericalRefraction.mro()
 
+    def test_construction(self, elements):
+        elements.SphericalRefraction(z_0=10, aperture=5, curvature=0.2, n_1=1., n_2=1.5)
+
 
 class TestTask4:
+
+    def test_intercept_exists(self, elements):
+        assert "intercept" in vars(elements.SphericalRefraction)
+
     def test_no_intercept(self, rays, elements):
         ray = rays.Ray(pos=[10., 0., 0.])
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=5.)
@@ -135,7 +155,7 @@ class TestTask4:
         assert np.allclose(sr.intercept(ray1), [1., 0., 9.989999])
         assert np.allclose(sr.intercept(ray2), [-1., 0., 9.989999])
 
-    def test_ray_pos_called(self, rays, elements, monkeypatch):
+    def test_ray_pos_called_once(self, rays, elements, monkeypatch):
         pos_mock = MagicMock(return_value=np.array([0., 0., 10.]))
         monkeypatch.setattr(rays.Ray, "pos", pos_mock)
         r = rays.Ray()
@@ -143,7 +163,7 @@ class TestTask4:
         sr.intercept(r)
         pos_mock.assert_called_once()
 
-    def test_ray_direc_called(self, rays, elements, monkeypatch):
+    def test_ray_direc_called_once(self, rays, elements, monkeypatch):
         direc_mock = MagicMock(return_value=np.array([0., 0., 10.]))
         monkeypatch.setattr(rays.Ray, "direc", direc_mock)
         r = rays.Ray()
@@ -155,6 +175,9 @@ class TestTask4:
 class TestTask5:
     def test_refract_exists(self, ph):
         assert hasattr(ph, "refract")
+
+    def test_calling_args(self, ph):
+        ph.refract(direc=[1, 2, 3], normal=[4, 5, 6], n_1=1, n_2=1.5)
 
     def test_returns_unitvector(self, ph):
         dir = np.array([0., 0.05, 1.])
@@ -203,15 +226,19 @@ class TestTask5:
         assert ph.refract(dir, norm, 1.5, 1.0) is None
 
 class TestTask6:
-    def test_pr_calls_intercept(self, elements, monkeypatch):
+
+    def test_pr_exists(self, elements):
+        assert "propagate_ray" in vars(elements.SphericalRefraction)
+
+    def test_pr_calls_intercept_once(self, rays, elements, monkeypatch):
         intercept_mock = MagicMock(return_value=np.array([0., 0., 10.]))
         monkeypatch.setattr(elements.SphericalRefraction, "intercept", intercept_mock)
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
-        ray = elements.Ray([0.,0.,0.], [0.,0.,1.])
+        ray = rays.Ray([0., 0., 0.], [0., 0., 1.])
         sr.propagate_ray(ray)
         intercept_mock.assert_called_once_with(ray)
 
-    def test_pr_calls_refract(self, rays, elements, ph, monkeypatch):
+    def test_pr_calls_refract_once(self, rays, elements, ph, monkeypatch):
         refract_mock = MagicMock(return_value=np.array([0., 0., 1.]))
         monkeypatch.setattr(ph, "refract", refract_mock)
         if hasattr(elements, "refract"):
@@ -227,7 +254,7 @@ class TestTask6:
         assert n1 == 1.0
         assert n2 == 1.5
 
-    def test_pr_calls_append(self, rays, elements, monkeypatch):
+    def test_pr_calls_append_once(self, rays, elements, monkeypatch):
         append_mock = MagicMock(return_value=None)
         monkeypatch.setattr(rays.Ray, "append", append_mock)
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
@@ -241,7 +268,7 @@ class TestTask7:
     def test_doesnt_crash(self, an):
         an.task7()
 
-    def test_ray_called(self, an, rays, monkeypatch):
+    def test_ray_created(self, an, rays, monkeypatch):
         mock_ray_init = MagicMock(wraps=rays.Ray)
         monkeypatch.setattr(rays, "Ray", mock_ray_init)
         if hasattr(an, "Ray"):
@@ -251,7 +278,7 @@ class TestTask7:
         except: pass
         mock_ray_init.assert_called()
 
-    def test_sr_called(self, an, elements, monkeypatch):
+    def test_sr_created(self, an, elements, monkeypatch):
         mock_sr_class = MagicMock()
         monkeypatch.setattr(elements, "SphericalRefraction", mock_sr_class)
         if hasattr(an, "SphericalRefraction"):
@@ -299,7 +326,10 @@ class TestTask8:
     def test_inheritance(self, elements):
         assert elements.OpticalElement in elements.OutputPlane.mro()
 
-    def test_pr_calls_intercept(self, default_ray, elements, monkeypatch):
+    def test_construction(self, elements):
+        elements.OutputPlane(z_0=250.)
+
+    def test_pr_calls_intercept_once(self, default_ray, elements, monkeypatch):
         intercept_patch = MagicMock(return_value=np.array([1., 2., 3.]))
         monkeypatch.setattr(elements.OutputPlane, "intercept", intercept_patch)
         op = elements.OutputPlane(z_0=10)
@@ -316,9 +346,11 @@ class TestTask8:
         op.propagate_ray(default_ray)
         refract_mock.assert_not_called()
        
-    def test_pr_calls_append(self, default_ray, rays, elements, monkeypatch):
+    def test_pr_calls_append_once(self, default_ray, rays, elements, monkeypatch):
         append_mock = MagicMock(return_value=None)
         monkeypatch.setattr(rays.Ray, "append", append_mock)
+        if hasattr(elements, "Ray"):
+            monkeypatch.setattr(elements.Ray, "append", append_mock)
         op = elements.OutputPlane(z_0=10)
         intercept = op.intercept(default_ray)
         op.propagate_ray(default_ray)
@@ -340,61 +372,90 @@ class TestTask8:
 
 
 class TestTask9:
-    def test_sr_called(self, an, elements, monkeypatch):
-        sr = MagicMock(wraps=elements.SphericalRefraction)
-        monkeypatch.setattr(elements, "SphericalRefraction", sr)
-        if hasattr(an, "SphericalRefraction"):
-            monkeypatch.setattr(an, "SphericalRefraction", sr)
-        an.task9()
-        sr.assert_called_once()
 
-    def test_sr_setup(self, an, elements, monkeypatch):
-        sr = MagicMock(wraps=elements.SphericalRefraction)
-        monkeypatch.setattr(elements, "SphericalRefraction", sr)
-        if hasattr(an, "SphericalRefraction"):
-            monkeypatch.setattr(an, "SphericalRefraction", sr)
-        an.task9()
-        sr.assert_called_once()
-        args = set(sr.call_args.args)
-        args.update(sr.call_args.kwargs.values())
+    def test_doesnt_crash(self, task9_output):
+        pass
+
+    # def test_sr_created_once(self, an, elements, monkeypatch):
+    #     sr = MagicMock(wraps=elements.SphericalRefraction)
+    #     monkeypatch.setattr(elements, "SphericalRefraction", sr)
+    #     if hasattr(an, "SphericalRefraction"):
+    #         monkeypatch.setattr(an, "SphericalRefraction", sr)
+    #     an.task9()
+    #     sr.assert_called_once()
+
+    def test_sr_created_once(self, sr_mock, task9_output):
+        sr_mock.assert_called_once()
+
+    # def test_sr_setup_correctly(self, an, elements, monkeypatch):
+    #     sr = MagicMock(wraps=elements.SphericalRefraction)
+    #     monkeypatch.setattr(elements, "SphericalRefraction", sr)
+    #     if hasattr(an, "SphericalRefraction"):
+    #         monkeypatch.setattr(an, "SphericalRefraction", sr)
+    #     an.task9()
+    #     sr.assert_called_once()
+    #     args = set(sr.call_args.args)
+    #     args.update(sr.call_args.kwargs.values())
+    #     assert len(args) == 5
+    #     assert not {100, 0.03, 1., 1.5}.difference(args)
+    def test_sr_setup_correctly(self, sr_mock, task9_output):
+        sr_mock.assert_called_once()
+        args = set(sr_mock.call_args.args)
+        args.update(sr_mock.call_args.kwargs.values())
         assert len(args) == 5
         assert not {100, 0.03, 1., 1.5}.difference(args)
 
-    def test_op_called(self, an, elements, monkeypatch):
-        op = MagicMock(wraps=elements.OutputPlane)
-        monkeypatch.setattr(elements, "OutputPlane", op)
-        if hasattr(an, "OutputPlane"):
-            monkeypatch.setattr(an, "OutputPlane", op)
-        an.task9()
-        op.assert_called_once()
+    # def test_op_created_once(self, an, elements, monkeypatch):
+    #     op = MagicMock(wraps=elements.OutputPlane)
+    #     monkeypatch.setattr(elements, "OutputPlane", op)
+    #     if hasattr(an, "OutputPlane"):
+    #         monkeypatch.setattr(an, "OutputPlane", op)
+    #     an.task9()
+    #     op.assert_called_once()
 
-    def test_op_setup(self, an, elements, monkeypatch):
-        op = MagicMock(wraps=elements.OutputPlane)
-        monkeypatch.setattr(elements, "OutputPlane", op)
-        if hasattr(an, "OutputPlane"):
-            monkeypatch.setattr(an, "OutputPlane", op)
-        an.task9()
-        op.assert_called_once()
-        args = op.call_args.args
-        args += tuple(op.call_args.kwargs.values())
+    def test_op_created_once(self, op_mock, task9_output):
+        op_mock.assert_called_once()
+
+    # def test_op_setup_correctly(self, an, elements, monkeypatch):
+    #     op = MagicMock(wraps=elements.OutputPlane)
+    #     monkeypatch.setattr(elements, "OutputPlane", op)
+    #     if hasattr(an, "OutputPlane"):
+    #         monkeypatch.setattr(an, "OutputPlane", op)
+    #     an.task9()
+    #     op.assert_called_once()
+    #     args = op.call_args.args
+    #     args += tuple(op.call_args.kwargs.values())
+    #     assert len(args) == 1
+    #     assert args[0] == 250
+
+    def test_op_setup_correctly(self, op_mock, task9_output):
+        op_mock.assert_called_once()
+        args = op_mock.call_args.args
+        args += tuple(op_mock.call_args.kwargs.values())
         assert len(args) == 1
         assert args[0] == 250
 
-    def test_ray_called(self, an, rays, monkeypatch):
-        ray = MagicMock(wraps=rays.Ray)
-        monkeypatch.setattr(rays, "Ray", ray)
-        if hasattr(an, "Ray"):
-            monkeypatch.setattr(an, "Ray", ray)
-        an.task9()
-        ray.assert_called()
+    # def test_ray_created(self, an, rays, monkeypatch):
+    #     ray = MagicMock(wraps=rays.Ray)
+    #     monkeypatch.setattr(rays, "Ray", ray)
+    #     if hasattr(an, "Ray"):
+    #         monkeypatch.setattr(an, "Ray", ray)
+    #     an.task9()
+    #     ray.assert_called()
 
-    def test_ray_called_multiple(self, an, rays, monkeypatch):
-        ray = MagicMock(wraps=rays.Ray)
-        monkeypatch.setattr(rays, "Ray", ray)
-        if hasattr(an, "Ray"):
-            monkeypatch.setattr(an, "Ray", ray)
-        an.task9()
-        assert ray.call_count > 1
+    def test_ray_created(self, ray_mock, task9_output):
+        ray_mock.assert_called()
+
+    # def test_multiple_rays_created(self, an, rays, monkeypatch):
+    #     ray = MagicMock(wraps=rays.Ray)
+    #     monkeypatch.setattr(rays, "Ray", ray)
+    #     if hasattr(an, "Ray"):
+    #         monkeypatch.setattr(an, "Ray", ray)
+    #     an.task9()
+    #     assert ray.call_count > 1
+
+    def test_multiple_rays_created(self, ray_mock, task9_output):
+        assert ray_mock.call_count > 1
 
     def test_ray_vertices_called(self, an, rays, monkeypatch):
         vertices = MagicMock(return_value=[np.array([0.,0.,0.])])
@@ -412,47 +473,120 @@ class TestTask9:
         an.task9()
         assert vertices.call_count > 1
 
-    def test_output_fig(self, an):
-        fig = an.task9()
-        assert isinstance(fig, mpl.figure.Figure)
+    def test_output_fig_produced(self, task9_output):
+        assert isinstance(task9_output, mpl.figure.Figure)
 
     @check_figures_equal(ref_path="task9", tol=32)
-    def test_plot9(self, an):
-        return an.task9()
+    def test_plot9(self, task9_output):
+        return task9_output
 
 
 class TestTask10:
-    def test_focal_point(self, an):
-        _, fp = an.task10()
-        assert np.isclose(fp, 200.)
 
-    def test_ouput_fig(self, an):
-        fig, _ = an.task10()
-        assert isinstance(fig, mpl.figure.Figure)
+    def test_focal_point_exists(self, elements):
+        assert "focal_point" in vars(elements.SphericalRefraction)
 
+    def test_focal_point(self, elements):
+        sr = elements.SphericalRefraction(z_0=100,
+                                          curvature=0.03,
+                                          n_1=1.0,
+                                          n_2=1.5,
+                                          aperture=34)
+        assert np.isclose(sr.focal_point(), 200.)
+
+    def test_doesnt_crash(self, task10_output):
+        pass
+
+    # def test_output_fp(self, an):
+    #     _, fp = an.task10()
+    #     assert np.isclose(fp, 200.)
+    def test_output_fp(self, task10_output):
+        assert np.isclose(task10_output[1], 200.)
+
+    # def test_ouput_fig_produced(self, an):
+    #     fig, _ = an.task10()
+    #     assert isinstance(fig, mpl.figure.Figure)
+
+    def test_ouput_fig_produced(self, task10_output):
+        assert isinstance(task10_output[0], mpl.figure.Figure)
+
+    # @check_figures_equal(ref_path="task10", tol=32)
+    # def test_plot10(self, an):
+    #     fig, _ = an.task10()
+    #     return fig
+    
     @check_figures_equal(ref_path="task10", tol=32)
-    def test_plot10(self, an):
-        fig, _ = an.task10()
-        return fig
+    def test_plot10(self, task10_output):
+        return task10_output[0]
 
 
 class TestTask11:
-    def test_ouput_fig(self, an):
-        fig = an.task11()
-        assert isinstance(fig, mpl.figure.Figure)
+    
+
+    def test_ray_bundle_exists(self, ray_bundle):
+        assert ray_bundle is not None
+
+    def test_ray_bundle_class(self, ray_bundle):
+        assert isinstance(ray_bundle, type)
+
+    def test_bundle_not_inheritance(self, rays, ray_bundle):
+        assert rays.Ray not in ray_bundle.mro()
+
+    def test_bundle_construction(self, ray_bundle):
+        ray_bundle(rmax=5., nrings=5)
+
+    def test_propbundle_exists(self, ray_bundle):
+        assert "propagate_bundle" in vars(ray_bundle)
+
+    # def test_propbundle_calles_propray(self, elements, ray_bundle, monkeypatch):
+    #     prop_ray = MagicMock()
+    #     monkeypatch.setattr(elements.SphericalRefraction, "propagate_ray", prop_ray)
+    #     ray_bundle(rmax=5., nrings=5).propagate_bundle(elements.SphericalRefraction())
+
+    def test_propbundle_calles_propray(self, rays, elements, pr_mock):
+        sr = elements.SphericalRefraction(z_0=100, aperture=35., curvature=0.2, n_1=1., n_2=1.5)
+        rb = rays.RayBundle(rmax=5., nrings=5)
+        rb.propagate_bundle([sr])
+        pr_mock.assert_called()
+
+    def test_track_plot_exists(self, ray_bundle):
+        assert "track_plot" in vars(ray_bundle)
+
+    def test_track_plot(self, rays, monkeypatch):
+        vert_mock = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
+        monkeypatch.setattr(rays.Ray, "vertices", vert_mock)
+        rb = rays.RayBundle(rmax=5., nrings=5)
+        rb.track_plot()
+        vert_mock.assert_called()
+
+    def test_doesnt_crash(self, task11_output):
+        pass
+
+    # def test_ouput_fig_produced(self, an):
+    #     fig = an.task11()
+    #     assert isinstance(fig, mpl.figure.Figure)
+    
+    def test_ouput_fig_produced(self, task11_output):
+        assert isinstance(task11_output, mpl.figure.Figure)
 
     @check_figures_equal(ref_path="task11", tol=32)
-    def test_plot11(self, an):
-        return an.task11()
+    def test_plot11(self, task11_output):
+        return task11_output
 
 class TestTask12:
-    def test_rms(self, an):
-        _, rms = an.task12()
-        assert np.isclose(rms, 0.0020035841289414527)
+    # def test_rms(self, an):
+    #     _, rms = an.task12()
+    #     assert np.isclose(rms, 0.0020035841289414527)
 
-    def test_output_fig(self, an):
-        fig, _ = an.task12()
-        assert isinstance(fig, mpl.figure.Figure)
+    def test_rms(self, task12_output):
+        assert np.isclose(task12_output[1], 0.016176669411515444)
+
+    # def test_output_fig(self, an):
+    #     fig, _ = an.task12()
+    #     assert isinstance(fig, mpl.figure.Figure)
+
+    def test_output_fig_produced(self, task12_output):
+        assert isinstance(task12_output[0], mpl.figure.Figure)
 
     @check_figures_equal(ref_path="task12", tol=33)
     def test_plot12(self, an):

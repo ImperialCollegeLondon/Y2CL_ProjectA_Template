@@ -1,23 +1,8 @@
 import pytest
 
-class TestOpticalElement:
-    def test_oe_exists(self, elements):
-        assert hasattr(elements, "OpticalElement")
-
-    def test_pr_raises(self, elements):
-        with pytest.raises(NotImplementedError):
-            elements.OpticalElement.propagate_ray(1, 2)
 
 
-class TestRayBundle:
-    def test_ray_bundle_exists(self, ray_bundle):
-        assert ray_bundle is not None
 
-    def test_ray_bundle_class(self, ray_bundle):
-        assert isinstance(ray_bundle, type)
-
-    def test_bundle_not_inheritance(self, rays, ray_bundle):
-        assert rays.Ray not in ray_bundle.mro()
 
 
 class TestAdvancedDesign:

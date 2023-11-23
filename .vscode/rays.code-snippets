@@ -26,7 +26,7 @@
         "prefix": "class",
         "body": [
             "class RayBundle:",
-            "\tdef __init__(self, r_max, rings):",
+            "\tdef __init__(self, rmax, nrings):",
             "\t\t${1:pass}",
             "",
             "\tdef propagate_bundle(self, elements):",

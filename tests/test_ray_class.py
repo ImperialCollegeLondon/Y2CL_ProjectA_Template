@@ -14,7 +14,7 @@ class TestInternals:
         rays.Ray([1.,2.,3.])
         rays.Ray(direc=[4.,5.,6.])
 
-    def test_pos_iterable_check(self, rays):
+    def test_pos_list_or_array_check(self, rays):
         with pytest.raises(Exception) as excinfo:
             rays.Ray(pos=12)
 
@@ -57,7 +57,7 @@ class TestInternals:
     def test_pos_set(self, test_ray_pos):
         assert np.allclose(test_ray_pos[0], [1., 2., 3.])
 
-    def test_dir_iterable_check(self, rays):
+    def test_dir_list_or_array_check(self, rays):
         with pytest.raises(Exception) as excinfo:
             rays.Ray(direc=12)
 
@@ -108,7 +108,7 @@ class TestInternals:
         assert isinstance(pos_default, (type(None), list, np.ndarray))        
         assert isinstance(direc_default, (type(None), list, np.ndarray))
 
-    def test_append_pos_iterable_check(self, default_ray):
+    def test_append_pos_list_or_array_check(self, default_ray):
         with pytest.raises(Exception):
             default_ray.append(pos=12, direc=[1.,2.,3.])
 
@@ -120,7 +120,7 @@ class TestInternals:
         with pytest.raises(Exception):
             default_ray.append(pos=[1., 2.], direc=[1.,2.,3.])
 
-    def test_append_direc_iterable_check(self, default_ray):
+    def test_append_direc_list_or_array_check(self, default_ray):
         with pytest.raises(Exception):
             default_ray.append(pos=[1.,2.,3.], direc=12)
 

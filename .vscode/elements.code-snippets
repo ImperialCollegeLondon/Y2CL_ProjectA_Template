@@ -12,39 +12,5 @@
             ""
         ],
         "description": "OpticalElement interface."
-    },
-    "SphericalRefraction Class": {
-        "prefix": "class",
-        "body": [
-            "class SphericalRefraction(${1:inherits_from}):",
-            "\tdef __init__(self, z_0, aperture, curvature, n_1, n_2):",
-            "\t\t${2:pass}",
-            "",
-            "\tdef intercept(self, ray):",
-            "\t\t# return either None or new position vector",
-            "\t\t${3:pass}",
-            "",
-            "\tdef propagate_ray(self, ray):",
-            "\t\t# return either None or nothing if propagated successfully",
-            "\t\t${4:pass}",
-        ],
-        "description": "SphericalRefraction class template."
-    },
-    "OutputPlane Class": {
-        "prefix": "class",
-        "body": [
-            "class OutputPlane(${1:inherits_from}):",
-            "\tdef __init__(self, z_0):",
-            "\t\t${2:pass}",
-            "",
-            "\tdef intercept(self, ray):",
-            "\t\t# return either None or new position vector",
-            "\t\t${3:pass}",
-            "",
-            "\tdef propagate_ray(self, ray):",
-            "\t\t# return either None or nothing if propagated successfully",
-            "\t\t${4:pass}",
-        ],
-        "description": "OutputPlane class template."
     }
 }
