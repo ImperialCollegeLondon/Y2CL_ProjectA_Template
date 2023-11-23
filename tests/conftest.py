@@ -116,6 +116,15 @@ def sr_mock(elements, an):
         yield sr
 
 @pytest.fixture()
+def sr_mock_with_lenses(elements, lenses, an):
+    sr = MagicMock(wraps=elements.SphericalRefraction)
+    with patch.object(elements, "SphericalRefraction", sr), \
+         patch.object(lenses, "SphericalRefraction", sr), \
+         patch.object(an, "SphericalRefraction", sr):
+        yield sr
+
+
+@pytest.fixture()
 def op_mock(elements, an):
     op = MagicMock(wraps=elements.OutputPlane)
     with patch.object(elements, "OutputPlane", op), \
@@ -139,6 +148,15 @@ def pr_mock(elements, an):
         else:
             yield pr
 
+@pytest.fixture()
+def vert_mock(rays, an):
+    vert_mock = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
+    with patch.object(rays.Ray, "vertices", vert_mock):
+        if hasattr(an, "Ray"):
+            with patch.object(an.Ray, "vertices", vert_mock):
+                yield vert_mock
+        else:
+            yield vert_mock
 
 @pytest.fixture()
 def task9_output(an):
@@ -159,4 +177,19 @@ def task11_output(an):
 @pytest.fixture(scope="class")
 def task12_output(an):
     yield an.task12()
+    plt.close("all")
+
+@pytest.fixture(scope="class")
+def task13_output(an):
+    yield an.task13()
+    plt.close("all")
+
+@pytest.fixture(scope="class")
+def task14_output(an):
+    yield an.task14()
+    plt.close("all")
+
+@pytest.fixture(scope="class")
+def task15_output(an):
+    yield an.task15()
     plt.close("all")
