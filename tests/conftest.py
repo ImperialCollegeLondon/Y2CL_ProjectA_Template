@@ -1,8 +1,10 @@
 """Pytest fixtures."""
 from importlib import import_module
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 import pytest
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
 
@@ -28,24 +30,25 @@ def rt():
     lenses_module = import_module("raytracer.lenses")
     return CombinedNamespace(rays_module, elements_module, lenses_module)
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def ph():
     return import_module("raytracer.physics")
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def rays():
     return import_module("raytracer.rays")
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def elements():
     return import_module("raytracer.elements")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def lenses():
     return import_module("raytracer.lenses")
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def an():
+    matplotlib.use("agg")  # Non-interactive backend more stable for testing that interactive Tk
     yield import_module("raytracer.analysis")
     plt.close()
 
@@ -104,9 +107,6 @@ def source_files():
 def source_files_str(source_files):
     return ' '.join(source_files)
 
-from unittest.mock import MagicMock, patch
-
-
 
 @pytest.fixture()
 def sr_mock(elements, an):
@@ -151,6 +151,7 @@ def pr_mock(elements, an):
 @pytest.fixture()
 def vert_mock(rays, an):
     vert_mock = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
+    # vert_mock = MagicMock(wraps=rays.Ray.vertices)
     with patch.object(rays.Ray, "vertices", vert_mock):
         if hasattr(an, "Ray"):
             with patch.object(an.Ray, "vertices", vert_mock):

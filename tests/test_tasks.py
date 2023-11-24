@@ -376,28 +376,9 @@ class TestTask9:
     def test_doesnt_crash(self, task9_output):
         pass
 
-    # def test_sr_created_once(self, an, elements, monkeypatch):
-    #     sr = MagicMock(wraps=elements.SphericalRefraction)
-    #     monkeypatch.setattr(elements, "SphericalRefraction", sr)
-    #     if hasattr(an, "SphericalRefraction"):
-    #         monkeypatch.setattr(an, "SphericalRefraction", sr)
-    #     an.task9()
-    #     sr.assert_called_once()
-
     def test_sr_created_once(self, sr_mock, task9_output):
         sr_mock.assert_called_once()
 
-    # def test_sr_setup_correctly(self, an, elements, monkeypatch):
-    #     sr = MagicMock(wraps=elements.SphericalRefraction)
-    #     monkeypatch.setattr(elements, "SphericalRefraction", sr)
-    #     if hasattr(an, "SphericalRefraction"):
-    #         monkeypatch.setattr(an, "SphericalRefraction", sr)
-    #     an.task9()
-    #     sr.assert_called_once()
-    #     args = set(sr.call_args.args)
-    #     args.update(sr.call_args.kwargs.values())
-    #     assert len(args) == 5
-    #     assert not {100, 0.03, 1., 1.5}.difference(args)
     def test_sr_setup_correctly(self, sr_mock, task9_output):
         sr_mock.assert_called_once()
         args = set(sr_mock.call_args.args)
@@ -405,28 +386,8 @@ class TestTask9:
         assert len(args) == 5
         assert not {100, 0.03, 1., 1.5}.difference(args)
 
-    # def test_op_created_once(self, an, elements, monkeypatch):
-    #     op = MagicMock(wraps=elements.OutputPlane)
-    #     monkeypatch.setattr(elements, "OutputPlane", op)
-    #     if hasattr(an, "OutputPlane"):
-    #         monkeypatch.setattr(an, "OutputPlane", op)
-    #     an.task9()
-    #     op.assert_called_once()
-
     def test_op_created_once(self, op_mock, task9_output):
         op_mock.assert_called_once()
-
-    # def test_op_setup_correctly(self, an, elements, monkeypatch):
-    #     op = MagicMock(wraps=elements.OutputPlane)
-    #     monkeypatch.setattr(elements, "OutputPlane", op)
-    #     if hasattr(an, "OutputPlane"):
-    #         monkeypatch.setattr(an, "OutputPlane", op)
-    #     an.task9()
-    #     op.assert_called_once()
-    #     args = op.call_args.args
-    #     args += tuple(op.call_args.kwargs.values())
-    #     assert len(args) == 1
-    #     assert args[0] == 250
 
     def test_op_setup_correctly(self, op_mock, task9_output):
         op_mock.assert_called_once()
@@ -435,46 +396,14 @@ class TestTask9:
         assert len(args) == 1
         assert args[0] == 250
 
-    # def test_ray_created(self, an, rays, monkeypatch):
-    #     ray = MagicMock(wraps=rays.Ray)
-    #     monkeypatch.setattr(rays, "Ray", ray)
-    #     if hasattr(an, "Ray"):
-    #         monkeypatch.setattr(an, "Ray", ray)
-    #     an.task9()
-    #     ray.assert_called()
-
     def test_ray_created(self, ray_mock, task9_output):
         ray_mock.assert_called()
-
-    # def test_multiple_rays_created(self, an, rays, monkeypatch):
-    #     ray = MagicMock(wraps=rays.Ray)
-    #     monkeypatch.setattr(rays, "Ray", ray)
-    #     if hasattr(an, "Ray"):
-    #         monkeypatch.setattr(an, "Ray", ray)
-    #     an.task9()
-    #     assert ray.call_count > 1
 
     def test_multiple_rays_created(self, ray_mock, task9_output):
         assert ray_mock.call_count > 1
 
-    # def test_ray_vertices_called(self, an, rays, monkeypatch):
-    #     vertices = MagicMock(return_value=[np.array([0.,0.,0.])])
-    #     monkeypatch.setattr(rays.Ray, "vertices", vertices)
-    #     if hasattr(an, "Ray"):
-    #         monkeypatch.setattr(an.Ray, "vertices", vertices)
-    #     an.task9()
-    #     vertices.assert_called()
-
     def test_ray_vertices_called(self, vert_mock, task9_output):
         vert_mock.assert_called()
-
-    # def test_ray_vertices_called_multiple(self, an, rays, monkeypatch):
-    #     vertices = MagicMock(return_value=[np.array([0.,0.,0.])])
-    #     monkeypatch.setattr(rays.Ray, "vertices", vertices)
-    #     if hasattr(an, "Ray"):
-    #         monkeypatch.setattr(an.Ray, "vertices", vertices)
-    #     an.task9()
-    #     assert vertices.call_count > 1
 
     def test_ray_vertices_called_multiple(self, vert_mock, task9_output):
         assert vert_mock.call_count > 1
@@ -503,31 +432,18 @@ class TestTask10:
     def test_doesnt_crash(self, task10_output):
         pass
 
-    # def test_output_fp(self, an):
-    #     _, fp = an.task10()
-    #     assert np.isclose(fp, 200.)
     def test_output_fp(self, task10_output):
         assert np.isclose(task10_output[1], 200.)
-
-    # def test_ouput_fig_produced(self, an):
-    #     fig, _ = an.task10()
-    #     assert isinstance(fig, mpl.figure.Figure)
 
     def test_ouput_fig_produced(self, task10_output):
         assert isinstance(task10_output[0], mpl.figure.Figure)
 
-    # @check_figures_equal(ref_path="task10", tol=32)
-    # def test_plot10(self, an):
-    #     fig, _ = an.task10()
-    #     return fig
-    
     @check_figures_equal(ref_path="task10", tol=32)
     def test_plot10(self, task10_output):
         return task10_output[0]
 
 
 class TestTask11:
-    
 
     def test_ray_bundle_exists(self, ray_bundle):
         assert ray_bundle is not None
@@ -543,11 +459,6 @@ class TestTask11:
 
     def test_propbundle_exists(self, ray_bundle):
         assert "propagate_bundle" in vars(ray_bundle)
-
-    # def test_propbundle_calles_propray(self, elements, ray_bundle, monkeypatch):
-    #     prop_ray = MagicMock()
-    #     monkeypatch.setattr(elements.SphericalRefraction, "propagate_ray", prop_ray)
-    #     ray_bundle(rmax=5., nrings=5).propagate_bundle(elements.SphericalRefraction())
 
     def test_propbundle_calles_propray(self, rays, elements, pr_mock):
         sr = elements.SphericalRefraction(z_0=100, aperture=35., curvature=0.2, n_1=1., n_2=1.5)
@@ -568,16 +479,13 @@ class TestTask11:
     def test_doesnt_crash(self, task11_output):
         pass
 
-    # def test_ouput_fig_produced(self, an):
-    #     fig = an.task11()
-    #     assert isinstance(fig, mpl.figure.Figure)
-    
     def test_ouput_fig_produced(self, task11_output):
         assert isinstance(task11_output, mpl.figure.Figure)
 
     @check_figures_equal(ref_path="task11", tol=32)
     def test_plot11(self, task11_output):
         return task11_output
+
 
 class TestTask12:
 
@@ -587,50 +495,29 @@ class TestTask12:
     def test_rms_exists(self, rays):
         assert "rms" in vars(rays.RayBundle)
 
-
     def test_doesnt_crash(self, task12_output):
         pass
-
-    # def test_rms(self, an):
-    #     _, rms = an.task12()
-    #     assert np.isclose(rms, 0.0020035841289414527)
 
     def test_rms(self, task12_output):
         assert np.isclose(task12_output[1], 0.016176669411515444)
 
-    # def test_output_fig(self, an):
-    #     fig, _ = an.task12()
-    #     assert isinstance(fig, mpl.figure.Figure)
-
     def test_output_fig_produced(self, task12_output):
         assert isinstance(task12_output[0], mpl.figure.Figure)
-
-    # @check_figures_equal(ref_path="task12", tol=33)
-    # def test_plot12(self, an):
-    #     fig, _ = an.task12()
-    #     return fig
 
     @check_figures_equal(ref_path="task12", tol=33)
     def test_plot12(self, task12_output):
         return task12_output[0]
 
-class TestTask13:
 
-    # def test_output_fig(self, an):
-    #     fig = an.task13()
-    #     assert isinstance(fig, mpl.figure.Figure)
+class TestTask13:
 
     def test_output_fig_produced(self, task13_output):
         assert isinstance(task13_output, mpl.figure.Figure)
 
-    # @check_figures_equal(ref_path="task13", tol=33)
-    # def test_plot13(self, an):
-    #     fig = an.task13()
-    #     return fig
-    
     @check_figures_equal(ref_path="task13", tol=33)
     def test_plot13(self, task13_output):
         return task13_output
+
 
 class TestTask14:
 
@@ -645,54 +532,18 @@ class TestTask14:
 
     def test_doesnt_crash(self, task14_output):
         pass
-    
-    # def test_output_pcfig(self, an):
-    #     fig, _, _, _ = an.task14()
-    #     assert isinstance(fig, mpl.figure.Figure)
 
     def test_output_pcfig(self, task14_output):
         assert isinstance(task14_output[0], mpl.figure.Figure)
 
-    # def test_output_cpfig(self, an):
-    #     _, _, fig, _ = an.task14()
-    #     assert isinstance(fig, mpl.figure.Figure)
-
     def test_output_cpfig(self, task14_output):
         assert isinstance(task14_output[2], mpl.figure.Figure)
-
-    # def test_pc_focalpoint(self, an):
-    #     _, pc, _, _ = an.task14()
-    #     assert np.isclose(pc, 201.74922600619198)
 
     def test_pc_focalpoint(self, task14_output):
         assert np.isclose(task14_output[1], 201.74922600619198)
 
-    # def test_cp_focalpoint(self, an):
-    #     _, _, _, cp = an.task14()
-    #     assert np.isclose(cp, 198.45281250408226)
-
     def test_cp_focalpoint(self, task14_output):
         assert np.isclose(task14_output[3], 198.45281250408226)
-
-
-
-    # def test_2SR_objects_created(self, elements, lenses, monkeypatch):
-    #     sr = MagicMock(wraps=elements.SphericalRefraction)
-    #     op = MagicMock(wraps=elements.OutputPlane)
-    #     monkeypatch.setattr(elements, "SphericalRefraction", sr)
-    #     monkeypatch.setattr(elements, "OutputPlane", op)
-    #     if hasattr(lenses, "SphericalRefraction"):
-    #         monkeypatch.setattr(lenses, "SphericalRefraction", sr)
-
-    #     # need to import after we patch
-    #     an = import_module("raytracer.analysis")
-    #     if hasattr(an, "SphericalRefraction"):
-    #         monkeypatch.setattr(an, "SphericalRefraction", sr)
-    #     if hasattr(an, "OutputPlane"):
-    #         monkeypatch.setattr(an, "OutputPlane", op)
-    #     an.task14()
-    #     assert sr.call_count >= 2
-    #     assert op.called
 
     def test_2SR_objects_created(self, sr_mock_with_lenses, an):
         an.task14()
@@ -702,20 +553,10 @@ class TestTask14:
         an.task14()
         assert op_mock.called
 
-    # @check_figures_equal(ref_path="task14pc", tol=33)
-    # def test_plot14pc(self, an):
-    #     fig, _, _, _ = an.task14()
-    #     return fig
-
     @check_figures_equal(ref_path="task14pc", tol=33)
     def test_plot14pc(self, task14_output):
         return task14_output[0]
 
-    # @check_figures_equal(ref_path="task14cp", tol=33)
-    # def test_plot14cp(self, an):
-    #     _, _, fig, _ = an.task14()
-    #     return fig
-    
     @check_figures_equal(ref_path="task14cp", tol=33)
     def test_plot14cp(self, task14_output):
         return task14_output[2]
@@ -728,11 +569,6 @@ class TestTask15:
     def test_output_fig(self, task15_output):
         assert isinstance(task15_output, mpl.figure.Figure)    
     
-    # @check_figures_equal(ref_path="task15", tol=33)
-    # def test_plot15(self, an):
-    #     fig = an.task15()
-    #     return fig
-
     @check_figures_equal(ref_path="task15", tol=33)
     def test_plot15(self, task15_output):
         return task15_output
