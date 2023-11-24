@@ -81,6 +81,16 @@
       "points": 1
     },
     {
+      "name": "Test advanceddesign - hidden variables",
+      "setup": "",
+      "run": "pytest -vv tests/test_raytracer.py::TestAdvancedDesign::test_hidden_variables",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
       "name": "Test advanceddesign - intercept not in op",
       "setup": "",
       "run": "pytest -vv tests/test_raytracer.py::TestAdvancedDesign::test_intercept_not_in_op",
@@ -131,9 +141,9 @@
       "points": 1
     },
     {
-      "name": "Test opticalelement - oe exists",
+      "name": "Test internals - append direc list or array check",
       "setup": "",
-      "run": "pytest -vv tests/test_raytracer.py::TestOpticalElement::test_oe_exists",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_append_direc_list_or_array_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -141,9 +151,9 @@
       "points": 1
     },
     {
-      "name": "Test opticalelement - pr raises",
+      "name": "Test internals - append direc too long check",
       "setup": "",
-      "run": "pytest -vv tests/test_raytracer.py::TestOpticalElement::test_pr_raises",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_append_direc_too_long_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -151,9 +161,9 @@
       "points": 1
     },
     {
-      "name": "Test raybundle - bundle not inheritance",
+      "name": "Test internals - append direc too short check",
       "setup": "",
-      "run": "pytest -vv tests/test_raytracer.py::TestRayBundle::test_bundle_not_inheritance",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_append_direc_too_short_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -161,9 +171,9 @@
       "points": 1
     },
     {
-      "name": "Test raybundle - ray bundle class",
+      "name": "Test internals - append pos list or array check",
       "setup": "",
-      "run": "pytest -vv tests/test_raytracer.py::TestRayBundle::test_ray_bundle_class",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_append_pos_list_or_array_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -171,9 +181,19 @@
       "points": 1
     },
     {
-      "name": "Test raybundle - ray bundle exists",
+      "name": "Test internals - append pos too long check",
       "setup": "",
-      "run": "pytest -vv tests/test_raytracer.py::TestRayBundle::test_ray_bundle_exists",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_append_pos_too_long_check",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test internals - append pos too short check",
+      "setup": "",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_append_pos_too_short_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -291,9 +311,9 @@
       "points": 1
     },
     {
-      "name": "Test internals - dir iterable check",
+      "name": "Test internals - dir list or array check",
       "setup": "",
-      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_dir_iterable_check",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_dir_list_or_array_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -391,9 +411,9 @@
       "points": 1
     },
     {
-      "name": "Test internals - pos iterable check",
+      "name": "Test internals - pos list",
       "setup": "",
-      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_pos_iterable_check",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_pos_list",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -401,9 +421,9 @@
       "points": 1
     },
     {
-      "name": "Test internals - pos list",
+      "name": "Test internals - pos list or array check",
       "setup": "",
-      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_pos_list",
+      "run": "pytest -vv tests/test_ray_class.py::TestInternals::test_pos_list_or_array_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -481,6 +501,16 @@
       "points": 1
     },
     {
+      "name": "Test task10 - doesnt crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask10::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
       "name": "Test task10 - focal point",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask10::test_focal_point",
@@ -491,9 +521,29 @@
       "points": 1
     },
     {
-      "name": "Test task10 - ouput fig",
+      "name": "Test task10 - focal point exists",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask10::test_ouput_fig",
+      "run": "pytest -vv tests/test_tasks.py::TestTask10::test_focal_point_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task10 - ouput fig produced",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask10::test_ouput_fig_produced",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task10 - output fp",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask10::test_output_fp",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -511,9 +561,39 @@
       "points": 1
     },
     {
-      "name": "Test task11 - ouput fig",
+      "name": "Test task11 - bundle construction",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_ouput_fig",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_bundle_construction",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - bundle not inheritance",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_bundle_not_inheritance",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - doesnt crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - ouput fig produced",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_ouput_fig_produced",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -531,9 +611,79 @@
       "points": 1
     },
     {
-      "name": "Test task12 - output fig",
+      "name": "Test task11 - propbundle calles propray",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_output_fig",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_propbundle_calles_propray",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - propbundle exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_propbundle_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - ray bundle class",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_ray_bundle_class",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - ray bundle exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_ray_bundle_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - track plot",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_track_plot",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task11 - track plot exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask11::test_track_plot_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task12 - doesnt crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task12 - output fig produced",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_output_fig_produced",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -561,9 +711,29 @@
       "points": 1
     },
     {
-      "name": "Test task13 - output fig",
+      "name": "Test task12 - rms exists",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask13::test_output_fig",
+      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_rms_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task12 - spot plot exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_spot_plot_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task13 - output fig produced",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask13::test_output_fig_produced",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -591,9 +761,39 @@
       "points": 1
     },
     {
+      "name": "Test task14 - OP object created",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask14::test_OP_object_created",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
       "name": "Test task14 - cp focalpoint",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask14::test_cp_focalpoint",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task14 - doesnt crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask14::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task14 - lenses exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask14::test_lenses_exists",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -671,6 +871,16 @@
       "points": 1
     },
     {
+      "name": "Test task15 - doesnt crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask15::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
       "name": "Test task15 - output fig",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask15::test_output_fig",
@@ -711,36 +921,6 @@
       "points": 1
     },
     {
-      "name": "Test task2 - append direc iterable check",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_direc_iterable_check",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
-      "name": "Test task2 - append direc too long check",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_direc_too_long_check",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
-      "name": "Test task2 - append direc too short check",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_direc_too_short_check",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
       "name": "Test task2 - append increases length",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_increases_length",
@@ -764,36 +944,6 @@
       "name": "Test task2 - append pos array",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_pos_array",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
-      "name": "Test task2 - append pos iterable check",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_pos_iterable_check",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
-      "name": "Test task2 - append pos too long check",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_pos_too_long_check",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
-      "name": "Test task2 - append pos too short check",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask2::test_append_pos_too_short_check",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -931,6 +1081,46 @@
       "points": 1
     },
     {
+      "name": "Test task2ish - intercept raises",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask2ish::test_intercept_raises",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task2ish - oe exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask2ish::test_oe_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task2ish - pr raises",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask2ish::test_pr_raises",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task3 - construction",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask3::test_construction",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
       "name": "Test task3 - inheritance",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask3::test_inheritance",
@@ -954,6 +1144,16 @@
       "name": "Test task4 - intercept array",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask4::test_intercept_array",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task4 - intercept exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask4::test_intercept_exists",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1011,9 +1211,9 @@
       "points": 1
     },
     {
-      "name": "Test task4 - ray direc called",
+      "name": "Test task4 - ray direc called once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask4::test_ray_direc_called",
+      "run": "pytest -vv tests/test_tasks.py::TestTask4::test_ray_direc_called_once",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1021,9 +1221,9 @@
       "points": 1
     },
     {
-      "name": "Test task4 - ray pos called",
+      "name": "Test task4 - ray pos called once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask4::test_ray_pos_called",
+      "run": "pytest -vv tests/test_tasks.py::TestTask4::test_ray_pos_called_once",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1034,6 +1234,16 @@
       "name": "Test task5 - TIR",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask5::test_TIR",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task5 - calling args",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask5::test_calling_args",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1121,9 +1331,9 @@
       "points": 1
     },
     {
-      "name": "Test task6 - pr calls append",
+      "name": "Test task6 - pr calls append once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask6::test_pr_calls_append",
+      "run": "pytest -vv tests/test_tasks.py::TestTask6::test_pr_calls_append_once",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1131,9 +1341,9 @@
       "points": 1
     },
     {
-      "name": "Test task6 - pr calls intercept",
+      "name": "Test task6 - pr calls intercept once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask6::test_pr_calls_intercept",
+      "run": "pytest -vv tests/test_tasks.py::TestTask6::test_pr_calls_intercept_once",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1141,9 +1351,19 @@
       "points": 1
     },
     {
-      "name": "Test task6 - pr calls refract",
+      "name": "Test task6 - pr calls refract once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask6::test_pr_calls_refract",
+      "run": "pytest -vv tests/test_tasks.py::TestTask6::test_pr_calls_refract_once",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task6 - pr exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask6::test_pr_exists",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1181,19 +1401,9 @@
       "points": 1
     },
     {
-      "name": "Test task7 - ray called",
+      "name": "Test task7 - ray created",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask7::test_ray_called",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
-      "name": "Test task7 - sr called",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask7::test_sr_called",
+      "run": "pytest -vv tests/test_tasks.py::TestTask7::test_ray_created",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1204,6 +1414,26 @@
       "name": "Test task7 - sr calls propagate",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask7::test_sr_calls_propagate",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task7 - sr created",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask7::test_sr_created",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task8 - construction",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask8::test_construction",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1251,9 +1481,9 @@
       "points": 1
     },
     {
-      "name": "Test task8 - pr calls append",
+      "name": "Test task8 - pr calls append once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask8::test_pr_calls_append",
+      "run": "pytest -vv tests/test_tasks.py::TestTask8::test_pr_calls_append_once",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1261,9 +1491,9 @@
       "points": 1
     },
     {
-      "name": "Test task8 - pr calls intercept",
+      "name": "Test task8 - pr calls intercept once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask8::test_pr_calls_intercept",
+      "run": "pytest -vv tests/test_tasks.py::TestTask8::test_pr_calls_intercept_once",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1281,9 +1511,9 @@
       "points": 1
     },
     {
-      "name": "Test task9 - op called",
+      "name": "Test task9 - doesnt crash",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_op_called",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_doesnt_crash",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1291,9 +1521,9 @@
       "points": 1
     },
     {
-      "name": "Test task9 - op setup",
+      "name": "Test task9 - multiple rays created",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_op_setup",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_multiple_rays_created",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1301,9 +1531,29 @@
       "points": 1
     },
     {
-      "name": "Test task9 - output fig",
+      "name": "Test task9 - op created once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_output_fig",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_op_created_once",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task9 - op setup correctly",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_op_setup_correctly",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Test task9 - output fig produced",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_output_fig_produced",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1321,19 +1571,9 @@
       "points": 1
     },
     {
-      "name": "Test task9 - ray called",
+      "name": "Test task9 - ray created",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_ray_called",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 10,
-      "points": 1
-    },
-    {
-      "name": "Test task9 - ray called multiple",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_ray_called_multiple",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_ray_created",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1361,9 +1601,9 @@
       "points": 1
     },
     {
-      "name": "Test task9 - sr called",
+      "name": "Test task9 - sr created once",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_sr_called",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_sr_created_once",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1371,9 +1611,9 @@
       "points": 1
     },
     {
-      "name": "Test task9 - sr setup",
+      "name": "Test task9 - sr setup correctly",
       "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_sr_setup",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_sr_setup_correctly",
       "input": "",
       "output": "",
       "comparison": "included",
