@@ -120,7 +120,7 @@ class TestTask3:
 class TestTask4:
 
     def test_intercept_exists(self, elements):
-        assert "intercept" in vars(elements.SphericalRefraction)
+        assert hasattr(elements.SphericalRefraction, "intercept")
 
     def test_no_intercept(self, rays, elements):
         ray = rays.Ray(pos=[10., 0., 0.])
@@ -228,7 +228,7 @@ class TestTask5:
 class TestTask6:
 
     def test_pr_exists(self, elements):
-        assert "propagate_ray" in vars(elements.SphericalRefraction)
+        assert hasattr(elements.SphericalRefraction, "propagate_ray")
 
     def test_pr_calls_intercept_once(self, rays, elements, monkeypatch):
         intercept_mock = MagicMock(return_value=np.array([0., 0., 10.]))
@@ -345,7 +345,7 @@ class TestTask8:
         op = elements.OutputPlane(z_0=10)
         op.propagate_ray(default_ray)
         refract_mock.assert_not_called()
-       
+
     def test_pr_calls_append_once(self, default_ray, rays, elements, monkeypatch):
         append_mock = MagicMock(return_value=None)
         monkeypatch.setattr(rays.Ray, "append", append_mock)
@@ -419,7 +419,7 @@ class TestTask9:
 class TestTask10:
 
     def test_focal_point_exists(self, elements):
-        assert "focal_point" in vars(elements.SphericalRefraction)
+        assert hasattr(elements.SphericalRefraction, "focal_point")
 
     def test_focal_point(self, elements):
         sr = elements.SphericalRefraction(z_0=100,
@@ -458,7 +458,7 @@ class TestTask11:
         ray_bundle(rmax=5., nrings=5)
 
     def test_propbundle_exists(self, ray_bundle):
-        assert "propagate_bundle" in vars(ray_bundle)
+        assert hasattr(ray_bundle, "propagate_bundle")
 
     def test_propbundle_calles_propray(self, rays, elements, pr_mock):
         sr = elements.SphericalRefraction(z_0=100, aperture=35., curvature=0.2, n_1=1., n_2=1.5)
@@ -467,7 +467,7 @@ class TestTask11:
         pr_mock.assert_called()
 
     def test_track_plot_exists(self, ray_bundle):
-        assert "track_plot" in vars(ray_bundle)
+        assert hasattr(ray_bundle, "track_plot")
 
     def test_track_plot(self, rays, monkeypatch):
         vert_mock = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
@@ -490,10 +490,10 @@ class TestTask11:
 class TestTask12:
 
     def test_spot_plot_exists(self, rays):
-        assert "spot_plot" in vars(rays.RayBundle)
+        assert hasattr(rays.RayBundle, "spot_plot")
 
     def test_rms_exists(self, rays):
-        assert "rms" in vars(rays.RayBundle)
+        assert hasattr(rays.RayBundle, "rms")
 
     def test_doesnt_crash(self, task12_output):
         pass
