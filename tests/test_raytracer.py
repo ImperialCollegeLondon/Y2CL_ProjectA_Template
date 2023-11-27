@@ -30,7 +30,7 @@ class TestAdvancedDesign:
         assert test_tree.difference({elements.OutputPlane,
                                      elements.OpticalElement,
                                      object})
-        
+
     def test_intercept_not_in_op(self, elements):
         assert "intercept" not in vars(elements.OutputPlane)
 
