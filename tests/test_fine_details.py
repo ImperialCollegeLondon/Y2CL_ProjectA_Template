@@ -3,7 +3,7 @@ import numpy as np
 from pprint import pformat
 import re
 import pytest
-
+from matplotlib.figure import Figure
 
 class TestRayInternals:
 
@@ -136,7 +136,6 @@ class TestRayInternals:
             default_ray.append(pos=[1.,2.,3.], direc=[1., 2.])
 
 
-
 DATA_ATTRIBUTE_REGEX = re.compile(r"self\.([_a-zA-Z0-9]*)", re.MULTILINE)
 
 
@@ -187,9 +186,11 @@ class TestAdvancedDesign:
     def test_hidden_variables(self, rays, elements, lenses):
         non_hidden_vars = set()
         for module in (rays, elements, lenses):
-            for name, cls in getmembers(module, isclass):
+            for cls_name, cls in getmembers(module, isclass):
+                if module == rays and cls == Figure:
+                    continue
                 if init_func := vars(cls).get("__init__", False):
-                    non_hidden_vars.update(f"{name}.{var}" for var in DATA_ATTRIBUTE_REGEX.findall(getsource(init_func))
+                    non_hidden_vars.update(f"{cls_name}.{var}" for var in DATA_ATTRIBUTE_REGEX.findall(getsource(init_func))
                                            if not var.startswith('_'))
 
         assert not non_hidden_vars, f"Non hidden data attributes:\n {pformat(non_hidden_vars)}"
