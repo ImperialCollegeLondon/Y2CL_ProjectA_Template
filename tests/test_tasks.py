@@ -1,5 +1,4 @@
 from types import FunctionType
-from importlib import import_module
 from unittest.mock import MagicMock
 import numpy as np
 import matplotlib as mpl
