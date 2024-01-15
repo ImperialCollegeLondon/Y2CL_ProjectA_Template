@@ -1,40 +1,58 @@
-from types import FunctionType
+from types import FunctionType, MethodType, NoneType
 from unittest.mock import MagicMock
 import numpy as np
 import matplotlib as mpl
 import pytest
 from utils import check_figures_equal
 
-class TestTask1:
-    def test_docstring_present(self, ph):
-        assert ph.__doc__ != None
-    def test_docstring_not_blank(self, ph):
-        assert ph.__doc__ != ""
 
 class TestTask2:
-    def test_pos_method(self, rays):  # Check method not overridden by variable
-        assert isinstance(rays.Ray.pos, FunctionType)
 
-    def test_default_p_array(self, rays):
-        r = rays.Ray()
-        assert isinstance(r.pos(), np.ndarray)
+    def test_docstring_present(self, rays):
+        assert rays.__doc__ is not None
 
-    def test_p_array(self, test_ray):
-        assert isinstance(test_ray.pos(), np.ndarray)
+    def test_docstring_not_blank(self, rays):
+        assert rays.__doc__ != ""
 
-    def test_p_set(self, test_ray):
-        assert np.allclose(test_ray.pos(), [1., 2., 3.])
+    def test_pos_exists(self, rays):  # Check method not overridden by variable
+        assert isinstance(rays.Ray.pos, (FunctionType, property))
 
-    def test_direc_method(self, rays):  # Check method not overridden by variable
-        assert isinstance(rays.Ray.direc, FunctionType)
+    def test_default_pos_type(self, default_ray):
+        pos = default_ray.pos
+        if isinstance(pos, MethodType):
+            pos = pos()
+        assert isinstance(pos, np.ndarray)
 
-    def test_k_array(self, test_ray):
-        assert isinstance(test_ray.direc(), np.ndarray)
+    def test_pos_type(self, test_ray):
+        pos = test_ray.pos
+        if isinstance(pos, MethodType):
+            pos = pos()
+        assert isinstance(pos, np.ndarray)
 
-    def test_k_set(self, test_ray):
-        test_k = np.array([4.,5.,6.])
+    def test_pos_correct(self, test_ray):
+        pos = test_ray.pos
+        if isinstance(pos, MethodType):
+            pos = pos()
+        assert np.allclose(pos, [1., 2., 3.])
+
+    def test_direc_exists(self, rays):  # Check method not overridden by variable
+        assert isinstance(rays.Ray.direc, (FunctionType, property))
+
+    def test_direc_type(self, test_ray):
+        direc = test_ray.direc
+        if isinstance(direc, MethodType):
+            direc = direc()
+        assert isinstance(direc, np.ndarray)
+
+    def test_direc_correct(self, test_ray):
+        test_k = np.array([4., 5., 6.])
         test_k /= np.linalg.norm(test_k)
-        assert np.allclose(test_ray.direc(), test_k)
+        direc = test_ray.direc
+        if isinstance(direc, MethodType):
+            direc = direc()
+        assert np.allclose(direc, test_k)
+
+    ## TODO: pick up from here.
 
     def test_append_increases_length(self, default_ray, var_name_map):
         pos = getattr(default_ray, var_name_map['pos'])
