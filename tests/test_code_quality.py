@@ -1,7 +1,11 @@
+import os
+import sys
+from pathlib import Path
 from pprint import pformat
 from subprocess import run
 from pylint.lint import Run
 import pytest
+
 
 @pytest.fixture(scope="class")
 def pylint_results(source_files):
@@ -29,8 +33,8 @@ class TestStyle:
 class TestDocumentation:
 
     def test_documentation_present(self, source_files_str):
-        cmd = rf'pydocstyle --select=D100,D102,D103,D419 {source_files_str}'
-        res = run(cmd, shell=True, capture_output=True, check=False, text=True)
+        cmd = rf'{sys.executable} -m pydocstyle --select=D100,D102,D103,D419 {source_files_str}'
+        res = run(cmd, shell=True, capture_output=True, check=False, text=True, env=os.environ.copy())
         if res.returncode:
             print("pydocstyle")
             print("---------")
@@ -45,8 +49,8 @@ class TestDocumentation:
         assert missing_docs == 0
 
     def test_documentation_style(self, source_files_str):
-        cmd = rf'darglint {source_files_str}'
-        res = run(cmd, shell=True, capture_output=True, check=False, text=True)
+        cmd = rf'{Path(sys.executable).with_name("darglint")} {source_files_str}'
+        res = run(cmd, shell=True, capture_output=True, check=False, text=True, env=os.environ.copy())
         if res.returncode:
             print("darglight")
             print("---------")
