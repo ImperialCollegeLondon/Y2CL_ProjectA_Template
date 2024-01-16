@@ -1,5 +1,6 @@
 from types import FunctionType, MethodType, NoneType
 from unittest.mock import MagicMock
+from inspect import getmembers, isclass, signature
 import numpy as np
 import matplotlib as mpl
 import pytest
@@ -8,22 +9,33 @@ from utils import check_figures_equal
 
 class TestTask2:
 
+    def test_rays_exists(self, rays):
+        pass
+
     def test_docstring_present(self, rays):
         assert rays.__doc__ is not None
 
     def test_docstring_not_blank(self, rays):
         assert rays.__doc__ != ""
 
+    def test_ray_exists(self, rays):
+        assert "Ray" in vars(rays)
+
+    def test_ray_construction_args(self, rays):
+        assert {"pos", "direc"}.issubset(signature(rays.Ray).parameters.keys())
+
+    def test_ray_construction(self, default_ray, test_ray):
+        pass
+
     def test_pos_exists(self, rays):  # Check method not overridden by variable
         assert isinstance(rays.Ray.pos, (FunctionType, property))
 
-    def test_default_pos_type(self, default_ray):
-        pos = default_ray.pos
-        if isinstance(pos, MethodType):
-            pos = pos()
-        assert isinstance(pos, np.ndarray)
+    def test_pos_type(self, default_ray, test_ray):
+        default_pos = default_ray.pos
+        if isinstance(default_pos, MethodType):
+            default_pos = default_pos()
+        assert isinstance(default_pos, np.ndarray)
 
-    def test_pos_type(self, test_ray):
         pos = test_ray.pos
         if isinstance(pos, MethodType):
             pos = pos()
@@ -38,7 +50,12 @@ class TestTask2:
     def test_direc_exists(self, rays):  # Check method not overridden by variable
         assert isinstance(rays.Ray.direc, (FunctionType, property))
 
-    def test_direc_type(self, test_ray):
+    def test_direc_type(self, default_ray, test_ray):
+        default_direc = default_ray.direc
+        if isinstance(default_direc, MethodType):
+            default_direc = default_direc()
+        assert isinstance(default_direc, np.ndarray)
+
         direc = test_ray.direc
         if isinstance(direc, MethodType):
             direc = direc()
@@ -46,254 +63,296 @@ class TestTask2:
 
     def test_direc_correct(self, test_ray):
         test_k = np.array([4., 5., 6.])
-        test_k /= np.linalg.norm(test_k)
         direc = test_ray.direc
         if isinstance(direc, MethodType):
             direc = direc()
-        assert np.allclose(direc, test_k)
+        assert np.allclose(direc, test_k) or np.allclose(direc, test_k / np.linalg.norm(test_k))
 
-    ## TODO: pick up from here.
+    def test_append_exists(self, rays):
+        assert isinstance(rays.Ray.append, FunctionType)
 
-    def test_append_increases_length(self, default_ray, var_name_map):
-        pos = getattr(default_ray, var_name_map['pos'])
-        assert len(pos) == 1
-        default_ray.append([1.,2.,3.], [4.,5.,6.])
-        assert len(pos) == 2
+    def test_append_correct(self, test_ray):
+        test_ray.append([10., 12., 14.], [11., 13., 15.])
+        pos = test_ray.pos
+        if isinstance(pos, MethodType):
+            pos = pos()
+        direc = test_ray.direc
+        if isinstance(direc, MethodType):
+            direc = direc()
+        vertices = test_ray.vertices
+        if isinstance(vertices, MethodType):
+            vertices = vertices()
 
-    def test_append_pos_type(self, default_ray, var_name_map):
-        assert isinstance(getattr(default_ray,var_name_map["pos"]), list)
-        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
-        assert isinstance(getattr(default_ray,var_name_map["pos"]), list)
-
-    def test_append_pos_array(self, default_ray, var_name_map):
-        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
-        pos = getattr(default_ray,var_name_map["pos"])
-        assert isinstance(pos[-1], np.ndarray)
-
-    def test_append_pos(self, default_ray, var_name_map):
-        default_ray.append(pos=[1., 2., 3.], direc=[4., 5., 6.])
-        pos = getattr(default_ray, var_name_map['pos'])
-        assert np.allclose(pos[1], [1., 2., 3.])
-        assert np.allclose(default_ray.pos(), [1., 2., 3.])
-
-    def test_append_direc_array(self, default_ray, var_name_map):
-        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
-        direc = getattr(default_ray, var_name_map['direc'])
+        assert isinstance(pos, np.ndarray)
+        assert np.allclose(pos, [10., 12., 14.])
         assert isinstance(direc, np.ndarray)
-
-    def test_append_direc(self, default_ray, var_name_map):
-        default_ray.append([1., 2., 3.], [4., 5., 6.])
-        direc = getattr(default_ray, var_name_map["direc"])
-        test_k = np.array([4.,5.,6.])
-        test_k /= np.linalg.norm(test_k)
-        assert np.allclose(direc, test_k)
-        assert np.allclose(default_ray.direc(), test_k)
-
-    def test_vertices_method(self, rays):  # Check method not overridden by variable
-        assert isinstance(rays.Ray.vertices, FunctionType)
-
-    def test_vertices_list(self, default_ray):
-        assert isinstance(default_ray.vertices(), list)
-
-    def test_vertices_array(self, default_ray):
-        default_ray.append([4.,5.,6.], [7.,8.,9.])
-        for vertex in default_ray.vertices():
+        test_k = np.array([11., 13., 15.])
+        assert np.allclose(direc, test_k) or np.allclose(direc, test_k / np.linalg.norm(test_k))
+        assert len(vertices) == 2
+        assert np.allclose(vertices, [[1., 2., 3.],
+                                      [10., 12., 14.]])
+        for vertex in vertices:
             assert isinstance(vertex, np.ndarray)
 
-    def test_vertices(self, test_ray):
-        assert np.allclose(test_ray.vertices(), [[1.,2.,3.]])
+    def test_vertices_exists(self, rays):
+        assert isinstance(rays.Ray.vertices, (FunctionType, property))
 
-    def test_multiple_vertices(self, test_ray):
-        test_ray.append([4.,5.,6.], [7.,8.,9.])
-        assert np.allclose(test_ray.vertices(),
-                           [[1.,2.,3.],
-                            [4.,5.,6.]])
+    def test_vertices_type(self, default_ray, test_ray):
+        default_vertices = default_ray.vertices
+        if isinstance(default_vertices, MethodType):
+            default_vertices = default_vertices()
+        assert isinstance(default_vertices, list)
 
-class TestTask2ish:
-    def test_oe_exists(self, elements):
-        assert hasattr(elements, "OpticalElement")
+        for default_vertex in default_vertices:
+            assert isinstance(default_vertex, np.ndarray)
 
-    def test_intercept_raises(self, elements):
-        oe = elements.OpticalElement()
-        with pytest.raises(NotImplementedError):
-            oe.intercept(1)
+        vertices = test_ray.vertices
+        if isinstance(vertices, MethodType):
+            vertices = vertices()
+        assert isinstance(vertices, list)
 
-    def test_pr_raises(self, elements):
-        oe = elements.OpticalElement()
-        with pytest.raises(NotImplementedError):
-            oe.propagate_ray(1)
+        for vertex in vertices:
+            assert isinstance(vertex, np.ndarray)
+
+    def test_vertices_correct(self, default_ray, test_ray):
+        default_vertices = default_ray.vertices
+        if isinstance(default_vertices, MethodType):
+            default_vertices = default_vertices()
+
+        assert len(default_vertices) == 1
+        default_ray.append([4., 5., 6.], [7., 8., 9.])
+        default_vertices = default_ray.vertices
+        if isinstance(default_vertices, MethodType):
+            default_vertices = default_vertices()
+        assert len(default_vertices) == 2
+
+        for vertex in default_vertices:
+            assert isinstance(vertex, np.ndarray)
+
+        test_vertices = test_ray.vertices
+        if isinstance(test_vertices, MethodType):
+            test_vertices = test_vertices()
+
+        assert len(test_vertices) == 1
+        test_ray.append([4., 5., 6.], [7., 8., 9.])
+        test_vertices = test_ray.vertices
+        if isinstance(test_vertices, MethodType):
+            test_vertices = test_vertices()
+        assert len(test_vertices) == 2
+
+        for vertex in test_vertices:
+            assert isinstance(vertex, np.ndarray)
+
+        assert np.allclose(test_vertices, [[1., 2., 3.],
+                                           [4., 5., 6.]])
+
 
 class TestTask3:
-    def test_sr_class_exists(self, elements):
-        assert hasattr(elements, "SphericalRefraction")
+
+    def test_elements_exists(self, elements):
+        pass
+
+    def test_oe_exists(self, elements):
+        assert "OpticalElement" in vars(elements)
+        # assert "OpticalElement" in (name for name, _ in getmembers(elements, isclass))
+
+    def test_intercept_raises(self, default_ray, elements):
+        oe = elements.OpticalElement()
+        with pytest.raises(NotImplementedError):
+            oe.intercept(default_ray)
+
+    def test_pr_raises(self, default_ray, elements):
+        oe = elements.OpticalElement()
+        with pytest.raises(NotImplementedError):
+            oe.propagate_ray(default_ray)
+
+
+class TestTask4:
+    def test_sr_exists(self, elements):
+        assert "SphericalRefraction" in vars(elements)
 
     def test_inheritance(self, elements):
         assert elements.OpticalElement in elements.SphericalRefraction.mro()
 
+    def test_construction_args(self, elements):
+        assert {"z_0", "aperture", "curvature", "n_1", "n_2"}.issubset(signature(elements.SphericalRefraction).parameters.keys())
+
     def test_construction(self, elements):
-        elements.SphericalRefraction(z_0=10, aperture=5, curvature=0.2, n_1=1., n_2=1.5)
+        elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
 
 
-class TestTask4:
+class TestTask5:
 
     def test_intercept_exists(self, elements):
-        assert hasattr(elements.SphericalRefraction, "intercept")
+        assert isinstance(elements.SphericalRefraction.intercept, FunctionType)
 
     def test_no_intercept(self, rays, elements):
         ray = rays.Ray(pos=[10., 0., 0.])
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=5.)
         assert sr.intercept(ray) is None
 
-    def test_intercept_array(self, default_ray, elements):
+    def test_intercept_type(self, default_ray, elements):
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         assert isinstance(sr.intercept(default_ray), np.ndarray)
 
-    def test_onaxis_ray_convex_intercept(self, rays, elements):
-        ray = rays.Ray(pos=[0.,0.,0.])
+    def test_onaxis_intercept(self, rays, elements):
+        ray = rays.Ray(pos=[0., 0., 0.])
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray), [0., 0., 10.])
 
-    def test_onaxis_ray_concave_intercept(self, rays, elements):
-        ray = rays.Ray(pos=[0.,0.,0.])
         sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray), [0., 0., 10.])
 
-    def test_offaxis_convex_intercept(self, rays, elements):
+    def test_offaxis_intercept(self, rays, elements):
         ray1 = rays.Ray(pos=[1., 0., 0.])
         ray2 = rays.Ray(pos=[-1., 0., 0.])
         sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray1), [1., 0., 10.010001])
         assert np.allclose(sr.intercept(ray2), [-1., 0., 10.010001])
 
-    def test_offaxis_concave_intercept(self, rays, elements):
-        ray1 = rays.Ray(pos=[1., 0., 0.])
-        ray2 = rays.Ray(pos=[-1., 0., 0.])
         sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray1), [1., 0., 9.989999])
         assert np.allclose(sr.intercept(ray2), [-1., 0., 9.989999])
 
-    def test_ray_pos_called_once(self, rays, elements, monkeypatch):
-        pos_mock = MagicMock(return_value=np.array([0., 0., 10.]))
-        monkeypatch.setattr(rays.Ray, "pos", pos_mock)
-        r = rays.Ray()
-        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
-        sr.intercept(r)
-        pos_mock.assert_called_once()
-
-    def test_ray_direc_called_once(self, rays, elements, monkeypatch):
-        direc_mock = MagicMock(return_value=np.array([0., 0., 10.]))
-        monkeypatch.setattr(rays.Ray, "direc", direc_mock)
-        r = rays.Ray()
-        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
-        sr.intercept(r)
-        direc_mock.assert_called_once()
-
-
-class TestTask5:
-    def test_refract_exists(self, ph):
-        assert hasattr(ph, "refract")
-
-    def test_calling_args(self, ph):
-        ph.refract(direc=[1, 2, 3], normal=[4, 5, 6], n_1=1, n_2=1.5)
-
-    def test_returns_unitvector(self, ph):
-        dir = np.array([0., 0.05, 1.])
-        norm = np.array([0., -1.9, -1.])
-        assert np.linalg.norm(ph.refract(dir, norm, 1.0, 1.5)) == 1.
-
-    def test_onaxis_refract(self, ph):
-        dir = np.array([0., 0., 1.])
-        norm = np.array([0., 0., -1.])
-        assert np.allclose(ph.refract(dir, norm, 1.0, 1.5), np.array([0., 0., 1.]))
-
-    def test_offaxis_refract_lower(self, ph):
-        dir = np.array([0., 0., 1.])
-        norm = np.array([0., -1., -1.])
-        norm /= np.linalg.norm(norm)
-        assert np.allclose(ph.refract(dir, norm, 1.0, 1.5), np.array([0., 0.29027623, 0.9569429]))
-
-    def test_offaxis_refract_upper(self, ph):
-        dir = np.array([0., 0., 1.])
-        norm = np.array([0., 1., -1.])
-        norm /= np.linalg.norm(norm)
-        assert np.allclose(ph.refract(dir, norm, 1.0, 1.5), np.array([0., -0.29027623, 0.9569429]))
-
-    def test_equal_ref_indices_onaxis(self, ph):
-        dir = np.array([0., 0., 1.])
-        norm = np.array([0., 0., -1.])
-        norm /= np.linalg.norm(norm)
-        assert np.allclose(ph.refract(dir, norm, 1.0, 1.0), np.array([0., 0., 1.]))
-    
-    def test_equal_ref_indices_upper(self, ph):
-        dir = np.array([0., 0., 1.])
-        norm = np.array([0., 1., -1.])
-        norm /= np.linalg.norm(norm)
-        assert np.allclose(ph.refract(dir, norm, 1.0, 1.0), np.array([0., 0., 1.]))
-
-    def test_equal_ref_indices_lower(self, ph):
-        dir = np.array([0., 0., 1.])
-        norm = np.array([0., -1., -1.])
-        norm /= np.linalg.norm(norm)
-        assert np.allclose(ph.refract(dir, norm, 1.0, 1.0), np.array([0., 0., 1.]))
-
-    def test_TIR(self, ph):
-        dir = np.array([0., 0., 1.])
-        norm = np.array([0., 1., -1.])
-        norm /= np.linalg.norm(norm)
-        assert ph.refract(dir, norm, 1.5, 1.0) is None
 
 class TestTask6:
 
+    def test_physics_exists(self, ph):
+        pass
+
+    def test_refract_exists(self, ph):
+        assert isinstance(ph.refract, FunctionType)
+
+    def test_refract_args(self, ph):
+        assert {"direc", "normal", "n_1", "n_2"}.issubset(signature(ph.refract).parameters.keys())
+
+    def test_refract_type(self, ph):
+        assert isinstance(ph.refract(direc=[1, 2, 3], normal=[4, 5, 6], n_1=1, n_2=1.5), np.ndarray)
+
+    def test_returns_unitvector(self, ph):
+        assert np.linalg.norm(ph.refract(direc=np.array([0., 0.05, 1.]),
+                                         normal=np.array([0., -1.9, -1.]),
+                                         n_1=1.0, n_2=1.5)) == 1.
+
+    def test_onaxis_refract(self, ph):
+        assert np.allclose(ph.refract(direc=np.array([0., 0., 1.]),
+                                      normal=np.array([0., 0., -1.]),
+                                      n_1=1.0, n_2=1.5), np.array([0., 0., 1.]))
+
+    def test_offaxis_refract(self, ph):
+        direc = np.array([0., 0., 1.])
+        norm_lower = np.array([0., -1., -1.])
+        norm_lower /= np.linalg.norm(norm_lower)
+        assert np.allclose(ph.refract(direc=direc,
+                                      normal=norm_lower,
+                                      n_1=1.0, n_2=1.5), np.array([0., 0.29027623, 0.9569429]))
+
+        norm_upper = np.array([0., 1., -1.])
+        norm_upper /= np.linalg.norm(norm_upper)
+        assert np.allclose(ph.refract(direc=direc,
+                                      normal=norm_upper,
+                                      n_1=1.0, n_2=1.5), np.array([0., -0.29027623, 0.9569429]))
+
+    def test_equal_ref_indices_onaxis(self, ph):
+        norm = np.array([0., 0., -1.])
+        norm /= np.linalg.norm(norm)
+        assert np.allclose(ph.refract(direc=np.array([0., 0., 1.]),
+                                      normal=norm,
+                                      n_1=1.0, n_2=1.0), np.array([0., 0., 1.]))
+
+    def test_equal_ref_indices_offaxis(self, ph):
+        direc = np.array([0., 0., 1.])
+        norm_upper = np.array([0., 1., -1.])
+        norm_upper /= np.linalg.norm(norm_upper)
+        print(ph.refract(direc=direc,normal=norm_upper,n_1=11.0, n_2=1.0), np.array([0., 0., 1.]))
+        assert np.allclose(ph.refract(direc=direc,
+                                      normal=norm_upper,
+                                      n_1=1.0, n_2=1.0), np.array([0., 0., 1.]))
+
+        norm_lower = np.array([0., -1., -1.])
+        norm_lower /= np.linalg.norm(norm_lower)
+        assert np.allclose(ph.refract(direc=direc,
+                                      normal=norm_lower,
+                                      n_1=1.0, n_2=1.0), np.array([0., 0., 1.]))
+
+    def test_TIR(self, ph):
+        direc = np.array([0., 0., 1.])
+        norm = np.array([0., 1., -1.])
+        norm /= np.linalg.norm(norm)
+        assert ph.refract(direc=direc, normal=norm, n_1=1.5, n_2=1.0) is None
+
+
+class TestTask7:
+
     def test_pr_exists(self, elements):
-        assert hasattr(elements.SphericalRefraction, "propagate_ray")
+        assert isinstance(elements.SphericalRefraction.propagate_ray, FunctionType)
 
     def test_pr_calls_intercept_once(self, rays, elements, monkeypatch):
-        intercept_mock = MagicMock(return_value=np.array([0., 0., 10.]))
-        monkeypatch.setattr(elements.SphericalRefraction, "intercept", intercept_mock)
-        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
         ray = rays.Ray([0., 0., 0.], [0., 0., 1.])
-        sr.propagate_ray(ray)
+        intercept_mock = MagicMock(return_value=np.array([0., 0., 10.]))
+        with monkeypatch.context() as m:
+            m.setattr(elements.SphericalRefraction, "intercept", intercept_mock)
+            sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
+            sr.propagate_ray(ray)
         intercept_mock.assert_called_once_with(ray)
 
     def test_pr_calls_refract_once(self, rays, elements, ph, monkeypatch):
+        ray = rays.Ray([0., 0., 0.], [0., 0., 1.])
         refract_mock = MagicMock(return_value=np.array([0., 0., 1.]))
-        monkeypatch.setattr(ph, "refract", refract_mock)
-        if hasattr(elements, "refract"):
-            monkeypatch.setattr(elements, "refract", refract_mock)
-        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
-        ray = rays.Ray([0.,0.,0.], [0.,0.,1.])
-        sr.propagate_ray(ray)
+        with monkeypatch.context() as m:
+            m.setattr(ph, "refract", refract_mock)
+            if hasattr(elements, "refract"):
+                m.setattr(elements, "refract", refract_mock)
+            sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
+            sr.propagate_ray(ray)
         refract_mock.assert_called_once()
-        k, norm, n1, n2 = refract_mock.call_args.args
-        norm /= np.linalg.norm(norm)
-        assert np.allclose(k, ray.direc())
-        assert np.allclose(norm, np.array([0., 0., -1.]))
-        assert n1 == 1.0
-        assert n2 == 1.5
+
+        call_dict = {}
+        for name, val in zip(signature(ph.refract).parameters.keys(), refract_mock.call_args.args):
+            call_dict[name] = val
+        call_dict.update(refract_mock.call_args.kwargs)
+
+        assert np.allclose(call_dict["direc"], [0., 0., 1.])
+        assert np.allclose(call_dict["normal"] / np.linalg.norm(call_dict["normal"]), [0., 0., -1.])
+        assert call_dict["n_1"] == 1.0
+        assert call_dict["n_2"] == 1.5
 
     def test_pr_calls_append_once(self, rays, elements, monkeypatch):
         append_mock = MagicMock(return_value=None)
-        monkeypatch.setattr(rays.Ray, "append", append_mock)
-        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
-        sr.propagate_ray(rays.Ray([1., 2., 0.], [0., 0., 1.]))
-        append_mock.assert_called_once()
-        new_pos, new_direc = append_mock.call_args.args
-        assert np.allclose(new_pos, [1., 2., 10.05002503])
-        assert np.allclose(new_direc, [-0.00667112, -0.01334223, 0.99988873])
+        with monkeypatch.context() as m:
+            m.setattr(rays.Ray, "append", append_mock)
+            if hasattr(elements, "Ray"):
+                m.setattr(elements.Ray, "append", append_mock)
 
-class TestTask7:
-    def test_doesnt_crash(self, an):
-        an.task7()
+            sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
+            sr.propagate_ray(rays.Ray([1., 2., 0.], [0., 0., 1.]))
+        append_mock.assert_called_once()
+
+        call_dict = {}
+        for name, val in zip(signature(rays.Ray().append).parameters.keys(), append_mock.call_args.args):
+            call_dict[name] = val
+        call_dict.update(append_mock.call_args.kwargs)
+
+        assert np.allclose(call_dict["pos"], [1., 2., 10.05002503])
+        assert np.allclose(call_dict["direc"], [-0.00667112, -0.01334223, 0.99988873])
+
+
+class TestTask8:
+
+    def test_doesnt_crash(self, task8_output):
+        pass
 
     def test_ray_created(self, an, rays, monkeypatch):
         mock_ray_init = MagicMock(wraps=rays.Ray)
-        monkeypatch.setattr(rays, "Ray", mock_ray_init)
-        if hasattr(an, "Ray"):
-            monkeypatch.setattr(an, "Ray", mock_ray_init)
-        try:
-            an.task7()
-        except: pass
+        with monkeypatch.context() as m:
+            m.setattr(rays, "Ray", mock_ray_init)
+            if hasattr(an, "Ray"):
+                m.setattr(an, "Ray", mock_ray_init)
+            an.task8()
         mock_ray_init.assert_called()
+        assert mock_ray_init.call_count > 1, "Only a single ray created."
+
+    ## TODO: pick up here.
 
     def test_sr_created(self, an, elements, monkeypatch):
         mock_sr_class = MagicMock()
@@ -315,15 +374,6 @@ class TestTask7:
         except: pass
         mock_pr.assert_called()
 
-    def test_multiple_rays_created(self, an, rays, monkeypatch):
-        mock_ray_init = MagicMock(wraps=rays.Ray)
-        monkeypatch.setattr(rays, "Ray", mock_ray_init)
-        if hasattr(an, "Ray"):
-            monkeypatch.setattr(an, "Ray", mock_ray_init)
-        try:
-            an.task7()
-        except: pass
-        assert mock_ray_init.call_count > 1
 
     def test_multiple_propagates(self, an, elements, monkeypatch):
         mock_pr = MagicMock()
@@ -336,7 +386,7 @@ class TestTask7:
         assert mock_pr.call_count > 1
 
 
-class TestTask8:
+class TestTask8ish:
     def test_op_exists(self, elements):
         assert hasattr(elements, "OutputPlane")
 

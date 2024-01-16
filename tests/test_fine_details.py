@@ -5,13 +5,8 @@ import re
 import pytest
 from matplotlib.figure import Figure
 
+
 class TestRayInternals:
-
-    def test_default_construction(self, default_ray):
-        pass
-
-    def test_construction(self, test_ray):
-        pass
 
     def test_partial_construction(self, rays):
         rays.Ray([1.,2.,3.])
@@ -135,6 +130,43 @@ class TestRayInternals:
         with pytest.raises(Exception):
             default_ray.append(pos=[1.,2.,3.], direc=[1., 2.])
 
+#####################################################
+    def test_append_increases_length(self, default_ray, var_name_map):
+        pos = getattr(default_ray, var_name_map['pos'])
+        assert len(pos) == 1
+        default_ray.append([1.,2.,3.], [4.,5.,6.])
+        assert len(pos) == 2
+
+    def test_append_pos_type(self, default_ray, var_name_map):
+        assert isinstance(getattr(default_ray,var_name_map["pos"]), list)
+        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
+        assert isinstance(getattr(default_ray,var_name_map["pos"]), list)
+
+    def test_append_pos_array(self, default_ray, var_name_map):
+        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
+        pos = getattr(default_ray,var_name_map["pos"])
+        assert isinstance(pos[-1], np.ndarray)
+
+    def test_append_pos(self, default_ray, var_name_map):
+        default_ray.append(pos=[1., 2., 3.], direc=[4., 5., 6.])
+        pos = getattr(default_ray, var_name_map['pos'])
+        assert np.allclose(pos[1], [1., 2., 3.])
+        assert np.allclose(default_ray.pos(), [1., 2., 3.])
+
+    def test_append_direc_array(self, default_ray, var_name_map):
+        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
+        direc = getattr(default_ray, var_name_map['direc'])
+        assert isinstance(direc, np.ndarray)
+
+    def test_append_direc(self, default_ray, var_name_map):
+        default_ray.append([1., 2., 3.], [4., 5., 6.])
+        direc = getattr(default_ray, var_name_map["direc"])
+        test_k = np.array([4.,5.,6.])
+        test_k /= np.linalg.norm(test_k)
+        assert np.allclose(direc, test_k)
+        assert np.allclose(default_ray.direc(), test_k)
+#################################################
+
 
 DATA_ATTRIBUTE_REGEX = re.compile(r"self\.([_a-zA-Z0-9]*)", re.MULTILINE)
 
@@ -194,3 +226,24 @@ class TestAdvancedDesign:
                                            if not var.startswith('_'))
 
         assert not non_hidden_vars, f"Non hidden data attributes:\n {pformat(non_hidden_vars)}"
+
+
+
+## OpticalElement.propagate_ray calls intercept
+        
+    ## testing intercept only calls pos and direc once to avoid repetition
+    def test_ray_pos_called_once(self, rays, elements, monkeypatch):
+        pos_mock = MagicMock(return_value=np.array([0., 0., 10.]))
+        monkeypatch.setattr(rays.Ray, "pos", pos_mock)
+        r = rays.Ray()
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
+        sr.intercept(r)
+        pos_mock.assert_called_once()
+
+    def test_ray_direc_called_once(self, rays, elements, monkeypatch):
+        direc_mock = MagicMock(return_value=np.array([0., 0., 10.]))
+        monkeypatch.setattr(rays.Ray, "direc", direc_mock)
+        r = rays.Ray()
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
+        sr.intercept(r)
+        direc_mock.assert_called_once()

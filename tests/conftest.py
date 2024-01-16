@@ -159,6 +159,11 @@ def vert_mock(rays, an):
         else:
             yield vert_mock
 
+@pytest.fixture(scope="class")
+def task8_output(an):
+    yield an.task8()
+    plt.close("all")    
+
 @pytest.fixture()
 def task9_output(an):
     yield an.task9()
