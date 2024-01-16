@@ -1,7 +1,8 @@
 """Pytest fixtures."""
 from importlib import import_module
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from types import FunctionType
+from unittest.mock import MagicMock, patch, PropertyMock
 import pytest
 import numpy as np
 import matplotlib
@@ -108,7 +109,7 @@ def source_files_str(source_files):
     return ' '.join(source_files)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def sr_mock(elements, an):
     sr = MagicMock(wraps=elements.SphericalRefraction)
     with patch.object(elements, "SphericalRefraction", sr), \
@@ -124,14 +125,14 @@ def sr_mock_with_lenses(elements, lenses, an):
         yield sr
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def op_mock(elements, an):
     op = MagicMock(wraps=elements.OutputPlane)
     with patch.object(elements, "OutputPlane", op), \
          patch.object(an, "OutputPlane", op):
         yield op
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def ray_mock(rays, an):
     ray = MagicMock(wraps=rays.Ray)
     with patch.object(rays, "Ray", ray), \
@@ -148,26 +149,20 @@ def pr_mock(elements, an):
         else:
             yield pr
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def vert_mock(rays, an):
-    vert_mock = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
-    # vert_mock = MagicMock(wraps=rays.Ray.vertices)
-    with patch.object(rays.Ray, "vertices", vert_mock):
-        if hasattr(an, "Ray"):
-            with patch.object(an.Ray, "vertices", vert_mock):
-                yield vert_mock
-        else:
-            yield vert_mock
+    v_mock = PropertyMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
+    if isinstance(rays.Ray.vertices, FunctionType):
+        v_mock = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
+
+    with (patch.object(rays.Ray, "vertices", v_mock),
+          patch.object(an.Ray, "vertices", v_mock)):
+        yield v_mock
 
 @pytest.fixture(scope="class")
 def task8_output(an):
     yield an.task8()
     plt.close("all")    
-
-@pytest.fixture()
-def task9_output(an):
-    yield an.task9()
-    plt.close("all")
 
 
 @pytest.fixture(scope="class")
