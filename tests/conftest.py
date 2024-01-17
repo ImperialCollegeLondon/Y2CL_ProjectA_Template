@@ -98,7 +98,7 @@ def ray_bundle(rays):
 
 @pytest.fixture(scope="module")
 def source_files():
-    excluded_files = ("coffeecake.py", "mymodule.py")
+    excluded_files = ()
     src_files = [str(file_) for file_ in Path(__file__).parent.parent.glob("raytracer/[a-zA-Z]*.py")
                  if file_.name not in excluded_files]
     assert src_files, "No source files found to check!"
