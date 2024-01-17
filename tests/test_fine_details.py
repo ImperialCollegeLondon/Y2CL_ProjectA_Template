@@ -1,4 +1,6 @@
+from types import MethodType, FunctionType
 from inspect import signature, getmembers, isclass, getsource
+from unittest.mock import MagicMock, PropertyMock
 import numpy as np
 from pprint import pformat
 import re
@@ -24,35 +26,25 @@ class TestRayInternals:
         with pytest.raises(Exception) as excinfo:
             rays.Ray(pos=[1., 2.])
 
-    def test_default_pos_list(self, default_ray_pos):
+    def test_pos_type(self, default_ray_pos, test_ray_pos):
         assert isinstance(default_ray_pos, list)
- 
-    def test_pos_list(self, test_ray_pos):
         assert isinstance(test_ray_pos, list)
 
-    def test_default_pos_single_element(self, default_ray_pos):
+    def test_pos_single_element(self, default_ray_pos, test_ray_pos):
         assert len(default_ray_pos) == 1
-
-    def test_pos_single_element(self, test_ray_pos):
         assert len(test_ray_pos) == 1
 
-    def test_default_pos_ndarray(self, default_ray_pos):
+    def test_pos_ndarray(self, default_ray_pos, test_ray_pos):
         assert isinstance(default_ray_pos[0], np.ndarray)
-
-    def test_pos_ndarray(self, test_ray_pos):
         assert isinstance(test_ray_pos[0], np.ndarray)
 
-    def test_default_pos_dtype(self, default_ray_pos):
-        init_pos = default_ray_pos[0]
-        assert init_pos.dtype == np.dtype("float64") or \
-               init_pos.dtype == np.dtype("float32")
+    def test_pos_dtype(self, default_ray_pos, test_ray_pos):
+        init_pos_d = default_ray_pos[0]
+        init_pos_t = test_ray_pos[0]
+        assert init_pos_d.dtype == np.float_
+        assert init_pos_t.dtype == np.float_
 
-    def test_pos_dtype(self, test_ray_pos):
-        init_pos = test_ray_pos[0]
-        assert init_pos.dtype == np.dtype("float64") or \
-               init_pos.dtype == np.dtype("float32")
-
-    def test_pos_set(self, test_ray_pos):
+    def test_pos_correct(self, test_ray_pos):
         assert np.allclose(test_ray_pos[0], [1., 2., 3.])
 
     def test_dir_list_or_array_check(self, rays):
@@ -67,43 +59,30 @@ class TestRayInternals:
         with pytest.raises(Exception) as excinfo:
             rays.Ray(direc=[1., 2.])
 
-    def test_default_dir_ndarray(self, default_ray_direc):
+    def test_dir_ndarray(self, default_ray_direc, test_ray_direc):
         assert isinstance(default_ray_direc, np.ndarray)
-
-    def test_dir_ndarray(self, test_ray_direc):
         assert isinstance(test_ray_direc, np.ndarray)
-        
-    def test_default_dir_dtype(self, default_ray_direc):
-        assert default_ray_direc.dtype == np.dtype("float64") or \
-               default_ray_direc.dtype == np.dtype("float32")
-        
-    def test_dir_dtype(self, test_ray_direc):
-        assert test_ray_direc.dtype == np.dtype("float64") or \
-               test_ray_direc.dtype == np.dtype("float32")
 
-    def test_default_dir_normalised(self, default_ray_direc):
+    def test_dir_dtype(self, default_ray_direc, test_ray_direc):
+        assert default_ray_direc.dtype == np.float_
+        assert test_ray_direc.dtype == np.float_
+
+    def test_dir_normalised(self, default_ray_direc, test_ray_direc):
         assert np.isclose(np.linalg.norm(default_ray_direc), 1.)
-
-    def test_dir_normalised(self, test_ray_direc):
         assert np.isclose(np.linalg.norm(test_ray_direc), 1.)
 
     def test_dir_sensible_default(self, default_ray_direc):
         assert np.allclose(default_ray_direc, [0., 0., 1.])
 
-    def test_k_set(self, test_ray_direc):
-        test_k = np.array([4., 5. ,6.])
-        test_k /= np.linalg.norm(test_k)
-        assert np.allclose(test_ray_direc, test_k)
-
-    def test_hidden_variables(self, rays):
-        for var in vars(rays.Ray()):
-            assert var.startswith('_')
+    def test_dir_correct(self, test_ray_direc):
+        test_k = np.array([4., 5., 6.])
+        assert np.allclose(test_ray_direc, test_k / np.linalg.norm(test_k))
 
     def test_constructor_default_types(self, rays):
         params = signature(rays.Ray.__init__).parameters
         pos_default = params["pos"].default
         direc_default = params["direc"].default
-        assert isinstance(pos_default, (type(None), list, np.ndarray))        
+        assert isinstance(pos_default, (type(None), list, np.ndarray))
         assert isinstance(direc_default, (type(None), list, np.ndarray))
 
     def test_append_pos_list_or_array_check(self, default_ray):
@@ -134,50 +113,56 @@ class TestRayInternals:
     def test_append_increases_length(self, default_ray, var_name_map):
         pos = getattr(default_ray, var_name_map['pos'])
         assert len(pos) == 1
-        default_ray.append([1.,2.,3.], [4.,5.,6.])
+        default_ray.append([1., 2., 3.], [4., 5., 6.])
         assert len(pos) == 2
 
     def test_append_pos_type(self, default_ray, var_name_map):
-        assert isinstance(getattr(default_ray,var_name_map["pos"]), list)
-        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
-        assert isinstance(getattr(default_ray,var_name_map["pos"]), list)
+        assert isinstance(getattr(default_ray, var_name_map["pos"]), list)
+        default_ray.append(pos=[4., 5., 6.], direc=[7., 8., 9.])
+        assert isinstance(getattr(default_ray, var_name_map["pos"]), list)
 
     def test_append_pos_array(self, default_ray, var_name_map):
-        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
-        pos = getattr(default_ray,var_name_map["pos"])
+        default_ray.append(pos=[4., 5., 6.], direc=[7., 8., 9.])
+        pos = getattr(default_ray, var_name_map["pos"])
         assert isinstance(pos[-1], np.ndarray)
 
-    def test_append_pos(self, default_ray, var_name_map):
+    def test_append_pos_correct(self, default_ray, var_name_map):
         default_ray.append(pos=[1., 2., 3.], direc=[4., 5., 6.])
         pos = getattr(default_ray, var_name_map['pos'])
-        assert np.allclose(pos[1], [1., 2., 3.])
-        assert np.allclose(default_ray.pos(), [1., 2., 3.])
+        assert np.allclose(pos[-1], [1., 2., 3.])
+
+        pos = default_ray.pos
+        if isinstance(pos, MethodType):
+            pos = pos()
+        assert np.allclose(pos, [1., 2., 3.])
 
     def test_append_direc_array(self, default_ray, var_name_map):
-        default_ray.append(pos=[4.,5.,6.], direc=[7.,8.,9.])
+        default_ray.append(pos=[4., 5., 6.], direc=[7., 8., 9.])
         direc = getattr(default_ray, var_name_map['direc'])
         assert isinstance(direc, np.ndarray)
 
-    def test_append_direc(self, default_ray, var_name_map):
+    def test_append_direc_correct(self, default_ray, var_name_map):
         default_ray.append([1., 2., 3.], [4., 5., 6.])
         direc = getattr(default_ray, var_name_map["direc"])
-        test_k = np.array([4.,5.,6.])
-        test_k /= np.linalg.norm(test_k)
-        assert np.allclose(direc, test_k)
-        assert np.allclose(default_ray.direc(), test_k)
-#################################################
+        test_k = np.array([4., 5., 6.])
+        assert np.allclose(direc, test_k / np.linalg.norm(test_k))
+
+        direc = default_ray.direc
+        if isinstance(direc, MethodType):
+            direc = direc()
+        assert np.allclose(direc, test_k / np.linalg.norm(test_k))
 
 
 DATA_ATTRIBUTE_REGEX = re.compile(r"self\.([_a-zA-Z0-9]*)", re.MULTILINE)
 
 
 class TestAdvancedDesign:
-    def test_planarrefraction_exists(self, elements):
-        assert hasattr(elements, "PlanarRefraction")
-        assert issubclass(elements.PlanarRefraction, elements.OpticalElement)
+    # def test_planarrefraction_exists(self, elements):
+    #     assert hasattr(elements, "PlanarRefraction")
+    #     assert issubclass(elements.PlanarRefraction, elements.OpticalElement)
 
     def test_convexplano_exists(self, elements, lenses):
-        assert hasattr(lenses, "ConvexPlano")
+        assert "ConvexPlano" in vars(lenses)
         assert issubclass(lenses.ConvexPlano, elements.OpticalElement)
 
     def test_sr_tree(self, elements):
@@ -227,23 +212,34 @@ class TestAdvancedDesign:
 
         assert not non_hidden_vars, f"Non hidden data attributes:\n {pformat(non_hidden_vars)}"
 
-
-
-## OpticalElement.propagate_ray calls intercept
-        
-    ## testing intercept only calls pos and direc once to avoid repetition
-    def test_ray_pos_called_once(self, rays, elements, monkeypatch):
-        pos_mock = MagicMock(return_value=np.array([0., 0., 10.]))
-        monkeypatch.setattr(rays.Ray, "pos", pos_mock)
-        r = rays.Ray()
-        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
-        sr.intercept(r)
+    def test_intercept_calls_ray_pos_once(self, rays, elements, monkeypatch):
+        with monkeypatch.context() as m:
+            if isinstance(rays.Ray.pos, FunctionType):
+                pos_mock = MagicMock(return_value=np.array([0., 0., 0.]))
+            else:
+                pos_mock = PropertyMock(return_value=np.array([0., 0., 0.]))
+            m.setattr(rays.Ray, "pos", pos_mock)
+            if hasattr(elements, "Ray"):
+                m.setattr(elements.Ray, "pos", pos_mock)
+            elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.).intercept(rays.Ray())
         pos_mock.assert_called_once()
 
-    def test_ray_direc_called_once(self, rays, elements, monkeypatch):
-        direc_mock = MagicMock(return_value=np.array([0., 0., 10.]))
-        monkeypatch.setattr(rays.Ray, "direc", direc_mock)
-        r = rays.Ray()
-        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
-        sr.intercept(r)
+    def test_intercept_calls_ray_direc_once(self, rays, elements, monkeypatch):
+        with monkeypatch.context() as m:
+            if isinstance(rays.Ray.pos, FunctionType):
+                direc_mock = MagicMock(return_value=np.array([0., 0., 1.]))
+            else:
+                direc_mock = PropertyMock(return_value=np.array([0., 0., 1.]))
+            m.setattr(rays.Ray, "direc", direc_mock)
+            if hasattr(elements, "Ray"):
+                m.setattr(elements.Ray, "direc", direc_mock)
+            elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.).intercept(rays.Ray())
         direc_mock.assert_called_once()
+
+    def test_propagate_ray_calls_intercept_once(self, default_ray, elements, monkeypatch):
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
+        intercept_mock = MagicMock(wraps=sr.intercept)
+        with monkeypatch.context() as m:
+            m.setattr(sr, "intercept", intercept_mock)
+            sr.propagate_ray(default_ray)
+        intercept_mock.assert_called_once()

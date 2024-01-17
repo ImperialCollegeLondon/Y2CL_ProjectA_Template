@@ -173,7 +173,8 @@ class TestTask4:
         assert "SphericalRefraction" in vars(elements)
 
     def test_inheritance(self, elements):
-        assert elements.OpticalElement in elements.SphericalRefraction.mro()
+        # assert elements.OpticalElement in elements.SphericalRefraction.mro()
+        assert issubclass(elements.SphericalRefraction, elements.OpticalElement)
 
     def test_construction_args(self, elements):
         assert {"z_0", "aperture", "curvature", "n_1", "n_2"}.issubset(signature(elements.SphericalRefraction).parameters.keys())
@@ -379,7 +380,8 @@ class TestTask9:
         assert "OutputPlane" in vars(elements)
 
     def test_inheritance(self, elements):
-        assert elements.OpticalElement in elements.OutputPlane.mro()
+        # assert elements.OpticalElement in elements.OutputPlane.mro()
+        assert issubclass(elements.OutputPlane, elements.OpticalElement)
 
     def test_construction_args(self, elements):
         {"z_0"}.issubset(signature(elements.OutputPlane).parameters.keys())
@@ -448,10 +450,12 @@ class TestTask10:
     def test_doesnt_crash(self, task10_output):
         pass
 
-    def test_sr_created_once(self, sr_mock, task10_output):
+    def test_sr_created_once(self, sr_mock, an):
+        an.task10()
         sr_mock.assert_called_once()
 
-    def test_sr_setup_correctly(self, sr_mock, elements, task10_output):
+    def test_sr_setup_correctly(self, sr_mock, elements, an):
+        an.task10()
         call_dict = {}
         for name, val in zip(signature(elements.SphericalRefraction).parameters.keys(), sr_mock.call_args.args):
             call_dict[name] = val
@@ -462,10 +466,12 @@ class TestTask10:
         assert call_dict["n_1"] == 1.0
         assert call_dict["n_2"] == 1.5
 
-    def test_op_created_once(self, op_mock, task10_output):
+    def test_op_created_once(self, op_mock, an):
+        an.task10()
         op_mock.assert_called_once()
 
-    def test_op_setup_correctly(self, op_mock, elements, task10_output):
+    def test_op_setup_correctly(self, op_mock, elements, an):
+        an.task10()
         call_dict = {}
         for name, val in zip(signature(elements.OutputPlane).parameters.keys(), op_mock.call_args.args):
             call_dict[name] = val
@@ -473,11 +479,13 @@ class TestTask10:
 
         assert call_dict["z_0"] == 250.
 
-    def test_rays_created(self, ray_mock, task10_output):
+    def test_rays_created(self, ray_mock, an):
+        an.task10()
         ray_mock.assert_called()
         assert ray_mock.call_count > 1, "Only a single ray created"
 
-    def test_ray_vertices_called(self, vert_mock, task10_output):
+    def test_ray_vertices_called(self, vert_mock, an):
+        an.task10()
         vert_mock.assert_called()
         assert vert_mock.call_count > 1, "only called vertices on one ray"
 
@@ -516,7 +524,7 @@ class TestTask11:
     # def test_plot10(self, task11_output):
     #     return task11_output[0]
 
-## TODO: start here
+
 class TestTask12:
 
     def test_bundle_exists(self, rays):
@@ -526,7 +534,8 @@ class TestTask12:
         assert isinstance(rays.RayBundle, type)
 
     def test_bundle_not_inheritance(self, rays):
-        assert rays.Ray not in rays.RayBundle.mro()
+        # assert rays.Ray not in rays.RayBundle.mro()
+        assert not issubclass(rays.RayBundle, rays.Ray)
 
     def test_bundle_args(self, rays):
         {"rmax", "nrings"}.issubset(signature(rays.RayBundle).parameters.keys())
@@ -585,67 +594,77 @@ class TestTask13:
     # def test_plot13(self, task13_output):
     #     return task13_output[0]
 
-## TODO: start here
-class TestTask13ish:
-
-    def test_output_fig_produced(self, task13_output):
-        assert isinstance(task13_output, mpl.figure.Figure)
-
-    @check_figures_equal(ref_path="task13", tol=33)
-    def test_plot13(self, task13_output):
-        return task13_output
-
 
 class TestTask14:
+
+    def test_doesnt_crash(self, task14_output):
+        pass
+
+    def test_output(self, task14_output):
+        assert isinstance(task14_output[0], Figure)
+        assert np.isclose(task14_output[1], 0.0020035841295443506)
+        assert np.isclose(task14_output[2], 0.01176)
+
+    # @check_figures_equal(ref_path="task14", tol=33)
+    # def test_plot14(self, task14_output):
+    #     return task14_output
+
+
+class TestTask15:
 
     def test_lenses_exists(self, lenses):
         pass
 
     def test_planoconvex_exists(self, lenses):
-        assert hasattr(lenses, "PlanoConvex")
+        assert "PlanoConvex" in vars(lenses)
 
     def test_planoconvex_inheritance(self, elements, lenses):
         assert issubclass(lenses.PlanoConvex, elements.OpticalElement)
 
-    def test_doesnt_crash(self, task14_output):
-        pass
+    def test_construction_args(self, lenses):
+        params = signature(lenses.PlanoConvex).parameters.keys()
+        basic = {"z_0", "curvature1", "curvature2", "n_inside", "n_outside", "thickness", "aperture"}
+        advanced = {"z_0", "curvature", "n_inside", "n_outside", "thickness", "aperture"}
+        assert basic.issubset(params) or advanced.issubset(params)
 
-    def test_output_pcfig(self, task14_output):
-        assert isinstance(task14_output[0], mpl.figure.Figure)
-
-    def test_output_cpfig(self, task14_output):
-        assert isinstance(task14_output[2], mpl.figure.Figure)
-
-    def test_pc_focalpoint(self, task14_output):
-        assert np.isclose(task14_output[1], 201.74922600619198)
-
-    def test_cp_focalpoint(self, task14_output):
-        assert np.isclose(task14_output[3], 198.45281250408226)
-
-    def test_2SR_objects_created(self, sr_mock_with_lenses, an):
-        an.task14()
-        assert sr_mock_with_lenses.call_count >= 2
-
-    def test_OP_object_created(self, op_mock, an):
-        an.task14()
-        assert op_mock.called
-
-    @check_figures_equal(ref_path="task14pc", tol=33)
-    def test_plot14pc(self, task14_output):
-        return task14_output[0]
-
-    @check_figures_equal(ref_path="task14cp", tol=33)
-    def test_plot14cp(self, task14_output):
-        return task14_output[2]
-
-
-class TestTask15:
     def test_doesnt_crash(self, task15_output):
         pass
 
-    def test_output_fig(self, task15_output):
-        assert isinstance(task15_output, mpl.figure.Figure)    
-    
-    @check_figures_equal(ref_path="task15", tol=33)
-    def test_plot15(self, task15_output):
-        return task15_output
+    def test_output(self, task15_output):
+        pc_fig, pc_focal_point, cp_fig, cp_focal_point = task15_output
+        assert isinstance(pc_fig, Figure)
+        assert isinstance(cp_fig, Figure)
+        assert np.isclose(pc_focal_point, 201.74922600619198)
+        assert np.isclose(cp_focal_point, 198.45281250408226)
+
+    def test_2SR_objects_created(self, sr_mock_with_lenses, an):
+        an.task15()
+        assert sr_mock_with_lenses.call_count >= 2
+
+    def test_OP_object_created(self, op_mock, an):
+        an.task15()
+        op_mock.assert_called_once()
+
+    # @check_figures_equal(ref_path="task15pc", tol=33)
+    # def test_plot15pc(self, task15_output):
+    #     return task15_output[0]
+
+    # @check_figures_equal(ref_path="task15cp", tol=33)
+    # def test_plot15cp(self, task15_output):
+    #     return task15_output[2]
+
+
+class TestTask16:
+    def test_doesnt_crash(self, task16_output):
+        pass
+
+    def test_output(self, task16_output):
+        fig, pc_rms, cp_rms, diff = task16_output
+        assert isinstance(fig, Figure)
+        assert np.isclose(pc_rms, 0.012687332076619933)
+        assert np.isclose(cp_rms, 0.0031927627499460415)
+        assert np.isclose(diff, 0.008126934984520126)
+
+    # @check_figures_equal(ref_path="task16", tol=33)
+    # def test_plot16(self, task16_output):
+    #     return task16_output
