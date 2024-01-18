@@ -169,6 +169,9 @@ class TestTask3:
 
 
 class TestTask4:
+
+    ## TODO: test getters
+
     def test_sr_exists(self, elements):
         assert "SphericalRefraction" in vars(elements)
 
@@ -524,7 +527,7 @@ class TestTask11:
     # def test_plot10(self, task11_output):
     #     return task11_output[0]
 
-
+## TODO: do we need to check they are doing the internals right?
 class TestTask12:
 
     def test_bundle_exists(self, rays):
@@ -546,7 +549,7 @@ class TestTask12:
     def test_prop_bundle_exists(self, rays):
         assert isinstance(rays.RayBundle.propagate_bundle, FunctionType)
 
-    def test_prop_bundle_calles_pro_pray(self, rays, elements, pr_mock):
+    def test_prop_bundle_calles_prop_ray(self, rays, elements, pr_mock):
         sr = elements.SphericalRefraction(z_0=100, aperture=35., curvature=0.2, n_1=1., n_2=1.5)
         rb = rays.RayBundle(rmax=5., nrings=5)
         rb.propagate_bundle([sr])
@@ -567,6 +570,8 @@ class TestTask12:
     def test_doesnt_crash(self, task12_output):
         pass
 
+    ## TODO: test analysis uses track_plot not manual plottting
+
     def test_ouput_fig_produced(self, task12_output):
         assert isinstance(task12_output, Figure)
 
@@ -585,6 +590,8 @@ class TestTask13:
 
     def test_doesnt_crash(self, task13_output):
         pass
+
+    ## TODO: test analysis uses spot_plot and rms not manual plottting
 
     def test_output(self, task13_output):
         assert isinstance(task13_output[0], Figure)
