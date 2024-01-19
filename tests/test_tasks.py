@@ -650,7 +650,7 @@ class TestTask15:
 
     def test_OP_object_created(self, op_mock, an):
         an.task15()
-        op_mock.assert_called_once()
+        assert op_mock.call_count == 2
 
     # @check_figures_equal(ref_path="task15pc", tol=33)
     # def test_plot15pc(self, task15_output):
