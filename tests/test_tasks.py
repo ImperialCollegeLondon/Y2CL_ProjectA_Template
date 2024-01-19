@@ -1,5 +1,5 @@
 from types import FunctionType, MethodType, NoneType
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, PropertyMock
 from inspect import getmembers, isclass, signature
 import numpy as np
 import matplotlib as mpl
@@ -170,8 +170,6 @@ class TestTask3:
 
 class TestTask4:
 
-    ## TODO: test getters
-
     def test_sr_exists(self, elements):
         assert "SphericalRefraction" in vars(elements)
 
@@ -184,6 +182,46 @@ class TestTask4:
 
     def test_construction(self, elements):
         elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
+
+    def test_z0(self, elements):
+        assert isinstance(elements.SphericalRefraction.z0, (FunctionType, property))
+        sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
+        z0 = sr.z0
+        if isinstance(z0, MethodType):
+            z0 = z0()
+        assert z0 == 10.
+
+    def test_aperture(self, elements):
+        assert isinstance(elements.SphericalRefraction.aperture, (FunctionType, property))
+        sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
+        aperture = sr.aperture
+        if isinstance(aperture, MethodType):
+            aperture = aperture()
+        assert aperture == 5.
+
+    def test_curvature(self, elements):
+        assert isinstance(elements.SphericalRefraction.curvature, (FunctionType, property))
+        sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
+        curvature = sr.curvature
+        if isinstance(curvature, MethodType):
+            curvature = curvature()
+        assert curvature == 0.2
+
+    def test_n1(self, elements):
+        assert isinstance(elements.SphericalRefraction.n1, (FunctionType, property))
+        sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
+        n1 = sr.n1
+        if isinstance(n1, MethodType):
+            n1 = n1()
+        assert n1 == 1.
+
+    def test_n2(self, elements):
+        assert isinstance(elements.SphericalRefraction.n2, (FunctionType, property))
+        sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
+        n2 = sr.n2
+        if isinstance(n2, MethodType):
+            n2 = n2()
+        assert n2 == 1.5
 
 
 class TestTask5:
@@ -387,7 +425,7 @@ class TestTask9:
         assert issubclass(elements.OutputPlane, elements.OpticalElement)
 
     def test_construction_args(self, elements):
-        {"z_0"}.issubset(signature(elements.OutputPlane).parameters.keys())
+        assert {"z_0"}.issubset(signature(elements.OutputPlane).parameters.keys())
 
     def test_construction(self, elements):
         elements.OutputPlane(z_0=250.)
@@ -541,7 +579,7 @@ class TestTask12:
         assert not issubclass(rays.RayBundle, rays.Ray)
 
     def test_bundle_args(self, rays):
-        {"rmax", "nrings"}.issubset(signature(rays.RayBundle).parameters.keys())
+        assert {"rmax", "nrings", "multi"}.issubset(signature(rays.RayBundle).parameters.keys())
 
     def test_bundle_construction(self, rays):
         rays.RayBundle(rmax=5., nrings=5)
@@ -570,10 +608,17 @@ class TestTask12:
     def test_doesnt_crash(self, task12_output):
         pass
 
-    ## TODO: test analysis uses track_plot not manual plottting
-
     def test_ouput_fig_produced(self, task12_output):
         assert isinstance(task12_output, Figure)
+
+    def test_analysis_uses_track_plot(self, rays, an, monkeypatch):
+        track_plot_mock = MagicMock()
+        with monkeypatch.context() as m:
+            m.setattr(rays.RayBundle, "track_plot", track_plot_mock)
+            if hasattr(an, "RayBundle"):
+                m.setattr(an.RayBundle, "track_plot", track_plot_mock)
+            an.task12()
+        track_plot_mock.assert_called()
 
     # @check_figures_equal(ref_path="task12", tol=32)
     # def test_plot12(self, task12_output):
@@ -591,11 +636,25 @@ class TestTask13:
     def test_doesnt_crash(self, task13_output):
         pass
 
-    ## TODO: test analysis uses spot_plot and rms not manual plottting
-
     def test_output(self, task13_output):
         assert isinstance(task13_output[0], Figure)
         assert np.isclose(task13_output[1], 0.016176669411515444)
+
+    def test_analysis_uses_spot_plot_rms(self, rays, an, monkeypatch):
+        spot_plot_mock = MagicMock()
+        pm = PropertyMock
+        if isinstance(rays.RayBundle.rms, FunctionType):
+            pm = MagicMock
+        rms_mock = pm()
+        with monkeypatch.context() as m:
+            m.setattr(rays.RayBundle, "spot_plot", spot_plot_mock)
+            m.setattr(rays.RayBundle, "rms", rms_mock)
+            if hasattr(an, "RayBundle"):
+                m.setattr(an.RayBundle, "spot_plot", spot_plot_mock)
+                m.setattr(an.RayBundle, "rms", rms_mock)
+            an.task13()
+        spot_plot_mock.assert_called()
+        rms_mock.assert_called()
 
     # @check_figures_equal(ref_path="task13", tol=33)
     # def test_plot13(self, task13_output):
