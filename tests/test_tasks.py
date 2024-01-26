@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib as mpl
 from matplotlib.figure import Figure
 import pytest
-from utils import check_figures_equal
+# from utils import check_figures_equal
 
 
 class TestTask2:
