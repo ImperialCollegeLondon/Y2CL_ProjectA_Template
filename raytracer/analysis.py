@@ -24,6 +24,7 @@ def task10():
     Returns:
         Figure: the ray path plot.
     """
+    return
 
 
 def task11():
@@ -39,6 +40,7 @@ def task11():
     Returns:
         tuple[Figure, float]: the ray path plot and the focal point
     """
+    return
 
 
 def task12():
@@ -52,6 +54,7 @@ def task12():
     Returns:
         Figure: the track plot.
     """
+    return
 
 
 def task13():
@@ -67,6 +70,7 @@ def task13():
     Returns:
         tuple[Figure, float]: the spot plot and rms
     """
+    return
 
 
 def task14():
@@ -83,6 +87,7 @@ def task14():
     Returns:
         tuple[Figure, float, float]: the plot, the simulation RMS value, the diffraction scale.
     """
+    return
 
 
 def task15():
@@ -101,6 +106,7 @@ def task15():
     Returns:
         tuple[Figure, float, Figure, float]: the spot plots and rms for plano-convex and convex-plano.
     """
+    return
 
 
 def task16():
@@ -118,6 +124,7 @@ def task16():
     Returns:
         tuple[Figure, float, float, float]: the plot, RMS for plano-convex, RMS for convex-plano, diffraction scale.
     """
+    return
 
 
 if __name__ == "__main__":
