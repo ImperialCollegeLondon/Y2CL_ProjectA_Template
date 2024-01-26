@@ -184,9 +184,9 @@ class TestTask4:
         elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
 
     def test_z0(self, elements):
-        assert isinstance(elements.SphericalRefraction.z0, (FunctionType, property))
+        assert isinstance(elements.SphericalRefraction.z_0, (FunctionType, property))
         sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
-        z0 = sr.z0
+        z0 = sr.z_0
         if isinstance(z0, MethodType):
             z0 = z0()
         assert z0 == 10.
@@ -208,17 +208,17 @@ class TestTask4:
         assert curvature == 0.2
 
     def test_n1(self, elements):
-        assert isinstance(elements.SphericalRefraction.n1, (FunctionType, property))
+        assert isinstance(elements.SphericalRefraction.n_1, (FunctionType, property))
         sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
-        n1 = sr.n1
+        n1 = sr.n_1
         if isinstance(n1, MethodType):
             n1 = n1()
         assert n1 == 1.
 
     def test_n2(self, elements):
-        assert isinstance(elements.SphericalRefraction.n2, (FunctionType, property))
+        assert isinstance(elements.SphericalRefraction.n_2, (FunctionType, property))
         sr = elements.SphericalRefraction(z_0=10., aperture=5., curvature=0.2, n_1=1., n_2=1.5)
-        n2 = sr.n2
+        n2 = sr.n_2
         if isinstance(n2, MethodType):
             n2 = n2()
         assert n2 == 1.5
