@@ -561,11 +561,22 @@ class TestTask11:
         assert isinstance(task11_output[0], Figure)
         assert np.isclose(task11_output[1], 200.)
 
+    def test_analysis_uses_focal_point(self, elements, an, monkeypatch):
+        focal_point_mock = PropertyMock(return_value=200.)
+        if isinstance(elements.SphericalRefraction.focal_point, FunctionType):
+            focal_point_mock = MagicMock(return_value=200.)
+        with monkeypatch.context() as m:
+            m.setattr(elements.SphericalRefraction, "focal_point", focal_point_mock)
+            if hasattr(an, "SphericalRefraction"):
+                m.setattr(an.SphericalRefraction, "focal_point", focal_point_mock)
+            an.task11()
+        focal_point_mock.assert_called()
+
     # @check_figures_equal(ref_path="task11", tol=32)
     # def test_plot10(self, task11_output):
     #     return task11_output[0]
 
-## TODO: do we need to check they are doing the internals right?
+
 class TestTask12:
 
     def test_bundle_exists(self, rays):
