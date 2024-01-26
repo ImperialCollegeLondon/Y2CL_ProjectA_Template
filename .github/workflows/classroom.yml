@@ -15,6 +15,7 @@ jobs:
       - name: Set-up for grading
         uses: ImperialCollegeLondon/y2cl-setup@main
         with:
-          project: A
+          project: ProjectA
           src_dir: raytracer
+          python_version: 3.11
       - uses: education/autograding@v1
