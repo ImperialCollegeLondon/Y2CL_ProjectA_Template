@@ -153,7 +153,7 @@ class TestRayInternals:
         assert np.allclose(direc, test_k / np.linalg.norm(test_k))
 
 
-DATA_ATTRIBUTE_REGEX = re.compile(r"self\.([_a-zA-Z0-9]*)", re.MULTILINE)
+DATA_ATTRIBUTE_REGEX = re.compile(r"^\s*self\.([_a-zA-Z0-9]+)[^=]*=(?!=)", re.MULTILINE)
 
 
 class TestAdvancedDesign:
