@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 def task8():
     """
-    task 8.
+    Task 8.
 
     In this function you should check your propagate_ray function properly
     finds the correct intercept and correctly refracts a ray. Don't forget
@@ -14,7 +14,7 @@ def task8():
 
 def task10():
     """
-    task 10.
+    Task 10.
 
     In this function you should create Ray objects with the given initial positions.
     These rays should be propagated through the surface, up to the output plane.
@@ -29,7 +29,7 @@ def task10():
 
 def task11():
     """
-    task 11.
+    Task 11.
 
     In this function you should propagate the three given paraxial rays through the system
     to the output plane and the tracks of these rays should then be plotted.
@@ -45,7 +45,7 @@ def task11():
 
 def task12():
     """
-    task 12.
+    Task 12.
 
     In this function you should create a RayBunble and propagate it to the output plane
     before plotting the tracks of the rays.
@@ -59,7 +59,7 @@ def task12():
 
 def task13():
     """
-    task 13.
+    Task 13.
 
     In this function you should again create and propagate a RayBundle to the output plane
     before plotting the spot plot.
@@ -75,7 +75,7 @@ def task13():
 
 def task14():
     """
-    Task14.
+    Task 14.
 
     In this function you will trace a number of RayBundles through the optical system and
     plot the RMS and diffraction scale dependence on input beam radii.
@@ -111,7 +111,7 @@ def task15():
 
 def task16():
     """
-    Task16.
+    Task 16.
 
     In this function you will be again plotting the radial dependence of the RMS and diffraction values
     for each orientation of your lens.
@@ -132,25 +132,25 @@ if __name__ == "__main__":
     # Run task 8 function
     task8()
 
-    # # Run task 10 function
-    # fig10 = task10()
+    # Run task 10 function
+    # FIG10 = task10()
 
-    # # Run task 11 function
-    # fig11, focal_point = task11()
+    # Run task 11 function
+    # FIG11, FOCAL_POINT = task11()
 
-    # # Run task 12 function
-    # fig12 = task12()
+    # Run task 12 function
+    # FIG12 = task12()
 
-    # # Run task 13 function
-    # fig13, rms = task13()
+    # Run task 13 function
+    # FIG13, TASK13_RMS = task13()
 
-    # # Run task 14 function
-    # fig14, rms, diff_scale = task14()
+    # Run task 14 function
+    # FIG14, TASK14_RMS, TASK14_DIFF_SCALE = task14()
 
-    # # Run task 15 function
-    # fig15_pc, focal_point_pc, fig15_cp, focal_point_cp = task15()
+    # Run task 15 function
+    # FIG15_PC, FOCAL_POINT_PC, FIG15_CP, FOCAL_POINT_CP = task15()
 
-    # # Run task 16 function
-    # fig16, pc_rms, cp_rms, diff_scale = task16()
+    # Run task 16 function
+    # FIG16, PC_RMS, CP_RMS, TASK16_DIFF_SCALE = task16()
 
     plt.show()
