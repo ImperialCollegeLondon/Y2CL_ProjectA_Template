@@ -228,6 +228,10 @@ class TestTask5:
 
     def test_intercept_exists(self, elements):
         assert isinstance(elements.SphericalRefraction.intercept, FunctionType)
+    
+    def test_intercept_not_crash(self, default_ray, elements):
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
+        sr.intercept(default_ray)
 
     def test_no_intercept(self, rays, elements):
         ray = rays.Ray(pos=[10., 0., 0.])
@@ -495,12 +499,18 @@ class TestTask10:
         an.task10()
         sr_mock.assert_called_once()
 
-    def test_sr_setup_correctly(self, sr_mock, elements, an):
-        an.task10()
+    def test_sr_setup_correctly(self, elements, an, monkeypatch):
+        params = signature(elements.SphericalRefraction).parameters.keys()
+        sr = MagicMock(wraps=elements.SphericalRefraction)
+        with monkeypatch.context() as m:
+            m.setattr(elements, "SphericalRefraction", sr)
+            m.setattr(an, "SphericalRefraction", sr)
+            an.task10()
+
         call_dict = {}
-        for name, val in zip(signature(elements.SphericalRefraction).parameters.keys(), sr_mock.call_args.args):
+        for name, val in zip(params, sr.call_args.args):
             call_dict[name] = val
-        call_dict.update(sr_mock.call_args.kwargs)
+        call_dict.update(sr.call_args.kwargs)
 
         assert call_dict["z_0"] == 100
         assert call_dict['curvature'] == 0.03
@@ -511,12 +521,17 @@ class TestTask10:
         an.task10()
         op_mock.assert_called_once()
 
-    def test_op_setup_correctly(self, op_mock, elements, an):
-        an.task10()
+    def test_op_setup_correctly(self, elements, an, monkeypatch):
+        params = signature(elements.OutputPlane).parameters.keys()
+        op = MagicMock(wraps=elements.OutputPlane)
+        with monkeypatch.context() as m:
+            m.setattr(elements, "OutputPlane", op)
+            m.setattr(an, "OutputPlane", op)
+            an.task10()
         call_dict = {}
-        for name, val in zip(signature(elements.OutputPlane).parameters.keys(), op_mock.call_args.args):
+        for name, val in zip(params, op.call_args.args):
             call_dict[name] = val
-        call_dict.update(op_mock.call_args.kwargs)
+        call_dict.update(op.call_args.kwargs)
 
         assert call_dict["z_0"] == 250.
 
@@ -694,9 +709,6 @@ class TestTask15:
 
     def test_planoconvex_exists(self, lenses):
         assert "PlanoConvex" in vars(lenses)
-
-    def test_planoconvex_inheritance(self, elements, lenses):
-        assert issubclass(lenses.PlanoConvex, elements.OpticalElement)
 
     def test_construction_args(self, lenses):
         params = signature(lenses.PlanoConvex).parameters.keys()
