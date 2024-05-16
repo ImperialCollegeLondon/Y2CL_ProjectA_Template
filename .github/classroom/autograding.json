@@ -861,16 +861,6 @@
       "points": 1
     },
     {
-      "name": "Test task15 - planoconvex inheritance",
-      "setup": "",
-      "run": "pytest -vv tests/test_tasks.py::TestTask15::test_planoconvex_inheritance",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 120,
-      "points": 1
-    },
-    {
       "name": "Test task16 - doesnt crash",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask16::test_doesnt_crash",
@@ -1194,6 +1184,16 @@
       "name": "Test task5 - intercept exists",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask5::test_intercept_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task5 - intercept not crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask5::test_intercept_not_crash",
       "input": "",
       "output": "",
       "comparison": "included",
