@@ -71,6 +71,16 @@
       "points": 1
     },
     {
+      "name": "Test advanceddesign - biconvex pc share base",
+      "setup": "",
+      "run": "pytest -vv tests/test_fine_details.py::TestAdvancedDesign::test_biconvex_pc_share_base",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
       "name": "Test advanceddesign - convexplano exists",
       "setup": "",
       "run": "pytest -vv tests/test_fine_details.py::TestAdvancedDesign::test_convexplano_exists",
@@ -131,6 +141,16 @@
       "points": 1
     },
     {
+      "name": "Test advanceddesign - intercept not in srefl",
+      "setup": "",
+      "run": "pytest -vv tests/test_fine_details.py::TestAdvancedDesign::test_intercept_not_in_srefl",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
       "name": "Test advanceddesign - op tree",
       "setup": "",
       "run": "pytest -vv tests/test_fine_details.py::TestAdvancedDesign::test_op_tree",
@@ -154,6 +174,16 @@
       "name": "Test advanceddesign - sr tree",
       "setup": "",
       "run": "pytest -vv tests/test_fine_details.py::TestAdvancedDesign::test_sr_tree",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test advanceddesign - srefl tree",
+      "setup": "",
+      "run": "pytest -vv tests/test_fine_details.py::TestAdvancedDesign::test_srefl_tree",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -454,6 +484,46 @@
       "name": "Test rayinternals - pos type",
       "setup": "",
       "run": "pytest -vv tests/test_fine_details.py::TestRayInternals::test_pos_type",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test norelativeimports - elements module",
+      "setup": "",
+      "run": "pytest -vv tests/test_important_details.py::TestNoRelativeImports::test_elements_module",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test norelativeimports - lenses module",
+      "setup": "",
+      "run": "pytest -vv tests/test_important_details.py::TestNoRelativeImports::test_lenses_module",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test norelativeimports - physics module",
+      "setup": "",
+      "run": "pytest -vv tests/test_important_details.py::TestNoRelativeImports::test_physics_module",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test norelativeimports - rays module",
+      "setup": "",
+      "run": "pytest -vv tests/test_important_details.py::TestNoRelativeImports::test_rays_module",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -874,6 +944,76 @@
       "name": "Test task16 - output",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask16::test_output",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task17 - biconvex exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask17::test_biconvex_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task17 - doesnt crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask17::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task17 - not pc inheritance",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask17::test_not_pc_inheritance",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task17 - output",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask17::test_output",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task18 - doesnt crash",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask18::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task18 - output",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask18::test_output",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task18 - srefl exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask18::test_srefl_exists",
       "input": "",
       "output": "",
       "comparison": "included",
