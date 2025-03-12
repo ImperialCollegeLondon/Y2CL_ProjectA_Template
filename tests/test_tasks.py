@@ -4,6 +4,7 @@ from inspect import getmembers, isclass, signature
 import numpy as np
 import matplotlib as mpl
 from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 import pytest
 # from utils import check_figures_equal
 
@@ -624,7 +625,11 @@ class TestTask12:
 
     def test_track_plot_type(self, rays):
         rb = rays.RayBundle(rmax=5., nrings=5)
-        assert isinstance(rb.track_plot(), Figure)
+        ret = rb.track_plot()
+        assert isinstance(ret, (Figure, tuple))
+        if isinstance(ret, tuple):
+            assert isinstance(ret[0], Figure)
+            assert isinstance(ret[1], Axes)
 
     def test_track_plot_calles_vertices(self, rays, vert_mock):
         rb = rays.RayBundle(rmax=5., nrings=5)
@@ -757,3 +762,33 @@ class TestTask16:
     # @check_figures_equal(ref_path="task16", tol=33)
     # def test_plot16(self, task16_output):
     #     return task16_output
+
+
+class TestTask17:
+    def test_doesnt_crash(self, task17_output):
+        pass
+
+    def test_biconvex_exists(self, lenses):
+        assert "BiConvex" in vars(lenses)
+
+    def test_not_pc_inheritance(self, lenses):
+        assert not issubclass(lenses.BiConvex, lenses.PlanoConvex)
+
+    def test_output(self, task17_output):
+        fig, cp_rms, bc_rms = task17_output
+        assert isinstance(fig, Figure)
+        assert np.isclose(cp_rms, 0.009341789683984076)
+        assert bc_rms < cp_rms
+
+
+class TestTask18:
+    def test_doesnt_crash(self, task18_output):
+        pass
+
+    def test_srefl_exists(self, elements):
+        assert "SphericalReflection" in vars(elements)
+
+    def test_output(self, task18_output):
+        fig, refl_fp = task18_output
+        assert isinstance(fig, Figure)
+        assert np.isclose(refl_fp, 75.0)

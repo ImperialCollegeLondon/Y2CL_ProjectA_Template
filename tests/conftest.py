@@ -44,6 +44,10 @@ def elements():
     return import_module("raytracer.elements")
 
 @pytest.fixture(scope="session")
+def physics():
+    return import_module("raytracer.physics")
+
+@pytest.fixture(scope="session")
 def lenses():
     return import_module("raytracer.lenses")
 
@@ -205,4 +209,14 @@ def task15_output(an):
 @pytest.fixture(scope="class")
 def task16_output(an):
     yield an.task16()
+    plt.close("all")
+
+@pytest.fixture(scope="class")
+def task17_output(an):
+    yield an.task17()
+    plt.close("all")
+
+@pytest.fixture(scope="class")
+def task18_output(an):
+    yield an.task18()
     plt.close("all")

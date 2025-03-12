@@ -41,8 +41,8 @@ class TestRayInternals:
     def test_pos_dtype(self, default_ray_pos, test_ray_pos):
         init_pos_d = default_ray_pos[0]
         init_pos_t = test_ray_pos[0]
-        assert init_pos_d.dtype == np.float_
-        assert init_pos_t.dtype == np.float_
+        assert init_pos_d.dtype == float
+        assert init_pos_t.dtype == float
 
     def test_pos_correct(self, test_ray_pos):
         assert np.allclose(test_ray_pos[0], [1., 2., 3.])
@@ -64,8 +64,8 @@ class TestRayInternals:
         assert isinstance(test_ray_direc, np.ndarray)
 
     def test_dir_dtype(self, default_ray_direc, test_ray_direc):
-        assert default_ray_direc.dtype == np.float_
-        assert test_ray_direc.dtype == np.float_
+        assert default_ray_direc.dtype == float
+        assert test_ray_direc.dtype == float
 
     def test_dir_normalised(self, default_ray_direc, test_ray_direc):
         assert np.isclose(np.linalg.norm(default_ray_direc), 1.)
@@ -160,6 +160,19 @@ class TestAdvancedDesign:
     # def test_planarrefraction_exists(self, elements):
     #     assert hasattr(elements, "PlanarRefraction")
     #     assert issubclass(elements.PlanarRefraction, elements.OpticalElement)
+
+    def test_biconvex_pc_share_base(self, lenses):
+        assert lenses.BiConvex.__bases__ == lenses.PlanoConvex.__bases__
+
+    def test_srefl_tree(self, elements):
+        test_tree = set(elements.SphericalReflection.mro())
+        assert len(test_tree) > 3
+        assert test_tree.difference({elements.SphericalReflection,
+                                     elements.OpticalElement,
+                                     object})
+
+    def test_intercept_not_in_srefl(self, elements):
+        assert "intercept" not in vars(elements.SphericalReflection)
 
     def test_convexplano_exists(self, elements, lenses):
         assert "ConvexPlano" in vars(lenses)
