@@ -127,6 +127,41 @@ def task16():
     return
 
 
+def task17():
+    """
+    Task 17.
+
+    In this function you will be first plotting the spot plot for your PlanoConvex lens with the curved
+    side first (at the focal point). You will then be optimising the curvatures of a BiConvex lens
+    in order to minimise the RMS spot size at the same focal point. This function should return
+    the following items as a tuple in the following order:
+    1. The comparison spot plot for both PlanoConvex (curved side first) and BiConvex lenses at PlanoConvex focal point.
+    2. The RMS spot size for the PlanoConvex lens at focal point
+    3. the RMS spot size for the BiConvex lens at PlanoConvex focal point
+
+    Returns:
+        tuple[Figure, float, float]: The combined spot plot, RMS for the PC lens, RMS for the BiConvex lens
+    """
+    return
+
+
+def task18():
+    """
+    Task 18.
+
+    In this function you will be testing your reflection modelling. Create a new SphericalReflecting surface
+    and trace a RayBundle through it to the OutputPlane.This function should return
+    the following items as a tuple in the following order:
+    1. The track plot showing reflecting ray bundle off SphericalReflection surface.
+    2. The focal point of the SphericalReflection surface.
+
+    Returns:
+        tuple[Figure, float]: The track plot, the focal point
+
+    """
+    return
+
+
 if __name__ == "__main__":
 
     # Run task 8 function
@@ -152,5 +187,11 @@ if __name__ == "__main__":
 
     # Run task 16 function
     # FIG16, PC_RMS, CP_RMS, TASK16_DIFF_SCALE = task16()
+
+    # Run task 17 function
+    # task17()
+
+    # Run task 18 function
+    # task18()
 
     plt.show()
