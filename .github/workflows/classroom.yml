@@ -17,5 +17,5 @@ jobs:
         with:
           project: ProjectA
           src_dir: raytracer
-          python_version: 3.11
+          python_version: 3.12
       - uses: alexanderrichards/autograding@v2.0.0
