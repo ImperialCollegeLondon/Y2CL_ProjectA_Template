@@ -1,6 +1,8 @@
 from types import FunctionType, MethodType, NoneType
-from unittest.mock import MagicMock, PropertyMock
-from inspect import getmembers, isclass, signature
+from unittest.mock import MagicMock, PropertyMock, patch
+from inspect import getmembers, isclass, signature, getsource
+from importlib import import_module
+from base64 import b64encode, b64decode
 import numpy as np
 import matplotlib as mpl
 from matplotlib.figure import Figure
@@ -387,8 +389,11 @@ class TestTask7:
 
 class TestTask8:
 
-    def test_doesnt_crash(self, task8_output):
-        pass
+    TASK8_DEFAULT = b'ZGVmIHRhc2s4KCk6CiAgICAiIiIKICAgIFRhc2sgOC4KCiAgICBJbiB0aGlzIGZ1bmN0aW9uIHlvdSBzaG91bGQgY2hlY2sgeW91ciBwcm9wYWdhdGVfcmF5IGZ1bmN0aW9uIHByb3Blcmx5CiAgICBmaW5kcyB0aGUgY29ycmVjdCBpbnRlcmNlcHQgYW5kIGNvcnJlY3RseSByZWZyYWN0cyBhIHJheS4gRG9uJ3QgZm9yZ2V0CiAgICB0byBjaGVjayB0aGF0IHRoZSBjb3JyZWN0IHZhbHVlcyBhcmUgYXBwZW5kZWQgdG8geW91ciBSYXkgb2JqZWN0LgogICAgIiIiCg=='
+
+    def test_doesnt_crash(self, an, task8_output):
+        attempted = getsource(an.task8).encode('utf-8') != b64decode(TestTask8.TASK8_DEFAULT)
+        assert attempted, "Task8 not attempted."
 
     def test_ray_created(self, an, rays, monkeypatch):
         mock_ray_init = MagicMock(wraps=rays.Ray)
@@ -493,8 +498,11 @@ class TestTask9:
 
 class TestTask10:
 
-    def test_doesnt_crash(self, task10_output):
-        pass
+    TASK10_DEFAULT = b'ZGVmIHRhc2sxMCgpOgogICAgIiIiCiAgICBUYXNrIDEwLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBjcmVhdGUgUmF5IG9iamVjdHMgd2l0aCB0aGUgZ2l2ZW4gaW5pdGlhbCBwb3NpdGlvbnMuCiAgICBUaGVzZSByYXlzIHNob3VsZCBiZSBwcm9wYWdhdGVkIHRocm91Z2ggdGhlIHN1cmZhY2UsIHVwIHRvIHRoZSBvdXRwdXQgcGxhbmUuCiAgICBZb3Ugc2hvdWxkIHRoZW4gcGxvdCB0aGUgdHJhY2tzIG9mIHRoZXNlIHJheXMuCiAgICBUaGlzIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9mIHRoZSByYXkgcGF0aHMuCgogICAgUmV0dXJuczoKICAgICAgICBGaWd1cmU6IHRoZSByYXkgcGF0aCBwbG90LgogICAgIiIiCiAgICByZXR1cm4K'
+
+    def test_doesnt_crash(self, an, task10_output):
+        attempted = getsource(an.task10).encode('utf-8') != b64decode(TestTask10.TASK10_DEFAULT)
+        assert attempted, "Task10 not attempted."
 
     def test_sr_created_once(self, sr_mock, an):
         an.task10()
@@ -556,6 +564,8 @@ class TestTask10:
 
 class TestTask11:
 
+    TASK11_DEFAULT = b'ZGVmIHRhc2sxMSgpOgogICAgIiIiCiAgICBUYXNrIDExLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBwcm9wYWdhdGUgdGhlIHRocmVlIGdpdmVuIHBhcmF4aWFsIHJheXMgdGhyb3VnaCB0aGUgc3lzdGVtCiAgICB0byB0aGUgb3V0cHV0IHBsYW5lIGFuZCB0aGUgdHJhY2tzIG9mIHRoZXNlIHJheXMgc2hvdWxkIHRoZW4gYmUgcGxvdHRlZC4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHJheSBwYXRocwogICAgMi4gdGhlIGNhbGN1bGF0ZWQgZm9jYWwgcG9pbnQuCgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0XTogdGhlIHJheSBwYXRoIHBsb3QgYW5kIHRoZSBmb2NhbCBwb2ludAogICAgIiIiCiAgICByZXR1cm4K'
+
     def test_focal_point_exists(self, elements):
         assert isinstance(elements.SphericalRefraction.focal_point, (FunctionType, property))
 
@@ -570,8 +580,9 @@ class TestTask11:
             focal_point = focal_point()
         assert np.isclose(focal_point, 200.)
 
-    def test_doesnt_crash(self, task11_output):
-        pass
+    def test_doesnt_crash(self, an, task11_output):
+        attempted = getsource(an.task11).encode('utf-8') != b64decode(TestTask11.TASK11_DEFAULT)
+        assert attempted, "Task11 not attempted."
 
     def test_output(self, task11_output):
         assert isinstance(task11_output[0], Figure)
@@ -594,6 +605,8 @@ class TestTask11:
 
 
 class TestTask12:
+
+    TASK12_DEFAULT = b'ZGVmIHRhc2sxMigpOgogICAgIiIiCiAgICBUYXNrIDEyLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBjcmVhdGUgYSBSYXlCdW5ibGUgYW5kIHByb3BhZ2F0ZSBpdCB0byB0aGUgb3V0cHV0IHBsYW5lCiAgICBiZWZvcmUgcGxvdHRpbmcgdGhlIHRyYWNrcyBvZiB0aGUgcmF5cy4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgbWF0cGxvdGxpYiBmaWd1cmUgb2YgdGhlIHRyYWNrIHBsb3QuCgogICAgUmV0dXJuczoKICAgICAgICBGaWd1cmU6IHRoZSB0cmFjayBwbG90LgogICAgIiIiCiAgICByZXR1cm4K'
 
     def test_bundle_exists(self, rays):
         assert "RayBundle" in vars(rays)
@@ -636,18 +649,17 @@ class TestTask12:
         rb.track_plot()
         vert_mock.assert_called()
 
-    def test_doesnt_crash(self, task12_output):
-        pass
+    def test_doesnt_crash(self, an, task12_output):
+        attempted = getsource(an.task12).encode('utf-8') != b64decode(TestTask12.TASK12_DEFAULT)
+        assert attempted, "Task12 not attempted."
 
     def test_ouput_fig_produced(self, task12_output):
         assert isinstance(task12_output, Figure)
 
-    def test_analysis_uses_track_plot(self, rays, an, monkeypatch):
-        track_plot_mock = MagicMock()
-        with monkeypatch.context() as m:
-            m.setattr(rays.RayBundle, "track_plot", track_plot_mock)
-            if hasattr(an, "RayBundle"):
-                m.setattr(an.RayBundle, "track_plot", track_plot_mock)
+    def test_analysis_uses_track_plot(self, rays):
+        with patch.object(rays.RayBundle, "track_plot",
+                          autospec=True, side_effect=rays.RayBundle.track_plot) as track_plot_mock:
+            an = import_module("raytracer.analysis")
             an.task12()
         track_plot_mock.assert_called()
 
@@ -658,31 +670,31 @@ class TestTask12:
 
 class TestTask13:
 
+    TASK13_DEFAULT = b'ZGVmIHRhc2sxMygpOgogICAgIiIiCiAgICBUYXNrIDEzLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBhZ2FpbiBjcmVhdGUgYW5kIHByb3BhZ2F0ZSBhIFJheUJ1bmRsZSB0byB0aGUgb3V0cHV0IHBsYW5lCiAgICBiZWZvcmUgcGxvdHRpbmcgdGhlIHNwb3QgcGxvdC4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHRoZSBzcG90IHBsb3QKICAgIDIuIHRoZSBzaW11bGF0aW9uIFJNUwoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdF06IHRoZSBzcG90IHBsb3QgYW5kIHJtcwogICAgIiIiCiAgICByZXR1cm4K'
+
     def test_spot_plot_exists(self, rays):
         assert isinstance(rays.RayBundle.spot_plot, FunctionType)
 
     def test_rms_exists(self, rays):
         assert isinstance(rays.RayBundle.rms, (FunctionType, property))
 
-    def test_doesnt_crash(self, task13_output):
-        pass
+    def test_doesnt_crash(self, an, task13_output):
+        attempted = getsource(an.task13).encode('utf-8') != b64decode(TestTask13.TASK13_DEFAULT)
+        assert attempted, "Task13 not attempted."
 
     def test_output(self, task13_output):
         assert isinstance(task13_output[0], Figure)
         assert np.isclose(task13_output[1], 0.016176669411515444)
 
-    def test_analysis_uses_spot_plot_rms(self, rays, an, monkeypatch):
-        spot_plot_mock = MagicMock()
+    def test_analysis_uses_spot_plot_rms(self, rays, monkeypatch):
         pm = PropertyMock
         if isinstance(rays.RayBundle.rms, FunctionType):
             pm = MagicMock
-        rms_mock = pm()
-        with monkeypatch.context() as m:
-            m.setattr(rays.RayBundle, "spot_plot", spot_plot_mock)
+        rms_mock = pm(return_value=123)
+        with (patch.object(rays.RayBundle, "spot_plot", autospec=True, side_effect=rays.RayBundle.spot_plot) as spot_plot_mock,
+              monkeypatch.context() as m):
             m.setattr(rays.RayBundle, "rms", rms_mock)
-            if hasattr(an, "RayBundle"):
-                m.setattr(an.RayBundle, "spot_plot", spot_plot_mock)
-                m.setattr(an.RayBundle, "rms", rms_mock)
+            an = import_module("raytracer.analysis")
             an.task13()
         spot_plot_mock.assert_called()
         rms_mock.assert_called()
@@ -694,8 +706,11 @@ class TestTask13:
 
 class TestTask14:
 
-    def test_doesnt_crash(self, task14_output):
-        pass
+    TASK14_DEFAULT = b'ZGVmIHRhc2sxNCgpOgogICAgIiIiCiAgICBUYXNrIDE0LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgdHJhY2UgYSBudW1iZXIgb2YgUmF5QnVuZGxlcyB0aHJvdWdoIHRoZSBvcHRpY2FsIHN5c3RlbSBhbmQKICAgIHBsb3QgdGhlIFJNUyBhbmQgZGlmZnJhY3Rpb24gc2NhbGUgZGVwZW5kZW5jZSBvbiBpbnB1dCBiZWFtIHJhZGlpLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBzaW11bGF0aW9uIFJNUyBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMi41CiAgICAzLiB0aGUgZGlmZnJhY3Rpb24gc2NhbGUgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDIuNQoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgdGhlIHNpbXVsYXRpb24gUk1TIHZhbHVlLCB0aGUgZGlmZnJhY3Rpb24gc2NhbGUuCiAgICAiIiIKICAgIHJldHVybgo='
+
+    def test_doesnt_crash(self, an, task14_output):
+        attempted = getsource(an.task14).encode('utf-8') != b64decode(TestTask14.TASK14_DEFAULT)
+        assert attempted, "Task14 not attempted."
 
     def test_output(self, task14_output):
         assert isinstance(task14_output[0], Figure)
@@ -709,6 +724,8 @@ class TestTask14:
 
 class TestTask15:
 
+    TASK15_DEFAULT = b'ZGVmIHRhc2sxNSgpOgogICAgIiIiCiAgICBUYXNrIDE1LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgY3JlYXRlIHBsYW5vLWNvbnZleCBsZW5zZXMgaW4gZWFjaCBvcmllbnRhdGlvbiBhbmQgcHJvcGFnYXRlIGEgUmF5QnVuZGxlCiAgICB0aHJvdWdoIGVhY2ggdG8gdGhlaXIgcmVzcGVjdGl2ZSBmb2NhbCBwb2ludC4gWW91IHNob3VsZCB0aGVuIHBsb3QgdGhlIHNwb3QgcGxvdCBmb3IgZWFjaCBvcmllbnRhdGlvbi4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHRoZSBzcG90IHBsb3QgZm9yIHRoZSBwbGFuby1jb252ZXggc3lzdGVtCiAgICAyLiB0aGUgZm9jYWwgcG9pbnQgZm9yIHRoZSBwbGFuby1jb252ZXggbGVucwogICAgMy4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIHNwb3QgcGxvdCBmb3IgdGhlIGNvbnZleC1wbGFubyBzeXN0ZW0KICAgIDQgIHRoZSBmb2NhbCBwb2ludCBmb3IgdGhlIGNvbnZleC1wbGFubyBsZW5zCgoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdCwgRmlndXJlLCBmbG9hdF06IHRoZSBzcG90IHBsb3RzIGFuZCBybXMgZm9yIHBsYW5vLWNvbnZleCBhbmQgY29udmV4LXBsYW5vLgogICAgIiIiCiAgICByZXR1cm4K'
+
     def test_lenses_exists(self, lenses):
         pass
 
@@ -721,8 +738,9 @@ class TestTask15:
         advanced = {"z_0", "curvature", "n_inside", "n_outside", "thickness", "aperture"}
         assert basic.issubset(params) or advanced.issubset(params)
 
-    def test_doesnt_crash(self, task15_output):
-        pass
+    def test_doesnt_crash(self, an, task15_output):
+        attempted = getsource(an.task15).encode('utf-8') != b64decode(TestTask15.TASK15_DEFAULT)
+        assert attempted, "Task15 not attempted."
 
     def test_output(self, task15_output):
         pc_fig, pc_focal_point, cp_fig, cp_focal_point = task15_output
@@ -749,8 +767,12 @@ class TestTask15:
 
 
 class TestTask16:
-    def test_doesnt_crash(self, task16_output):
-        pass
+
+    TASK16_DEFAULT = b'ZGVmIHRhc2sxNigpOgogICAgIiIiCiAgICBUYXNrIDE2LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgYWdhaW4gcGxvdHRpbmcgdGhlIHJhZGlhbCBkZXBlbmRlbmNlIG9mIHRoZSBSTVMgYW5kIGRpZmZyYWN0aW9uIHZhbHVlcwogICAgZm9yIGVhY2ggb3JpZW50YXRpb24gb2YgeW91ciBsZW5zLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIHBsYW5vLWNvbnZleCBzeXN0ZW0KICAgIDMuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIGNvbnZleC1wbGFubyBzeXN0ZW0KICAgIDQgIHRoZSBkaWZmcmFjdGlvbiBzY2FsZSBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMy41CgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0LCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgUk1TIGZvciBwbGFuby1jb252ZXgsIFJNUyBmb3IgY29udmV4LXBsYW5vLCBkaWZmcmFjdGlvbiBzY2FsZS4KICAgICIiIgogICAgcmV0dXJuCg=='
+
+    def test_doesnt_crash(self, an, task16_output):
+        attempted = getsource(an.task16).encode('utf-8') != b64decode(TestTask16.TASK16_DEFAULT)
+        assert attempted, "Task16 not attempted."
 
     def test_output(self, task16_output):
         fig, pc_rms, cp_rms, diff = task16_output
@@ -765,8 +787,12 @@ class TestTask16:
 
 
 class TestTask17:
-    def test_doesnt_crash(self, task17_output):
-        pass
+
+    TASK17_DEFAULT = b'ZGVmIHRhc2sxNygpOgogICAgIiIiCiAgICBUYXNrIDE3LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgZmlyc3QgcGxvdHRpbmcgdGhlIHNwb3QgcGxvdCBmb3IgeW91ciBQbGFub0NvbnZleCBsZW5zIHdpdGggdGhlIGN1cnZlZAogICAgc2lkZSBmaXJzdCAoYXQgdGhlIGZvY2FsIHBvaW50KS4gWW91IHdpbGwgdGhlbiBiZSBvcHRpbWlzaW5nIHRoZSBjdXJ2YXR1cmVzIG9mIGEgQmlDb252ZXggbGVucwogICAgaW4gb3JkZXIgdG8gbWluaW1pc2UgdGhlIFJNUyBzcG90IHNpemUgYXQgdGhlIHNhbWUgZm9jYWwgcG9pbnQuIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybgogICAgdGhlIGZvbGxvd2luZyBpdGVtcyBhcyBhIHR1cGxlIGluIHRoZSBmb2xsb3dpbmcgb3JkZXI6CiAgICAxLiBUaGUgY29tcGFyaXNvbiBzcG90IHBsb3QgZm9yIGJvdGggUGxhbm9Db252ZXggKGN1cnZlZCBzaWRlIGZpcnN0KSBhbmQgQmlDb252ZXggbGVuc2VzIGF0IFBsYW5vQ29udmV4IGZvY2FsIHBvaW50LgogICAgMi4gVGhlIFJNUyBzcG90IHNpemUgZm9yIHRoZSBQbGFub0NvbnZleCBsZW5zIGF0IGZvY2FsIHBvaW50CiAgICAzLiB0aGUgUk1TIHNwb3Qgc2l6ZSBmb3IgdGhlIEJpQ29udmV4IGxlbnMgYXQgUGxhbm9Db252ZXggZm9jYWwgcG9pbnQKCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXQsIGZsb2F0XTogVGhlIGNvbWJpbmVkIHNwb3QgcGxvdCwgUk1TIGZvciB0aGUgUEMgbGVucywgUk1TIGZvciB0aGUgQmlDb252ZXggbGVucwogICAgIiIiCiAgICByZXR1cm4K'
+
+    def test_doesnt_crash(self, an, task17_output):
+        attempted = getsource(an.task17).encode('utf-8') != b64decode(TestTask17.TASK17_DEFAULT)
+        assert attempted, "Task17 not attempted."
 
     def test_biconvex_exists(self, lenses):
         assert "BiConvex" in vars(lenses)
@@ -782,8 +808,12 @@ class TestTask17:
 
 
 class TestTask18:
-    def test_doesnt_crash(self, task18_output):
-        pass
+
+    TASK18_DEFAULT = b'ZGVmIHRhc2sxOCgpOgogICAgIiIiCiAgICBUYXNrIDE4LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgdGVzdGluZyB5b3VyIHJlZmxlY3Rpb24gbW9kZWxsaW5nLiBDcmVhdGUgYSBuZXcgU3BoZXJpY2FsUmVmbGVjdGluZyBzdXJmYWNlCiAgICBhbmQgdHJhY2UgYSBSYXlCdW5kbGUgdGhyb3VnaCBpdCB0byB0aGUgT3V0cHV0UGxhbmUuVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuCiAgICB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIFRoZSB0cmFjayBwbG90IHNob3dpbmcgcmVmbGVjdGluZyByYXkgYnVuZGxlIG9mZiBTcGhlcmljYWxSZWZsZWN0aW9uIHN1cmZhY2UuCiAgICAyLiBUaGUgZm9jYWwgcG9pbnQgb2YgdGhlIFNwaGVyaWNhbFJlZmxlY3Rpb24gc3VyZmFjZS4KCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXRdOiBUaGUgdHJhY2sgcGxvdCwgdGhlIGZvY2FsIHBvaW50CgogICAgIiIiCiAgICByZXR1cm4K'
+
+    def test_doesnt_crash(self, an, task18_output):
+        attempted = getsource(an.task18).encode('utf-8') != b64decode(TestTask18.TASK18_DEFAULT)
+        assert attempted, "Task18 not attempted."
 
     def test_srefl_exists(self, elements):
         assert "SphericalReflection" in vars(elements)
