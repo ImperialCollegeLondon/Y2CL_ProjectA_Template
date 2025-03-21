@@ -517,13 +517,11 @@ class TestTask10:
 
         assert call_dict["z_0"] == 250.
 
-    def test_rays_created(self, ray_mock, an):
-        an.task10()
+    def test_rays_created(self, ray_mock, task10_output):
         ray_mock.assert_called()
         assert ray_mock.call_count > 1, "Only a single ray created"
 
-    def test_ray_vertices_called(self, vert_mock, an):
-        an.task10()
+    def test_ray_vertices_called(self, vert_mock, task10_output):
         vert_mock.assert_called()
         assert vert_mock.call_count > 1, "only called vertices on one ray"
 
@@ -709,12 +707,10 @@ class TestTask15:
         assert np.isclose(pc_focal_point, 201.74922600619198)
         assert np.isclose(cp_focal_point, 198.45281250408226)
 
-    def test_2SR_objects_created(self, sr_mock, an):
-        an.task15()
+    def test_2SR_objects_created(self, sr_mock, task15_output):
         assert sr_mock.call_count >= 2
 
-    def test_OP_object_created(self, op_mock, an):
-        an.task15()
+    def test_OP_object_created(self, op_mock, task15_output):
         assert op_mock.call_count == 2
 
     # @check_figures_equal(ref_path="task15pc", tol=33)
