@@ -1,5 +1,5 @@
 """Pytest fixtures."""
-from importlib import import_module
+from importlib import import_module, reload
 from pathlib import Path
 from types import FunctionType
 from unittest.mock import MagicMock, patch, PropertyMock
@@ -31,27 +31,27 @@ def rt():
     lenses_module = import_module("raytracer.lenses")
     return CombinedNamespace(rays_module, elements_module, lenses_module)
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def ph():
     return import_module("raytracer.physics")
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def rays():
     return import_module("raytracer.rays")
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def elements():
     return import_module("raytracer.elements")
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def physics():
     return import_module("raytracer.physics")
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def lenses():
     return import_module("raytracer.lenses")
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def an():
     matplotlib.use("agg")  # Non-interactive backend more stable for testing that interactive Tk
     yield import_module("raytracer.analysis")
@@ -114,44 +114,24 @@ def source_files_str(source_files):
 
 
 @pytest.fixture(scope="function")
-def sr_mock(elements, an):
-    sr = MagicMock(wraps=elements.SphericalRefraction)
-    with patch.object(elements, "SphericalRefraction", sr), \
-         patch.object(an, "SphericalRefraction", sr):
-        yield sr
+def sr_mock(elements):
+    with patch.object(elements.SphericalRefraction, "__init__", autospec=True, side_effect=elements.SphericalRefraction.__init__) as srm:
+        yield srm
 
 @pytest.fixture(scope="function")
-def sr_mock_with_lenses(elements, lenses, an):
-    sr = MagicMock(wraps=elements.SphericalRefraction)
-    with (patch.object(elements, "SphericalRefraction", sr),
-          patch.object(lenses, "SphericalRefraction", sr),
-          patch.object(an, "SphericalRefraction", sr)):
-        yield sr
-
+def op_mock(elements):
+    with patch.object(elements.OutputPlane, "__init__", autospec=True, side_effect=elements.OutputPlane.__init__) as opm:
+        yield opm
 
 @pytest.fixture(scope="function")
-def op_mock(elements, an):
-    op = MagicMock(wraps=elements.OutputPlane)
-    with patch.object(elements, "OutputPlane", op), \
-         patch.object(an, "OutputPlane", op):
-        yield op
+def ray_mock(rays):
+    with patch.object(rays.Ray, "__init__", autospec=True, side_effect=rays.Ray.__init__) as rm:
+        yield rm
 
 @pytest.fixture(scope="function")
-def ray_mock(rays, an):
-    ray = MagicMock(wraps=rays.Ray)
-    with patch.object(rays, "Ray", ray), \
-         patch.object(an, "Ray", ray):
-        yield ray
-
-@pytest.fixture()
-def pr_mock(elements, an):
-    pr = MagicMock()
-    with patch.object(elements.SphericalRefraction, "propagate_ray", pr):
-        if hasattr(an, "SphericalRefraction"):
-            with patch.object(an.SphericalRefraction, "propagate_ray", pr):
-                yield pr
-        else:
-            yield pr
+def pr_mock(elements):
+    with patch.object(elements.SphericalRefraction, "propagate_ray", autospec=True, side_effect=elements.SphericalRefraction.propagate_ray) as prm:
+        yield prm
 
 @pytest.fixture(scope="function")
 def planoconvex_mock(lenses, an):
@@ -161,62 +141,67 @@ def planoconvex_mock(lenses, an):
         yield pc
 
 @pytest.fixture(scope="function")
-def vert_mock(rays, an):
-    v_mock = PropertyMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
+def vert_mock(rays):
+    mock_type = PropertyMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
     if isinstance(rays.Ray.vertices, FunctionType):
-        v_mock = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
-
-    with (patch.object(rays.Ray, "vertices", v_mock),
-          patch.object(an.Ray, "vertices", v_mock)):
+        mock_type = MagicMock(return_value=[np.array([0., 0., 0.]), np.array([0., 0., 1.])])
+    with patch.object(rays.Ray, "vertices", mock_type) as v_mock:
         yield v_mock
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
+def track_plot_mock(rays):
+    with patch.object(rays.RayBundle, "track_plot", autospec=True, side_effect=rays.RayBundle.track_plot) as tp_mock:
+        yield tp_mock
+
+@pytest.fixture(scope="function")
+def spot_plot_mock(rays):
+    with patch.object(rays.RayBundle, "spot_plot", autospec=True, side_effect=rays.RayBundle.spot_plot) as sp_mock:
+        yield sp_mock
+
+@pytest.fixture(scope="function")
+def rms_mock(rays):
+    rmsm = PropertyMock(return_value=123)
+    if isinstance(rays.RayBundle.rms, FunctionType):
+        rmsm = MagicMock(return_value=123)
+    with patch.object(rays.RayBundle, "rms", rmsm):
+        yield rmsm
+
+@pytest.fixture(scope="function")
 def task8_output(an):
     yield an.task8()
-    plt.close("all")    
 
-
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task10_output(an):
     yield an.task10()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task11_output(an):
     yield an.task11()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task12_output(an):
     yield an.task12()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task13_output(an):
     yield an.task13()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task14_output(an):
     yield an.task14()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task15_output(an):
     yield an.task15()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task16_output(an):
     yield an.task16()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task17_output(an):
     yield an.task17()
-    plt.close("all")
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def task18_output(an):
     yield an.task18()
-    plt.close("all")
