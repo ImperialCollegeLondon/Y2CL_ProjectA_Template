@@ -1,4 +1,4 @@
-from types import FunctionType, MethodType, NoneType
+from types import FunctionType, MethodType
 from unittest.mock import MagicMock, PropertyMock, patch
 from inspect import getmembers, isclass, signature, getsource
 from importlib import import_module
@@ -280,9 +280,9 @@ class TestTask6:
         assert isinstance(ph.refract(direc=[1, 2, 3], normal=[4, 5, 6], n_1=1, n_2=1.5), np.ndarray)
 
     def test_returns_unitvector(self, ph):
-        assert np.linalg.norm(ph.refract(direc=np.array([0., 0.05, 1.]),
-                                         normal=np.array([0., -1.9, -1.]),
-                                         n_1=1.0, n_2=1.5)) == 1.
+        assert np.isclose(np.linalg.norm(ph.refract(direc=np.array([0., 0.05, 1.]),
+                                                    normal=np.array([0., -1.9, -1.]),
+                                                    n_1=1.0, n_2=1.5)), 1.)
 
     def test_onaxis_refract(self, ph):
         assert np.allclose(ph.refract(direc=np.array([0., 0., 1.]),
@@ -414,12 +414,9 @@ class TestTask8:
             an.task8()
         mock_sr_class.assert_called()
 
-    def test_propagate_ray_called(self, an, elements, monkeypatch):
-        mock_pr = MagicMock()
-        with monkeypatch.context() as m:
-            m.setattr(elements.SphericalRefraction, "propagate_ray", mock_pr)
-            if hasattr(an, "SphericalRefraction"):
-                m.setattr(an.SphericalRefraction, "propagate_ray", mock_pr)
+    def test_propagate_ray_called(self, elements):
+        with patch.object(elements.SphericalRefraction, "propagate_ray", autospec=True, side_effect=elements.SphericalRefraction.propagate_ray) as mock_pr:
+            an = import_module("raytracer.analysis")
             an.task8()
         mock_pr.assert_called()
         assert mock_pr.call_count > 1, "Propagate only called once"
