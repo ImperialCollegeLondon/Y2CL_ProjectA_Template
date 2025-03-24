@@ -156,7 +156,7 @@ def task18():
     2. The focal point of the SphericalReflection surface.
 
     Returns:
-        tuple[Figure, float]: The track plot, the focal point
+        tuple[Figure, float]: The track plot and the focal point.
 
     """
     return
@@ -189,9 +189,9 @@ if __name__ == "__main__":
     # FIG16, PC_RMS, CP_RMS, TASK16_DIFF_SCALE = task16()
 
     # Run task 17 function
-    # task17()
+    # FIG17, CP_RMS, BICONVEX_RMS = task17()
 
     # Run task 18 function
-    # task18()
+    # FIG18, FOCAL_POINT = task18()
 
     plt.show()
