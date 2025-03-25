@@ -391,7 +391,7 @@ class TestTask8:
 
     TASK8_DEFAULT = b'ZGVmIHRhc2s4KCk6CiAgICAiIiIKICAgIFRhc2sgOC4KCiAgICBJbiB0aGlzIGZ1bmN0aW9uIHlvdSBzaG91bGQgY2hlY2sgeW91ciBwcm9wYWdhdGVfcmF5IGZ1bmN0aW9uIHByb3Blcmx5CiAgICBmaW5kcyB0aGUgY29ycmVjdCBpbnRlcmNlcHQgYW5kIGNvcnJlY3RseSByZWZyYWN0cyBhIHJheS4gRG9uJ3QgZm9yZ2V0CiAgICB0byBjaGVjayB0aGF0IHRoZSBjb3JyZWN0IHZhbHVlcyBhcmUgYXBwZW5kZWQgdG8geW91ciBSYXkgb2JqZWN0LgogICAgIiIiCg=='
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task8_output, an):
         attempted = getsource(an.task8).encode('utf-8') != b64decode(TestTask8.TASK8_DEFAULT)
         assert attempted, "Task8 not attempted."
 
@@ -482,7 +482,7 @@ class TestTask10:
 
     TASK10_DEFAULT = b'ZGVmIHRhc2sxMCgpOgogICAgIiIiCiAgICBUYXNrIDEwLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBjcmVhdGUgUmF5IG9iamVjdHMgd2l0aCB0aGUgZ2l2ZW4gaW5pdGlhbCBwb3NpdGlvbnMuCiAgICBUaGVzZSByYXlzIHNob3VsZCBiZSBwcm9wYWdhdGVkIHRocm91Z2ggdGhlIHN1cmZhY2UsIHVwIHRvIHRoZSBvdXRwdXQgcGxhbmUuCiAgICBZb3Ugc2hvdWxkIHRoZW4gcGxvdCB0aGUgdHJhY2tzIG9mIHRoZXNlIHJheXMuCiAgICBUaGlzIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9mIHRoZSByYXkgcGF0aHMuCgogICAgUmV0dXJuczoKICAgICAgICBGaWd1cmU6IHRoZSByYXkgcGF0aCBwbG90LgogICAgIiIiCiAgICByZXR1cm4K'
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task10_output, an):
         attempted = getsource(an.task10).encode('utf-8') != b64decode(TestTask10.TASK10_DEFAULT)
         assert attempted, "Task10 not attempted."
 
@@ -551,7 +551,7 @@ class TestTask11:
             focal_point = focal_point()
         assert np.isclose(focal_point, 200.)
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task11_output, an):
         attempted = getsource(an.task11).encode('utf-8') != b64decode(TestTask11.TASK11_DEFAULT)
         assert attempted, "Task11 not attempted."
 
@@ -620,7 +620,7 @@ class TestTask12:
         rb.track_plot()
         vert_mock.assert_called()
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task12_output, an):
         attempted = getsource(an.task12).encode('utf-8') != b64decode(TestTask12.TASK12_DEFAULT)
         assert attempted, "Task12 not attempted."
 
@@ -645,7 +645,7 @@ class TestTask13:
     def test_rms_exists(self, rays):
         assert isinstance(rays.RayBundle.rms, (FunctionType, property))
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task13_output, an):
         attempted = getsource(an.task13).encode('utf-8') != b64decode(TestTask13.TASK13_DEFAULT)
         assert attempted, "Task13 not attempted."
 
@@ -666,7 +666,7 @@ class TestTask14:
 
     TASK14_DEFAULT = b'ZGVmIHRhc2sxNCgpOgogICAgIiIiCiAgICBUYXNrIDE0LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgdHJhY2UgYSBudW1iZXIgb2YgUmF5QnVuZGxlcyB0aHJvdWdoIHRoZSBvcHRpY2FsIHN5c3RlbSBhbmQKICAgIHBsb3QgdGhlIFJNUyBhbmQgZGlmZnJhY3Rpb24gc2NhbGUgZGVwZW5kZW5jZSBvbiBpbnB1dCBiZWFtIHJhZGlpLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBzaW11bGF0aW9uIFJNUyBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMi41CiAgICAzLiB0aGUgZGlmZnJhY3Rpb24gc2NhbGUgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDIuNQoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgdGhlIHNpbXVsYXRpb24gUk1TIHZhbHVlLCB0aGUgZGlmZnJhY3Rpb24gc2NhbGUuCiAgICAiIiIKICAgIHJldHVybgo='
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task14_output, an):
         attempted = getsource(an.task14).encode('utf-8') != b64decode(TestTask14.TASK14_DEFAULT)
         assert attempted, "Task14 not attempted."
 
@@ -696,7 +696,7 @@ class TestTask15:
         advanced = {"z_0", "curvature", "n_inside", "n_outside", "thickness", "aperture"}
         assert basic.issubset(params) or advanced.issubset(params)
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task15_output, an):
         attempted = getsource(an.task15).encode('utf-8') != b64decode(TestTask15.TASK15_DEFAULT)
         assert attempted, "Task15 not attempted."
 
@@ -726,7 +726,7 @@ class TestTask16:
 
     TASK16_DEFAULT = b'ZGVmIHRhc2sxNigpOgogICAgIiIiCiAgICBUYXNrIDE2LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgYWdhaW4gcGxvdHRpbmcgdGhlIHJhZGlhbCBkZXBlbmRlbmNlIG9mIHRoZSBSTVMgYW5kIGRpZmZyYWN0aW9uIHZhbHVlcwogICAgZm9yIGVhY2ggb3JpZW50YXRpb24gb2YgeW91ciBsZW5zLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIHBsYW5vLWNvbnZleCBzeXN0ZW0KICAgIDMuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIGNvbnZleC1wbGFubyBzeXN0ZW0KICAgIDQgIHRoZSBkaWZmcmFjdGlvbiBzY2FsZSBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMy41CgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0LCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgUk1TIGZvciBwbGFuby1jb252ZXgsIFJNUyBmb3IgY29udmV4LXBsYW5vLCBkaWZmcmFjdGlvbiBzY2FsZS4KICAgICIiIgogICAgcmV0dXJuCg=='
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task16_output, an):
         attempted = getsource(an.task16).encode('utf-8') != b64decode(TestTask16.TASK16_DEFAULT)
         assert attempted, "Task16 not attempted."
 
@@ -746,7 +746,7 @@ class TestTask17:
 
     TASK17_DEFAULT = b'ZGVmIHRhc2sxNygpOgogICAgIiIiCiAgICBUYXNrIDE3LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgZmlyc3QgcGxvdHRpbmcgdGhlIHNwb3QgcGxvdCBmb3IgeW91ciBQbGFub0NvbnZleCBsZW5zIHdpdGggdGhlIGN1cnZlZAogICAgc2lkZSBmaXJzdCAoYXQgdGhlIGZvY2FsIHBvaW50KS4gWW91IHdpbGwgdGhlbiBiZSBvcHRpbWlzaW5nIHRoZSBjdXJ2YXR1cmVzIG9mIGEgQmlDb252ZXggbGVucwogICAgaW4gb3JkZXIgdG8gbWluaW1pc2UgdGhlIFJNUyBzcG90IHNpemUgYXQgdGhlIHNhbWUgZm9jYWwgcG9pbnQuIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybgogICAgdGhlIGZvbGxvd2luZyBpdGVtcyBhcyBhIHR1cGxlIGluIHRoZSBmb2xsb3dpbmcgb3JkZXI6CiAgICAxLiBUaGUgY29tcGFyaXNvbiBzcG90IHBsb3QgZm9yIGJvdGggUGxhbm9Db252ZXggKGN1cnZlZCBzaWRlIGZpcnN0KSBhbmQgQmlDb252ZXggbGVuc2VzIGF0IFBsYW5vQ29udmV4IGZvY2FsIHBvaW50LgogICAgMi4gVGhlIFJNUyBzcG90IHNpemUgZm9yIHRoZSBQbGFub0NvbnZleCBsZW5zIGF0IGZvY2FsIHBvaW50CiAgICAzLiB0aGUgUk1TIHNwb3Qgc2l6ZSBmb3IgdGhlIEJpQ29udmV4IGxlbnMgYXQgUGxhbm9Db252ZXggZm9jYWwgcG9pbnQKCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXQsIGZsb2F0XTogVGhlIGNvbWJpbmVkIHNwb3QgcGxvdCwgUk1TIGZvciB0aGUgUEMgbGVucywgUk1TIGZvciB0aGUgQmlDb252ZXggbGVucwogICAgIiIiCiAgICByZXR1cm4K'
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task17_output, an):
         attempted = getsource(an.task17).encode('utf-8') != b64decode(TestTask17.TASK17_DEFAULT)
         assert attempted, "Task17 not attempted."
 
@@ -767,7 +767,7 @@ class TestTask18:
 
     TASK18_DEFAULT = b'ZGVmIHRhc2sxOCgpOgogICAgIiIiCiAgICBUYXNrIDE4LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgdGVzdGluZyB5b3VyIHJlZmxlY3Rpb24gbW9kZWxsaW5nLiBDcmVhdGUgYSBuZXcgU3BoZXJpY2FsUmVmbGVjdGluZyBzdXJmYWNlCiAgICBhbmQgdHJhY2UgYSBSYXlCdW5kbGUgdGhyb3VnaCBpdCB0byB0aGUgT3V0cHV0UGxhbmUuVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuCiAgICB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIFRoZSB0cmFjayBwbG90IHNob3dpbmcgcmVmbGVjdGluZyByYXkgYnVuZGxlIG9mZiBTcGhlcmljYWxSZWZsZWN0aW9uIHN1cmZhY2UuCiAgICAyLiBUaGUgZm9jYWwgcG9pbnQgb2YgdGhlIFNwaGVyaWNhbFJlZmxlY3Rpb24gc3VyZmFjZS4KCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXRdOiBUaGUgdHJhY2sgcGxvdCBhbmQgdGhlIGZvY2FsIHBvaW50LgoKICAgICIiIgogICAgcmV0dXJuCg=='
 
-    def test_doesnt_crash(self, an):
+    def test_doesnt_crash(self, task18_output, an):
         attempted = getsource(an.task18).encode('utf-8') != b64decode(TestTask18.TASK18_DEFAULT)
         assert attempted, "Task18 not attempted."
 
