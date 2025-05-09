@@ -185,8 +185,10 @@ class TestAdvancedDesign:
                                      elements.OpticalElement,
                                      object})
 
-    def test_intercept_not_in_sr(self, elements):
+    def test_intercept_not_in_sr(self, rays, elements):
         assert "intercept" not in vars(elements.SphericalRefraction)
+        with pytest.raises((NotImplementedError, TypeError)):
+            elements.OpticalElement().intercept(rays.Ray([0., 0., 0.], [0., 0., 1.]))
 
     def test_op_tree(self, elements):
         test_tree = set(elements.OutputPlane.mro())
@@ -195,8 +197,10 @@ class TestAdvancedDesign:
                                      elements.OpticalElement,
                                      object})
 
-    def test_intercept_not_in_op(self, elements):
+    def test_intercept_not_in_op(self, rays, elements):
         assert "intercept" not in vars(elements.OutputPlane)
+        with pytest.raises((NotImplementedError, TypeError)):
+            elements.OpticalElement().intercept(rays.Ray([0., 0., 0.], [0., 0., 1.]))
 
     # def test_hidden_variables(self, rays, elements, lenses):
     #     r = rays.Ray(pos=[1, 2, 3], direc=[4, 5, 6])

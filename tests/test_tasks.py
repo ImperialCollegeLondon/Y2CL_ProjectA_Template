@@ -1,5 +1,6 @@
 from types import FunctionType, MethodType
-from unittest.mock import MagicMock, PropertyMock, patch
+from operator import itemgetter
+from unittest.mock import MagicMock, PropertyMock, patch, call
 from inspect import getmembers, isclass, signature, getsource
 from importlib import import_module, reload
 from base64 import b64encode, b64decode
@@ -263,6 +264,36 @@ class TestTask5:
         sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
         assert np.allclose(sr.intercept(ray1), [1., 0., 9.989999])
         assert np.allclose(sr.intercept(ray2), [-1., 0., 9.989999])
+
+    def test_intercept_aperture(self, rays, elements):
+        ray1 = rays.Ray(pos=[7., 0., 0.])
+        ray2 = rays.Ray(pos=[-7., 0., 0.])
+        ray3 = rays.Ray(pos=[10., 0., 0.])
+        ray4 = rays.Ray(pos=[-10., 0., 0.])
+
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=50.)
+        assert np.allclose(sr.intercept(ray1), [7., 0., 10.49242482])
+        assert np.allclose(sr.intercept(ray2), [-7., 0., 10.49242482])
+        assert np.allclose(sr.intercept(ray3), [10., 0., 11.01020514])
+        assert np.allclose(sr.intercept(ray4), [-10., 0., 11.01020514])
+
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=50.)
+        assert np.allclose(sr.intercept(ray1), [7., 0., 9.50757518])
+        assert np.allclose(sr.intercept(ray2), [-7., 0., 9.50757518])
+        assert np.allclose(sr.intercept(ray3), [10., 0., 8.98979486])
+        assert np.allclose(sr.intercept(ray4), [-10., 0., 8.98979486])
+
+        sr = elements.SphericalRefraction(z_0=10, curvature=0.02, n_1=1., n_2=1.5, aperture=9.)
+        assert np.allclose(sr.intercept(ray1), [7., 0., 10.49242482])
+        assert np.allclose(sr.intercept(ray2), [-7., 0., 10.49242482])
+        assert sr.intercept(ray3) is None
+        assert sr.intercept(ray4) is None
+
+        sr = elements.SphericalRefraction(z_0=10, curvature=-0.02, n_1=1., n_2=1.5, aperture=9.)
+        assert np.allclose(sr.intercept(ray1), [7., 0., 9.50757518])
+        assert np.allclose(sr.intercept(ray2), [-7., 0., 9.50757518])
+        assert sr.intercept(ray3) is None
+        assert sr.intercept(ray4) is None
 
 
 class TestTask6:
@@ -584,6 +615,114 @@ class TestTask12:
 
     def test_bundle_class(self, rays):
         assert isinstance(rays.RayBundle, type)
+
+    def test_genpolar_exists(self, genpolar):
+        assert "rtrings" in vars(genpolar)
+
+    def test_using_rtrings(self, rtrings_mock, rays, monkeypatch):
+        with monkeypatch.context() as m:
+            m.setattr(rays, "rtrings", rtrings_mock)
+            rays.RayBundle()
+        rtrings_mock.assert_called_once_with(rmax=5, nrings=5, multi=6)
+
+    def test_bundles_rays(self, rays, bundle_var_name_map):
+        rb = rays.RayBundle()
+        rb_rays = getattr(rb, bundle_var_name_map['rays'])
+        assert len(rb_rays) == 91
+
+        positions = sorted((r.pos if not isinstance(r.pos, MethodType) else r.pos() for r in rb_rays), key=itemgetter(0, 1))
+        expected_positions = sorted([[-5.000000e+00, 6.123234e-16, 0.000000e+00],
+                                     [-4.890738, -1.03955845, 0.],
+                                     [-4.890738, 1.03955845, 0.],
+                                     [-4.56772729, -2.03368322, 0.],
+                                     [-4.56772729, 2.03368322, 0.],
+                                     [-4.04508497, -2.93892626, 0.],
+                                     [-4.04508497, 2.93892626, 0.],
+                                     [-4.0000000e+00, 4.8985872e-16, 0.0000000e+00],
+                                     [-3.86370331, -1.03527618, 0.],
+                                     [-3.86370331, 1.03527618, 0.],
+                                     [-3.46410162, -2., 0.],
+                                     [-3.46410162, 2., 0.],
+                                     [-3.34565303, -3.71572413, 0.],
+                                     [-3.34565303, 3.71572413, 0.],
+                                     [-3.0000000e+00, 3.6739404e-16, 0.0000000e+00],
+                                     [-2.82842712, -2.82842712, 0.],
+                                     [-2.82842712, 2.82842712, 0.],
+                                     [-2.81907786, -1.02606043, 0.],
+                                     [-2.81907786, 1.02606043, 0.],
+                                     [-2.5, -4.33012702, 0.],
+                                     [-2.5, 4.33012702, 0.],
+                                     [-2.29813333, -1.92836283, 0.],
+                                     [-2.29813333, 1.92836283, 0.],
+                                     [-2., -3.46410162, 0.],
+                                     [-2.0000000e+00, 2.4492936e-16, 0.0000000e+00],
+                                     [-2., 3.46410162, 0.],
+                                     [-1.73205081, -1., 0.],
+                                     [-1.73205081, 1., 0.],
+                                     [-1.54508497, -4.75528258, 0.],
+                                     [-1.54508497, 4.75528258, 0.],
+                                     [-1.5, -2.59807621, 0.],
+                                     [-1.5, 2.59807621, 0.],
+                                     [-1.03527618, -3.86370331, 0.],
+                                     [-1.03527618, 3.86370331, 0.],
+                                     [-1., -1.73205081, 0.],
+                                     [-1.0000000e+00, 1.2246468e-16, 0.0000000e+00],
+                                     [-1., 1.73205081, 0.],
+                                     [-0.52264232, -4.97260948, 0.],
+                                     [-0.52264232, 4.97260948, 0.],
+                                     [-0.52094453, -2.95442326, 0.],
+                                     [-0.52094453, 2.95442326, 0.],
+                                     [-0.5, -0.8660254, 0.],
+                                     [-0.5, 0.8660254, 0.],
+                                     [-7.34788079e-16, -4.00000000e+00, 0.00000000e+00],
+                                     [-3.6739404e-16, -2.0000000e+00, 0.0000000e+00],
+                                     [0., 0., 0.],
+                                     [1.2246468e-16, 2.0000000e+00, 0.0000000e+00],
+                                     [2.4492936e-16, 4.0000000e+00, 0.0000000e+00],
+                                     [0.5, -0.8660254, 0.],
+                                     [0.5, 0.8660254, 0.],
+                                     [0.52094453, -2.95442326, 0.],
+                                     [0.52094453, 2.95442326, 0.],
+                                     [0.52264232, -4.97260948, 0.],
+                                     [0.52264232, 4.97260948, 0.],
+                                     [1., -1.73205081, 0.],
+                                     [1., 0., 0.],
+                                     [1., 1.73205081, 0.],
+                                     [1.03527618, -3.86370331, 0.],
+                                     [1.03527618, 3.86370331, 0.],
+                                     [1.5, -2.59807621, 0.],
+                                     [1.5, 2.59807621, 0.],
+                                     [1.54508497, -4.75528258, 0.],
+                                     [1.54508497, 4.75528258, 0.],
+                                     [1.73205081, -1., 0.],
+                                     [1.73205081, 1., 0.],
+                                     [2., -3.46410162, 0.],
+                                     [2., 0., 0.],
+                                     [2., 3.46410162, 0.],
+                                     [2.29813333, -1.92836283, 0.],
+                                     [2.29813333, 1.92836283, 0.],
+                                     [2.5, -4.33012702, 0.],
+                                     [2.5, 4.33012702, 0.],
+                                     [2.81907786, -1.02606043, 0.],
+                                     [2.81907786, 1.02606043, 0.],
+                                     [2.82842712, -2.82842712, 0.],
+                                     [2.82842712, 2.82842712, 0.],
+                                     [3., 0., 0.],
+                                     [3.34565303, -3.71572413, 0.],
+                                     [3.34565303, 3.71572413, 0.],
+                                     [3.46410162, -2., 0.],
+                                     [3.46410162, 2., 0.],
+                                     [3.86370331, -1.03527618, 0.],
+                                     [3.86370331, 1.03527618, 0.],
+                                     [4., 0., 0.],
+                                     [4.04508497, -2.93892626, 0.],
+                                     [4.04508497, 2.93892626, 0.],
+                                     [4.56772729, -2.03368322, 0.],
+                                     [4.56772729, 2.03368322, 0.],
+                                     [4.890738, -1.03955845, 0.],
+                                     [4.890738, 1.03955845, 0.],
+                                     [5., 0., 0.]], key=itemgetter(0, 1))
+        assert np.allclose(positions, expected_positions)
 
     def test_bundle_not_inheritance(self, rays):
         # assert rays.Ray not in rays.RayBundle.mro()

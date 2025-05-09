@@ -651,9 +651,29 @@
       "points": 1
     },
     {
+      "name": "Test task12 - bundles rays",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_bundles_rays",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
       "name": "Test task12 - doesnt crash",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask12::test_doesnt_crash",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task12 - genpolar exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_genpolar_exists",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -714,6 +734,16 @@
       "name": "Test task12 - track plot type",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask12::test_track_plot_type",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task12 - using rtrings",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask12::test_using_rtrings",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -1244,6 +1274,16 @@
       "name": "Test task4 - z0",
       "setup": "",
       "run": "pytest -vv tests/test_tasks.py::TestTask4::test_z0",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    },
+    {
+      "name": "Test task5 - intercept aperture",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask5::test_intercept_aperture",
       "input": "",
       "output": "",
       "comparison": "included",

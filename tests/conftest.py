@@ -57,6 +57,10 @@ def elements():
 def physics():
     return import_module("raytracer.physics")
 
+@pytest.fixture(scope="function")
+def genpolar():
+    return import_module("raytracer.genpolar")
+
 
 @pytest.fixture(scope="function")
 def lenses():
@@ -84,6 +88,15 @@ def var_name_map(rays):
             ret['direc'] = var_name
     return ret
 
+@pytest.fixture
+def bundle_var_name_map(rays):
+    r = rays.RayBundle()
+
+    ret = {}
+    for var_name, val in vars(r).items():
+        if isinstance(val, (list, np.ndarray)):
+            ret['rays'] = var_name
+    return ret
 
 @pytest.fixture
 def default_ray(rays):
@@ -133,6 +146,11 @@ def source_files():
 def source_files_str(source_files):
     return ' '.join(source_files)
 
+
+@pytest.fixture(scope="function")
+def rtrings_mock(genpolar):
+    with patch.object(genpolar, "rtrings", spec=genpolar.rtrings, wraps=genpolar.rtrings) as rtrm:
+        yield rtrm
 
 @pytest.fixture(scope="function")
 def sr_mock(elements):
