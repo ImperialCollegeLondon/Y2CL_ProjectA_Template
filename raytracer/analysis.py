@@ -1,5 +1,9 @@
 """Analysis module."""
+from operator import itemgetter
+
 import matplotlib.pyplot as plt
+
+from raytracer._utils.decorators import SaveOutput
 
 
 def task8():
@@ -12,6 +16,7 @@ def task8():
     """
 
 
+@SaveOutput("task10")
 def task10():
     """
     Task 10.
@@ -27,6 +32,7 @@ def task10():
     return
 
 
+@SaveOutput("task11", plot_output_indices=itemgetter(0))
 def task11():
     """
     Task 11.
@@ -43,6 +49,7 @@ def task11():
     return
 
 
+@SaveOutput("task12")
 def task12():
     """
     Task 12.
@@ -57,6 +64,7 @@ def task12():
     return
 
 
+@SaveOutput("task13", plot_output_indices=itemgetter(0))
 def task13():
     """
     Task 13.
@@ -73,6 +81,7 @@ def task13():
     return
 
 
+@SaveOutput("task14", plot_output_indices=itemgetter(0))
 def task14():
     """
     Task 14.
@@ -90,6 +99,7 @@ def task14():
     return
 
 
+@SaveOutput(["task15a", "task15b"], plot_output_indices=itemgetter(0, 2))
 def task15():
     """
     Task 15.
@@ -109,6 +119,7 @@ def task15():
     return
 
 
+@SaveOutput("task16", plot_output_indices=itemgetter(0))
 def task16():
     """
     Task 16.
@@ -127,6 +138,7 @@ def task16():
     return
 
 
+@SaveOutput("task17", plot_output_indices=itemgetter(0))
 def task17():
     """
     Task 17.
@@ -145,6 +157,7 @@ def task17():
     return
 
 
+@SaveOutput("task18", plot_output_indices=itemgetter(0))
 def task18():
     """
     Task 18.
@@ -156,8 +169,41 @@ def task18():
     2. The focal point of the SphericalReflection surface.
 
     Returns:
-        tuple[Figure, float]: The track plot and the focal point.
+        tuple[Figure, float]: The track plot, the focal point
+    """
+    return
 
+
+@SaveOutput(["task19a", "task19b"])
+def task19():
+    """
+    Task 19.
+
+    In this function you will be quantifing the amount of spherical aberration.
+    Create a new ConvexPlano lens and trace a RayBundle through it to the OutputPlane
+    located at the focal point.
+    This function should return two matplotlib figures as a tuple in the following order:
+    1. The plot showing the transverse spherical aberration i.e. rms as a function of beam radius at focal point.
+    2. The plot showing the longitudinal spherical aberration i.e. z intercept of a ray as a function
+       of transverse distance from optical axis.
+
+    Returns:
+        tuple[Figure, Figure]: Transverse spherical aberration plot, longitudinal spherical aberration plot
+    """
+    return
+
+
+@SaveOutput("task20")
+def task20():
+    """
+    Task 20.
+
+    In this function you will investigate dispersion. Create several Rays with different wavelengths.
+    Plot the paths of these rays through a BiConvex lens made of BK7 glass to an OutputPlane at z=200.
+    This function should return the track plot of the path of your Rays through the glass lens.
+
+    Returns:
+        Figure: The ray track plot.
     """
     return
 
@@ -193,5 +239,11 @@ if __name__ == "__main__":
 
     # Run task 18 function
     # FIG18, FOCAL_POINT = task18()
+
+    # Run task 19 function
+    # FIG19 = task19()  # quantifying spherical aberration
+
+    # Run task 20 function
+    # FIG20 = task20()  # Dispersion of BK7 glass
 
     plt.show()
