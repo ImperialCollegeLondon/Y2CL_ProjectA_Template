@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "Test task9 - pr exists",
+      "setup": "",
+      "run": "pytest -vv tests/test_tasks.py::TestTask9::test_pr_exists",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 1
+    }
+  ]
+}

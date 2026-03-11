@@ -1,6 +1,12 @@
 name: GitHub Classroom Workflow
 
-on: [push]
+on:
+  push:
+    branches:
+      - "main"
+  release:
+    types: [published]
+
 
 permissions:
   checks: write
@@ -10,6 +16,7 @@ permissions:
 jobs:
   build:
     name: Autograding
+    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Set-up for grading
@@ -19,3 +26,17 @@ jobs:
           src_dir: raytracer
           python_version: 3.12
       - uses: alexanderrichards/autograding@v2.0.0
+
+  lint:
+    if: github.event_name == 'release' && github.event.release.author.login == 'alexanderrichards'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set-up for grading
+        uses: ImperialCollegeLondon/y2cl-setup@main
+        with:
+          project: ProjectA
+          src_dir: raytracer
+          python_version: 3.12
+      - uses: alexanderrichards/autograding@v3.0.0
+        with:
+          autograding-json-path: '.github/custom/my-tests.json'
