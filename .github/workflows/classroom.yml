@@ -26,6 +26,7 @@ jobs:
           src_dir: raytracer
           python_version: 3.12
       - uses: alexanderrichards/autograding@v3.0.0
+        with:
           autograding-json-path: '.github/classroom/linting.json'
 
   lint:
