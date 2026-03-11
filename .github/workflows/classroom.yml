@@ -25,7 +25,8 @@ jobs:
           project: ProjectA
           src_dir: raytracer
           python_version: 3.12
-      - uses: alexanderrichards/autograding@v2.0.0
+      - uses: alexanderrichards/autograding@v3.0.0
+          autograding-json-path: '.github/classroom/linting.json'
 
   lint:
     if: github.event_name == 'release' && github.event.release.author.login == 'alexanderrichards'
