@@ -39,4 +39,4 @@ jobs:
           python_version: 3.12
       - uses: alexanderrichards/autograding@v3.0.0
         with:
-          autograding-json-path: '.github/custom/my-tests.json'
+          autograding-json-path: '.github/custom/linting.json'
