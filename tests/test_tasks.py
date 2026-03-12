@@ -12,7 +12,6 @@ import matplotlib as mpl
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 import pytest
-# from utils import check_figures_equal
 
 
 class TestTask2:
@@ -164,15 +163,14 @@ class TestTask3:
         assert "OpticalElement" in vars(elements)
         # assert "OpticalElement" in (name for name, _ in getmembers(elements, isclass))
 
-    def test_intercept_raises(self, default_ray, elements):
-        oe = elements.OpticalElement()
+    def test_intercept_raises(self, default_ray, concrete_opticalelement):
+        # use concrete_opticalelement in case their OpticalElement is an ABC
         with pytest.raises(NotImplementedError):
-            oe.intercept(default_ray)
+            concrete_opticalelement.intercept(default_ray)
 
-    def test_pr_raises(self, default_ray, elements):
-        oe = elements.OpticalElement()
+    def test_pr_raises(self, default_ray, concrete_opticalelement):
         with pytest.raises(NotImplementedError):
-            oe.propagate_ray(default_ray)
+            concrete_opticalelement.propagate_ray(default_ray)
 
 
 class TestTask4:

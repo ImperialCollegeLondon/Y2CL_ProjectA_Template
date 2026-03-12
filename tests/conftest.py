@@ -169,6 +169,27 @@ def sr_mock(elements):
 
 
 @pytest.fixture(scope="function")
+def concrete_opticalelement(elements):
+    # Need this if they make the OpticalElement an ABC
+    class ConcreteOpticalElement(elements.OpticalElement):
+        def __init__(self):
+            pass
+
+        def intercept(self, ray):
+            return super().intercept(ray)
+        
+        def propagate_ray(self, ray):
+            return super().propagate_ray(ray)
+        
+        def normal(self, intercept):
+            return super().normal(intercept)
+        
+        def modify_direction(self, ray, intercept):
+            return super().modify_direction(ray, intercept)
+    return ConcreteOpticalElement()
+
+
+@pytest.fixture(scope="function")
 def op_mock(elements):
     with patch.object(elements.OutputPlane,
                       "__init__",
