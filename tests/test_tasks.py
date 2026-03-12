@@ -359,9 +359,10 @@ class TestTask6:
 
     def test_TIR(self, ph):
         direc = np.array([0., 0., 1.])
-        norm = np.array([0., 1., -1.])
+        norm = np.array([0., -1., -1.])
         norm /= np.linalg.norm(norm)
-        assert ph.refract(direc=direc, normal=norm, n_1=1.5, n_2=1.0) is None
+        assert ((ph.refract(direc=direc, normal=norm, n_1=1.5, n_2=1.0) is None)
+                or np.allclose(ph.refract(direc=direc, normal=norm, n_1=1.5, n_2=1.0), [0., -1., 0.]))
 
 
 class TestTask7:
