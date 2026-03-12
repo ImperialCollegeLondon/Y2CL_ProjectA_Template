@@ -1,17 +1,15 @@
-from types import FunctionType, MethodType
-from operator import itemgetter
+from base64 import b64decode
+from inspect import getsource, signature
 from itertools import product
-from inspect import signature
+from operator import itemgetter
 from string import ascii_lowercase
-from unittest.mock import MagicMock, PropertyMock, patch, call
-from inspect import getmembers, isclass, signature, getsource
-from importlib import import_module, reload
-from base64 import b64encode, b64decode
+from types import FunctionType, MethodType
+from unittest.mock import MagicMock, PropertyMock
+
 import numpy as np
-import matplotlib as mpl
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
 import pytest
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 
 class TestTask2:
