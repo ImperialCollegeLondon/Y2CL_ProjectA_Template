@@ -4,4 +4,3 @@ venv/
 *.py?
 
 *.egg-info/
-result_images/
