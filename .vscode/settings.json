@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         "**/.*": true,
+        "raytracer/_utils": true,
         "**/__pycache__": true,
         "**/venv": true,
         "**/settings.json": true,
