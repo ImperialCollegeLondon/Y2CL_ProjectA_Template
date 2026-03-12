@@ -38,6 +38,11 @@ def rt():
     return CombinedNamespace(rays_module, elements_module, lenses_module)
 
 
+@pytest.fixture(scope="session")
+def plots_for_marking_dir():
+    return Path(__file__).parent.parent / "plots_for_marking"
+
+
 @pytest.fixture(scope="function")
 def ph():
     return import_module("raytracer.physics")
@@ -69,7 +74,9 @@ def lenses():
 
 @pytest.fixture(scope="function")
 def an():
-    yield import_module("raytracer.analysis")
+    with patch('raytracer._utils.decorators.SaveOutput') as pp:
+        pp.return_value = lambda x: x
+        yield import_module("raytracer.analysis")
     plt.close('all')
 
 
@@ -271,3 +278,13 @@ def task17_output(an):
 @pytest.fixture(scope="function")
 def task18_output(an):
     yield an.task18()
+
+
+@pytest.fixture(scope="function")
+def task19_output(an):
+    yield an.task19()
+
+
+@pytest.fixture(scope="function")
+def task20_output(an):
+    yield an.task20()

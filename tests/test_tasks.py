@@ -1,5 +1,8 @@
 from types import FunctionType, MethodType
 from operator import itemgetter
+from itertools import product
+from inspect import signature
+from string import ascii_lowercase
 from unittest.mock import MagicMock, PropertyMock, patch, call
 from inspect import getmembers, isclass, signature, getsource
 from importlib import import_module, reload
@@ -511,7 +514,7 @@ class TestTask9:
 
 class TestTask10:
 
-    TASK10_DEFAULT = b'ZGVmIHRhc2sxMCgpOgogICAgIiIiCiAgICBUYXNrIDEwLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBjcmVhdGUgUmF5IG9iamVjdHMgd2l0aCB0aGUgZ2l2ZW4gaW5pdGlhbCBwb3NpdGlvbnMuCiAgICBUaGVzZSByYXlzIHNob3VsZCBiZSBwcm9wYWdhdGVkIHRocm91Z2ggdGhlIHN1cmZhY2UsIHVwIHRvIHRoZSBvdXRwdXQgcGxhbmUuCiAgICBZb3Ugc2hvdWxkIHRoZW4gcGxvdCB0aGUgdHJhY2tzIG9mIHRoZXNlIHJheXMuCiAgICBUaGlzIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9mIHRoZSByYXkgcGF0aHMuCgogICAgUmV0dXJuczoKICAgICAgICBGaWd1cmU6IHRoZSByYXkgcGF0aCBwbG90LgogICAgIiIiCiAgICByZXR1cm4K'
+    TASK10_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxMCIpCmRlZiB0YXNrMTAoKToKICAgICIiIgogICAgVGFzayAxMC4KCiAgICBJbiB0aGlzIGZ1bmN0aW9uIHlvdSBzaG91bGQgY3JlYXRlIFJheSBvYmplY3RzIHdpdGggdGhlIGdpdmVuIGluaXRpYWwgcG9zaXRpb25zLgogICAgVGhlc2UgcmF5cyBzaG91bGQgYmUgcHJvcGFnYXRlZCB0aHJvdWdoIHRoZSBzdXJmYWNlLCB1cCB0byB0aGUgb3V0cHV0IHBsYW5lLgogICAgWW91IHNob3VsZCB0aGVuIHBsb3QgdGhlIHRyYWNrcyBvZiB0aGVzZSByYXlzLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvZiB0aGUgcmF5IHBhdGhzLgoKICAgIFJldHVybnM6CiAgICAgICAgRmlndXJlOiB0aGUgcmF5IHBhdGggcGxvdC4KICAgICIiIgogICAgcmV0dXJuCg=='
 
     def test_doesnt_crash(self, task10_output, an):
         attempted = getsource(an.task10).encode('utf-8') != b64decode(TestTask10.TASK10_DEFAULT)
@@ -559,14 +562,16 @@ class TestTask10:
     def test_output_fig_produced(self, task10_output):
         assert isinstance(task10_output, Figure)
 
-    # @check_figures_equal(ref_path="task10", tol=32)
-    # def test_plot10(self, task10_output):
-    #     return task10_output
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task10.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 
 class TestTask11:
 
-    TASK11_DEFAULT = b'ZGVmIHRhc2sxMSgpOgogICAgIiIiCiAgICBUYXNrIDExLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBwcm9wYWdhdGUgdGhlIHRocmVlIGdpdmVuIHBhcmF4aWFsIHJheXMgdGhyb3VnaCB0aGUgc3lzdGVtCiAgICB0byB0aGUgb3V0cHV0IHBsYW5lIGFuZCB0aGUgdHJhY2tzIG9mIHRoZXNlIHJheXMgc2hvdWxkIHRoZW4gYmUgcGxvdHRlZC4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHJheSBwYXRocwogICAgMi4gdGhlIGNhbGN1bGF0ZWQgZm9jYWwgcG9pbnQuCgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0XTogdGhlIHJheSBwYXRoIHBsb3QgYW5kIHRoZSBmb2NhbCBwb2ludAogICAgIiIiCiAgICByZXR1cm4K'
+    TASK11_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxMSIsIHBsb3Rfb3V0cHV0X2luZGljZXM9aXRlbWdldHRlcigwKSkKZGVmIHRhc2sxMSgpOgogICAgIiIiCiAgICBUYXNrIDExLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBwcm9wYWdhdGUgdGhlIHRocmVlIGdpdmVuIHBhcmF4aWFsIHJheXMgdGhyb3VnaCB0aGUgc3lzdGVtCiAgICB0byB0aGUgb3V0cHV0IHBsYW5lIGFuZCB0aGUgdHJhY2tzIG9mIHRoZXNlIHJheXMgc2hvdWxkIHRoZW4gYmUgcGxvdHRlZC4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHJheSBwYXRocwogICAgMi4gdGhlIGNhbGN1bGF0ZWQgZm9jYWwgcG9pbnQuCgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0XTogdGhlIHJheSBwYXRoIHBsb3QgYW5kIHRoZSBmb2NhbCBwb2ludAogICAgIiIiCiAgICByZXR1cm4K'
 
     def test_focal_point_exists(self, elements):
         assert isinstance(elements.SphericalRefraction.focal_point, (FunctionType, property))
@@ -601,14 +606,16 @@ class TestTask11:
             an.task11()
         focal_point_mock.assert_called()
 
-    # @check_figures_equal(ref_path="task11", tol=32)
-    # def test_plot10(self, task11_output):
-    #     return task11_output[0]
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task11.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 
 class TestTask12:
 
-    TASK12_DEFAULT = b'ZGVmIHRhc2sxMigpOgogICAgIiIiCiAgICBUYXNrIDEyLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBjcmVhdGUgYSBSYXlCdW5ibGUgYW5kIHByb3BhZ2F0ZSBpdCB0byB0aGUgb3V0cHV0IHBsYW5lCiAgICBiZWZvcmUgcGxvdHRpbmcgdGhlIHRyYWNrcyBvZiB0aGUgcmF5cy4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgbWF0cGxvdGxpYiBmaWd1cmUgb2YgdGhlIHRyYWNrIHBsb3QuCgogICAgUmV0dXJuczoKICAgICAgICBGaWd1cmU6IHRoZSB0cmFjayBwbG90LgogICAgIiIiCiAgICByZXR1cm4K'
+    TASK12_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxMiIpCmRlZiB0YXNrMTIoKToKICAgICIiIgogICAgVGFzayAxMi4KCiAgICBJbiB0aGlzIGZ1bmN0aW9uIHlvdSBzaG91bGQgY3JlYXRlIGEgUmF5QnVuYmxlIGFuZCBwcm9wYWdhdGUgaXQgdG8gdGhlIG91dHB1dCBwbGFuZQogICAgYmVmb3JlIHBsb3R0aW5nIHRoZSB0cmFja3Mgb2YgdGhlIHJheXMuCiAgICBUaGlzIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9mIHRoZSB0cmFjayBwbG90LgoKICAgIFJldHVybnM6CiAgICAgICAgRmlndXJlOiB0aGUgdHJhY2sgcGxvdC4KICAgICIiIgogICAgcmV0dXJuCg=='
 
     def test_bundle_exists(self, rays):
         assert "RayBundle" in vars(rays)
@@ -769,14 +776,16 @@ class TestTask12:
     def test_analysis_uses_track_plot(self, track_plot_mock, task12_output):
         track_plot_mock.assert_called()
 
-    # @check_figures_equal(ref_path="task12", tol=32)
-    # def test_plot12(self, task12_output):
-    #     return task12_output
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task12.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 
 class TestTask13:
 
-    TASK13_DEFAULT = b'ZGVmIHRhc2sxMygpOgogICAgIiIiCiAgICBUYXNrIDEzLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBhZ2FpbiBjcmVhdGUgYW5kIHByb3BhZ2F0ZSBhIFJheUJ1bmRsZSB0byB0aGUgb3V0cHV0IHBsYW5lCiAgICBiZWZvcmUgcGxvdHRpbmcgdGhlIHNwb3QgcGxvdC4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHRoZSBzcG90IHBsb3QKICAgIDIuIHRoZSBzaW11bGF0aW9uIFJNUwoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdF06IHRoZSBzcG90IHBsb3QgYW5kIHJtcwogICAgIiIiCiAgICByZXR1cm4K'
+    TASK13_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxMyIsIHBsb3Rfb3V0cHV0X2luZGljZXM9aXRlbWdldHRlcigwKSkKZGVmIHRhc2sxMygpOgogICAgIiIiCiAgICBUYXNrIDEzLgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHNob3VsZCBhZ2FpbiBjcmVhdGUgYW5kIHByb3BhZ2F0ZSBhIFJheUJ1bmRsZSB0byB0aGUgb3V0cHV0IHBsYW5lCiAgICBiZWZvcmUgcGxvdHRpbmcgdGhlIHNwb3QgcGxvdC4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHRoZSBzcG90IHBsb3QKICAgIDIuIHRoZSBzaW11bGF0aW9uIFJNUwoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdF06IHRoZSBzcG90IHBsb3QgYW5kIHJtcwogICAgIiIiCiAgICByZXR1cm4K'
 
     def test_spot_plot_exists(self, rays):
         assert isinstance(rays.RayBundle.spot_plot, FunctionType)
@@ -796,14 +805,16 @@ class TestTask13:
         spot_plot_mock.assert_called()
         rms_mock.assert_called()
 
-    # @check_figures_equal(ref_path="task13", tol=33)
-    # def test_plot13(self, task13_output):
-    #     return task13_output[0]
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task13.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 
 class TestTask14:
 
-    TASK14_DEFAULT = b'ZGVmIHRhc2sxNCgpOgogICAgIiIiCiAgICBUYXNrIDE0LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgdHJhY2UgYSBudW1iZXIgb2YgUmF5QnVuZGxlcyB0aHJvdWdoIHRoZSBvcHRpY2FsIHN5c3RlbSBhbmQKICAgIHBsb3QgdGhlIFJNUyBhbmQgZGlmZnJhY3Rpb24gc2NhbGUgZGVwZW5kZW5jZSBvbiBpbnB1dCBiZWFtIHJhZGlpLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBzaW11bGF0aW9uIFJNUyBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMi41CiAgICAzLiB0aGUgZGlmZnJhY3Rpb24gc2NhbGUgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDIuNQoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgdGhlIHNpbXVsYXRpb24gUk1TIHZhbHVlLCB0aGUgZGlmZnJhY3Rpb24gc2NhbGUuCiAgICAiIiIKICAgIHJldHVybgo='
+    TASK14_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxNCIsIHBsb3Rfb3V0cHV0X2luZGljZXM9aXRlbWdldHRlcigwKSkKZGVmIHRhc2sxNCgpOgogICAgIiIiCiAgICBUYXNrIDE0LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgdHJhY2UgYSBudW1iZXIgb2YgUmF5QnVuZGxlcyB0aHJvdWdoIHRoZSBvcHRpY2FsIHN5c3RlbSBhbmQKICAgIHBsb3QgdGhlIFJNUyBhbmQgZGlmZnJhY3Rpb24gc2NhbGUgZGVwZW5kZW5jZSBvbiBpbnB1dCBiZWFtIHJhZGlpLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBzaW11bGF0aW9uIFJNUyBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMi41CiAgICAzLiB0aGUgZGlmZnJhY3Rpb24gc2NhbGUgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDIuNQoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgdGhlIHNpbXVsYXRpb24gUk1TIHZhbHVlLCB0aGUgZGlmZnJhY3Rpb24gc2NhbGUuCiAgICAiIiIKICAgIHJldHVybgo='
 
     def test_doesnt_crash(self, task14_output, an):
         attempted = getsource(an.task14).encode('utf-8') != b64decode(TestTask14.TASK14_DEFAULT)
@@ -814,14 +825,16 @@ class TestTask14:
         assert np.isclose(task14_output[1], 0.0020035841295443506)
         assert np.isclose(task14_output[2], 0.01176)
 
-    # @check_figures_equal(ref_path="task14", tol=33)
-    # def test_plot14(self, task14_output):
-    #     return task14_output
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task14.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 
 class TestTask15:
 
-    TASK15_DEFAULT = b'ZGVmIHRhc2sxNSgpOgogICAgIiIiCiAgICBUYXNrIDE1LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgY3JlYXRlIHBsYW5vLWNvbnZleCBsZW5zZXMgaW4gZWFjaCBvcmllbnRhdGlvbiBhbmQgcHJvcGFnYXRlIGEgUmF5QnVuZGxlCiAgICB0aHJvdWdoIGVhY2ggdG8gdGhlaXIgcmVzcGVjdGl2ZSBmb2NhbCBwb2ludC4gWW91IHNob3VsZCB0aGVuIHBsb3QgdGhlIHNwb3QgcGxvdCBmb3IgZWFjaCBvcmllbnRhdGlvbi4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIHRoZSBtYXRwbG90bGliIGZpZ3VyZSBvYmplY3QgZm9yIHRoZSBzcG90IHBsb3QgZm9yIHRoZSBwbGFuby1jb252ZXggc3lzdGVtCiAgICAyLiB0aGUgZm9jYWwgcG9pbnQgZm9yIHRoZSBwbGFuby1jb252ZXggbGVucwogICAgMy4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIHNwb3QgcGxvdCBmb3IgdGhlIGNvbnZleC1wbGFubyBzeXN0ZW0KICAgIDQgIHRoZSBmb2NhbCBwb2ludCBmb3IgdGhlIGNvbnZleC1wbGFubyBsZW5zCgoKICAgIFJldHVybnM6CiAgICAgICAgdHVwbGVbRmlndXJlLCBmbG9hdCwgRmlndXJlLCBmbG9hdF06IHRoZSBzcG90IHBsb3RzIGFuZCBybXMgZm9yIHBsYW5vLWNvbnZleCBhbmQgY29udmV4LXBsYW5vLgogICAgIiIiCiAgICByZXR1cm4K'
+    TASK15_DEFAULT = b'QFNhdmVPdXRwdXQoWyJ0YXNrMTVhIiwgInRhc2sxNWIiXSwgcGxvdF9vdXRwdXRfaW5kaWNlcz1pdGVtZ2V0dGVyKDAsIDIpKQpkZWYgdGFzazE1KCk6CiAgICAiIiIKICAgIFRhc2sgMTUuCgogICAgSW4gdGhpcyBmdW5jdGlvbiB5b3Ugd2lsbCBjcmVhdGUgcGxhbm8tY29udmV4IGxlbnNlcyBpbiBlYWNoIG9yaWVudGF0aW9uIGFuZCBwcm9wYWdhdGUgYSBSYXlCdW5kbGUKICAgIHRocm91Z2ggZWFjaCB0byB0aGVpciByZXNwZWN0aXZlIGZvY2FsIHBvaW50LiBZb3Ugc2hvdWxkIHRoZW4gcGxvdCB0aGUgc3BvdCBwbG90IGZvciBlYWNoIG9yaWVudGF0aW9uLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIHNwb3QgcGxvdCBmb3IgdGhlIHBsYW5vLWNvbnZleCBzeXN0ZW0KICAgIDIuIHRoZSBmb2NhbCBwb2ludCBmb3IgdGhlIHBsYW5vLWNvbnZleCBsZW5zCiAgICAzLiB0aGUgbWF0cGxvdGxpYiBmaWd1cmUgb2JqZWN0IGZvciB0aGUgc3BvdCBwbG90IGZvciB0aGUgY29udmV4LXBsYW5vIHN5c3RlbQogICAgNCAgdGhlIGZvY2FsIHBvaW50IGZvciB0aGUgY29udmV4LXBsYW5vIGxlbnMKCgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0LCBGaWd1cmUsIGZsb2F0XTogdGhlIHNwb3QgcGxvdHMgYW5kIHJtcyBmb3IgcGxhbm8tY29udmV4IGFuZCBjb252ZXgtcGxhbm8uCiAgICAiIiIKICAgIHJldHVybgo='
 
     def test_lenses_exists(self, lenses):
         pass
@@ -852,18 +865,16 @@ class TestTask15:
     def test_OP_object_created(self, op_mock, task15_output):
         assert op_mock.call_count == 2
 
-    # @check_figures_equal(ref_path="task15pc", tol=33)
-    # def test_plot15pc(self, task15_output):
-    #     return task15_output[0]
-
-    # @check_figures_equal(ref_path="task15cp", tol=33)
-    # def test_plot15cp(self, task15_output):
-    #     return task15_output[2]
+    def test_plots_ready_for_marking(self, plots_for_marking_dir):
+        for index, ext in product(ascii_lowercase[:2], ['png', 'pkl']):
+            plot = plots_for_marking_dir / f"task15{index}.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 
 class TestTask16:
 
-    TASK16_DEFAULT = b'ZGVmIHRhc2sxNigpOgogICAgIiIiCiAgICBUYXNrIDE2LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgYWdhaW4gcGxvdHRpbmcgdGhlIHJhZGlhbCBkZXBlbmRlbmNlIG9mIHRoZSBSTVMgYW5kIGRpZmZyYWN0aW9uIHZhbHVlcwogICAgZm9yIGVhY2ggb3JpZW50YXRpb24gb2YgeW91ciBsZW5zLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIHBsYW5vLWNvbnZleCBzeXN0ZW0KICAgIDMuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIGNvbnZleC1wbGFubyBzeXN0ZW0KICAgIDQgIHRoZSBkaWZmcmFjdGlvbiBzY2FsZSBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMy41CgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0LCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgUk1TIGZvciBwbGFuby1jb252ZXgsIFJNUyBmb3IgY29udmV4LXBsYW5vLCBkaWZmcmFjdGlvbiBzY2FsZS4KICAgICIiIgogICAgcmV0dXJuCg=='
+    TASK16_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxNiIsIHBsb3Rfb3V0cHV0X2luZGljZXM9aXRlbWdldHRlcigwKSkKZGVmIHRhc2sxNigpOgogICAgIiIiCiAgICBUYXNrIDE2LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgYWdhaW4gcGxvdHRpbmcgdGhlIHJhZGlhbCBkZXBlbmRlbmNlIG9mIHRoZSBSTVMgYW5kIGRpZmZyYWN0aW9uIHZhbHVlcwogICAgZm9yIGVhY2ggb3JpZW50YXRpb24gb2YgeW91ciBsZW5zLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSBmb2xsb3dpbmcgaXRlbXMgYXMgYSB0dXBsZSBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOgogICAgMS4gdGhlIG1hdHBsb3RsaWIgZmlndXJlIG9iamVjdCBmb3IgdGhlIGRpZmZyYWN0aW9uIHNjYWxlIHBsb3QKICAgIDIuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIHBsYW5vLWNvbnZleCBzeXN0ZW0KICAgIDMuIHRoZSBSTVMgZm9yIGlucHV0IGJlYW0gcmFkaXVzIDMuNSBmb3IgdGhlIGNvbnZleC1wbGFubyBzeXN0ZW0KICAgIDQgIHRoZSBkaWZmcmFjdGlvbiBzY2FsZSBmb3IgaW5wdXQgYmVhbSByYWRpdXMgMy41CgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIGZsb2F0LCBmbG9hdCwgZmxvYXRdOiB0aGUgcGxvdCwgUk1TIGZvciBwbGFuby1jb252ZXgsIFJNUyBmb3IgY29udmV4LXBsYW5vLCBkaWZmcmFjdGlvbiBzY2FsZS4KICAgICIiIgogICAgcmV0dXJuCg=='
 
     def test_doesnt_crash(self, task16_output, an):
         attempted = getsource(an.task16).encode('utf-8') != b64decode(TestTask16.TASK16_DEFAULT)
@@ -876,14 +887,15 @@ class TestTask16:
         assert np.isclose(cp_rms, 0.0031927627499460415)
         assert np.isclose(diff, 0.008126934984520126)
 
-    # @check_figures_equal(ref_path="task16", tol=33)
-    # def test_plot16(self, task16_output):
-    #     return task16_output
-
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task16.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 class TestTask17:
 
-    TASK17_DEFAULT = b'ZGVmIHRhc2sxNygpOgogICAgIiIiCiAgICBUYXNrIDE3LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgZmlyc3QgcGxvdHRpbmcgdGhlIHNwb3QgcGxvdCBmb3IgeW91ciBQbGFub0NvbnZleCBsZW5zIHdpdGggdGhlIGN1cnZlZAogICAgc2lkZSBmaXJzdCAoYXQgdGhlIGZvY2FsIHBvaW50KS4gWW91IHdpbGwgdGhlbiBiZSBvcHRpbWlzaW5nIHRoZSBjdXJ2YXR1cmVzIG9mIGEgQmlDb252ZXggbGVucwogICAgaW4gb3JkZXIgdG8gbWluaW1pc2UgdGhlIFJNUyBzcG90IHNpemUgYXQgdGhlIHNhbWUgZm9jYWwgcG9pbnQuIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybgogICAgdGhlIGZvbGxvd2luZyBpdGVtcyBhcyBhIHR1cGxlIGluIHRoZSBmb2xsb3dpbmcgb3JkZXI6CiAgICAxLiBUaGUgY29tcGFyaXNvbiBzcG90IHBsb3QgZm9yIGJvdGggUGxhbm9Db252ZXggKGN1cnZlZCBzaWRlIGZpcnN0KSBhbmQgQmlDb252ZXggbGVuc2VzIGF0IFBsYW5vQ29udmV4IGZvY2FsIHBvaW50LgogICAgMi4gVGhlIFJNUyBzcG90IHNpemUgZm9yIHRoZSBQbGFub0NvbnZleCBsZW5zIGF0IGZvY2FsIHBvaW50CiAgICAzLiB0aGUgUk1TIHNwb3Qgc2l6ZSBmb3IgdGhlIEJpQ29udmV4IGxlbnMgYXQgUGxhbm9Db252ZXggZm9jYWwgcG9pbnQKCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXQsIGZsb2F0XTogVGhlIGNvbWJpbmVkIHNwb3QgcGxvdCwgUk1TIGZvciB0aGUgUEMgbGVucywgUk1TIGZvciB0aGUgQmlDb252ZXggbGVucwogICAgIiIiCiAgICByZXR1cm4K'
+    TASK17_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxNyIsIHBsb3Rfb3V0cHV0X2luZGljZXM9aXRlbWdldHRlcigwKSkKZGVmIHRhc2sxNygpOgogICAgIiIiCiAgICBUYXNrIDE3LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgZmlyc3QgcGxvdHRpbmcgdGhlIHNwb3QgcGxvdCBmb3IgeW91ciBQbGFub0NvbnZleCBsZW5zIHdpdGggdGhlIGN1cnZlZAogICAgc2lkZSBmaXJzdCAoYXQgdGhlIGZvY2FsIHBvaW50KS4gWW91IHdpbGwgdGhlbiBiZSBvcHRpbWlzaW5nIHRoZSBjdXJ2YXR1cmVzIG9mIGEgQmlDb252ZXggbGVucwogICAgaW4gb3JkZXIgdG8gbWluaW1pc2UgdGhlIFJNUyBzcG90IHNpemUgYXQgdGhlIHNhbWUgZm9jYWwgcG9pbnQuIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybgogICAgdGhlIGZvbGxvd2luZyBpdGVtcyBhcyBhIHR1cGxlIGluIHRoZSBmb2xsb3dpbmcgb3JkZXI6CiAgICAxLiBUaGUgY29tcGFyaXNvbiBzcG90IHBsb3QgZm9yIGJvdGggUGxhbm9Db252ZXggKGN1cnZlZCBzaWRlIGZpcnN0KSBhbmQgQmlDb252ZXggbGVuc2VzIGF0IFBsYW5vQ29udmV4IGZvY2FsIHBvaW50LgogICAgMi4gVGhlIFJNUyBzcG90IHNpemUgZm9yIHRoZSBQbGFub0NvbnZleCBsZW5zIGF0IGZvY2FsIHBvaW50CiAgICAzLiB0aGUgUk1TIHNwb3Qgc2l6ZSBmb3IgdGhlIEJpQ29udmV4IGxlbnMgYXQgUGxhbm9Db252ZXggZm9jYWwgcG9pbnQKCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXQsIGZsb2F0XTogVGhlIGNvbWJpbmVkIHNwb3QgcGxvdCwgUk1TIGZvciB0aGUgUEMgbGVucywgUk1TIGZvciB0aGUgQmlDb252ZXggbGVucwogICAgIiIiCiAgICByZXR1cm4K'
 
     def test_doesnt_crash(self, task17_output, an):
         attempted = getsource(an.task17).encode('utf-8') != b64decode(TestTask17.TASK17_DEFAULT)
@@ -901,10 +913,15 @@ class TestTask17:
         assert np.isclose(cp_rms, 0.009341789683984076)
         assert bc_rms < cp_rms
 
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task17.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
 
 class TestTask18:
 
-    TASK18_DEFAULT = b'ZGVmIHRhc2sxOCgpOgogICAgIiIiCiAgICBUYXNrIDE4LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgdGVzdGluZyB5b3VyIHJlZmxlY3Rpb24gbW9kZWxsaW5nLiBDcmVhdGUgYSBuZXcgU3BoZXJpY2FsUmVmbGVjdGluZyBzdXJmYWNlCiAgICBhbmQgdHJhY2UgYSBSYXlCdW5kbGUgdGhyb3VnaCBpdCB0byB0aGUgT3V0cHV0UGxhbmUuVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuCiAgICB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIFRoZSB0cmFjayBwbG90IHNob3dpbmcgcmVmbGVjdGluZyByYXkgYnVuZGxlIG9mZiBTcGhlcmljYWxSZWZsZWN0aW9uIHN1cmZhY2UuCiAgICAyLiBUaGUgZm9jYWwgcG9pbnQgb2YgdGhlIFNwaGVyaWNhbFJlZmxlY3Rpb24gc3VyZmFjZS4KCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXRdOiBUaGUgdHJhY2sgcGxvdCBhbmQgdGhlIGZvY2FsIHBvaW50LgoKICAgICIiIgogICAgcmV0dXJuCg=='
+    TASK18_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2sxOCIsIHBsb3Rfb3V0cHV0X2luZGljZXM9aXRlbWdldHRlcigwKSkKZGVmIHRhc2sxOCgpOgogICAgIiIiCiAgICBUYXNrIDE4LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgdGVzdGluZyB5b3VyIHJlZmxlY3Rpb24gbW9kZWxsaW5nLiBDcmVhdGUgYSBuZXcgU3BoZXJpY2FsUmVmbGVjdGluZyBzdXJmYWNlCiAgICBhbmQgdHJhY2UgYSBSYXlCdW5kbGUgdGhyb3VnaCBpdCB0byB0aGUgT3V0cHV0UGxhbmUuVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuCiAgICB0aGUgZm9sbG93aW5nIGl0ZW1zIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIFRoZSB0cmFjayBwbG90IHNob3dpbmcgcmVmbGVjdGluZyByYXkgYnVuZGxlIG9mZiBTcGhlcmljYWxSZWZsZWN0aW9uIHN1cmZhY2UuCiAgICAyLiBUaGUgZm9jYWwgcG9pbnQgb2YgdGhlIFNwaGVyaWNhbFJlZmxlY3Rpb24gc3VyZmFjZS4KCiAgICBSZXR1cm5zOgogICAgICAgIHR1cGxlW0ZpZ3VyZSwgZmxvYXRdOiBUaGUgdHJhY2sgcGxvdCwgdGhlIGZvY2FsIHBvaW50CiAgICAiIiIKICAgIHJldHVybgo='
 
     def test_doesnt_crash(self, task18_output, an):
         attempted = getsource(an.task18).encode('utf-8') != b64decode(TestTask18.TASK18_DEFAULT)
@@ -917,3 +934,91 @@ class TestTask18:
         fig, refl_fp = task18_output
         assert isinstance(fig, Figure)
         assert np.isclose(refl_fp, 75.0)
+
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task18.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
+
+
+class TestTask19:
+
+    TASK19_DEFAULT = b'QFNhdmVPdXRwdXQoWyJ0YXNrMTlhIiwgInRhc2sxOWIiXSkKZGVmIHRhc2sxOSgpOgogICAgIiIiCiAgICBUYXNrIDE5LgoKICAgIEluIHRoaXMgZnVuY3Rpb24geW91IHdpbGwgYmUgcXVhbnRpZmluZyB0aGUgYW1vdW50IG9mIHNwaGVyaWNhbCBhYmVycmF0aW9uLgogICAgQ3JlYXRlIGEgbmV3IENvbnZleFBsYW5vIGxlbnMgYW5kIHRyYWNlIGEgUmF5QnVuZGxlIHRocm91Z2ggaXQgdG8gdGhlIE91dHB1dFBsYW5lCiAgICBsb2NhdGVkIGF0IHRoZSBmb2NhbCBwb2ludC4KICAgIFRoaXMgZnVuY3Rpb24gc2hvdWxkIHJldHVybiB0d28gbWF0cGxvdGxpYiBmaWd1cmVzIGFzIGEgdHVwbGUgaW4gdGhlIGZvbGxvd2luZyBvcmRlcjoKICAgIDEuIFRoZSBwbG90IHNob3dpbmcgdGhlIHRyYW5zdmVyc2Ugc3BoZXJpY2FsIGFiZXJyYXRpb24gaS5lLiBybXMgYXMgYSBmdW5jdGlvbiBvZiBiZWFtIHJhZGl1cyBhdCBmb2NhbCBwb2ludC4KICAgIDIuIFRoZSBwbG90IHNob3dpbmcgdGhlIGxvbmdpdHVkaW5hbCBzcGhlcmljYWwgYWJlcnJhdGlvbiBpLmUuIHogaW50ZXJjZXB0IG9mIGEgcmF5IGFzIGEgZnVuY3Rpb24KICAgICAgIG9mIHRyYW5zdmVyc2UgZGlzdGFuY2UgZnJvbSBvcHRpY2FsIGF4aXMuCgogICAgUmV0dXJuczoKICAgICAgICB0dXBsZVtGaWd1cmUsIEZpZ3VyZV06IFRyYW5zdmVyc2Ugc3BoZXJpY2FsIGFiZXJyYXRpb24gcGxvdCwgbG9uZ2l0dWRpbmFsIHNwaGVyaWNhbCBhYmVycmF0aW9uIHBsb3QKICAgICIiIgogICAgcmV0dXJuCg=='
+
+    def test_doesnt_crash(self, task19_output, an):
+        attempted = getsource(an.task19).encode('utf-8') != b64decode(TestTask19.TASK19_DEFAULT)
+        assert attempted, "Task19 not attempted."
+
+    def test_z_int(self, rays):
+        assert "z_int" in vars(rays.Ray)
+        r1 = rays.Ray(pos=[4., 4., 0.], direc=[-1., -1., 1.])
+        z1int = r1.z_int
+        if isinstance(z1int, MethodType):
+            z1int = z1int()()
+        assert z1int == 4.
+        r2 = rays.Ray(pos=[3., 4., 0.], direc=[-3./7, -4./7, 1.])
+        z2int = r2.z_int
+        if isinstance(z2int, MethodType):
+            z2int = z2int()()
+        assert z2int == 7.
+
+    def test_plots_ready_for_marking(self, plots_for_marking_dir):
+        for index, ext in product(ascii_lowercase[:2], ['png', 'pkl']):
+            plot = plots_for_marking_dir / f"task19{index}.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
+
+
+class TestTask20:
+
+    TASK20_DEFAULT = b'QFNhdmVPdXRwdXQoInRhc2syMCIpCmRlZiB0YXNrMjAoKToKICAgICIiIgogICAgVGFzayAyMC4KCiAgICBJbiB0aGlzIGZ1bmN0aW9uIHlvdSB3aWxsIGludmVzdGlnYXRlIGRpc3BlcnNpb24uIENyZWF0ZSBzZXZlcmFsIFJheXMgd2l0aCBkaWZmZXJlbnQgd2F2ZWxlbmd0aHMuCiAgICBQbG90IHRoZSBwYXRocyBvZiB0aGVzZSByYXlzIHRocm91Z2ggYSBCaUNvbnZleCBsZW5zIG1hZGUgb2YgQks3IGdsYXNzIHRvIGFuIE91dHB1dFBsYW5lIGF0IHo9MjAwLgogICAgVGhpcyBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIHRoZSB0cmFjayBwbG90IG9mIHRoZSBwYXRoIG9mIHlvdXIgUmF5cyB0aHJvdWdoIHRoZSBnbGFzcyBsZW5zLgoKICAgIFJldHVybnM6CiAgICAgICAgRmlndXJlOiBUaGUgcmF5IHRyYWNrIHBsb3QuCiAgICAiIiIKICAgIHJldHVybgo='
+
+    def test_doesnt_crash(self, task20_output, an):
+        attempted = getsource(an.task20).encode('utf-8') != b64decode(TestTask20.TASK20_DEFAULT)
+        assert attempted, "Task20 not attempted."
+
+    def test_ray_wavelength(self, rays):
+        assert "wavelength" in signature(rays.Ray).parameters
+        assert "wavelength" in vars(rays.Ray)
+
+    def test_dispersive_material(self, ph, elements):
+        assert "DispersiveMaterial" in vars(ph)
+        assert "ref_index" in vars(ph.DispersiveMaterial)
+        assert "wavelength" in signature(ph.DispersiveMaterial.ref_index).parameters
+
+    def test_SR_n1_n2(self, ph, elements):
+        assert "wavelength" in signature(elements.SphericalRefraction.n_1).parameters
+        assert "wavelength" in signature(elements.SphericalRefraction.n_2).parameters
+
+        disp_mat1 = MagicMock(spec=ph.DispersiveMaterial)
+        disp_mat1.ref_index = MagicMock()
+        sr1 = elements.SphericalRefraction(z_0=100, curvature=0.03, n_1=disp_mat1, n_2=1.0, aperture=34)
+        assert sr1.n_2() == 1.
+        sr1.n_1(wavelength=700e-9)
+        assert disp_mat1.ref_index.called
+
+        disp_mat2 = MagicMock(spec=ph.DispersiveMaterial)
+        disp_mat2.ref_index = MagicMock()
+        sr1 = elements.SphericalRefraction(z_0=100, curvature=0.03, n_1=1.0, n_2=disp_mat2, aperture=34)
+        assert sr1.n_1() == 1.
+        sr1.n_2(wavelength=700e-9)
+        assert disp_mat2.ref_index.called
+
+    def test_SR_propagate(self, rays, elements, ph, monkeypatch):
+        ray = rays.Ray(pos=[0., 1., 0.,], direc=[0., 0., 1.], wavelength=700e-9)
+        disp_mat = MagicMock(spec=ph.DispersiveMaterial)
+        disp_mat.ref_index = MagicMock(return_value=1.5)
+        sr = elements.SphericalRefraction(z_0=100, curvature=0.03, n_1=1.0, n_2=disp_mat, aperture=34)
+        n_2 = MagicMock(wraps=sr.n_2)
+        with monkeypatch.context() as ctx:
+            ctx.setattr(sr, "n_2", n_2)
+            sr.propagate_ray(ray)
+        assert n_2.called
+        assert disp_mat.ref_index.called
+
+    def test_plot_ready_for_marking(self, plots_for_marking_dir):
+        for ext in ['png', 'pkl']:
+            plot = plots_for_marking_dir / f"task20.{ext}"
+            assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
+            assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
