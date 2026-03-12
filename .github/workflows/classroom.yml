@@ -1,11 +1,6 @@
 name: GitHub Classroom Workflow
 
-on:
-  push:
-    branches:
-      - "main"
-  release:
-    types: [published]
+on: [push]
 
 
 permissions:
@@ -14,31 +9,23 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    name: Autograding
-    if: github.event_name != 'release'
+  Autograding:
     runs-on: ubuntu-latest
     steps:
       - name: Set-up for grading
-        uses: ImperialCollegeLondon/y2cl-setup@main
+        uses: ImperialCollegeLondon/y2cl-setup@v2.0.0
         with:
           project: ProjectA
           src_dir: raytracer
           python_version: 3.12
-      - uses: alexanderrichards/autograding@v3.0.0
+      - name: run grading
+        id: run-tests
+        uses: alexanderrichards/pytest-ghclassroom-autograder@v1.0.0
         with:
-          autograding-json-path: '.github/classroom/linting.json'
-
-  lint:
-    if: github.event_name == 'release' && github.event.release.author.login == 'alexanderrichards'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set-up for grading
-        uses: ImperialCollegeLondon/y2cl-setup@main
+          timeout: 10
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          RUN-TESTS_RESULTS: "${{steps.run-tests.outputs.result}}"
         with:
-          project: ProjectA
-          src_dir: raytracer
-          python_version: 3.12
-      - uses: alexanderrichards/autograding@v3.0.0
-        with:
-          autograding-json-path: '.github/classroom/linting.json'
+          runners: run-tests
