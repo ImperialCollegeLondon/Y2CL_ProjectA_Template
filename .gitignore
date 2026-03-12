@@ -4,3 +4,5 @@ venv/
 *.py?
 
 *.egg-info/
+
+raytracer/_utils
