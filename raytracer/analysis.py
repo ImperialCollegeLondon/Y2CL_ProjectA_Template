@@ -241,9 +241,9 @@ if __name__ == "__main__":
     # FIG18, FOCAL_POINT = task18()
 
     # Run task 19 function
-    # FIG19 = task19()  # quantifying spherical aberration
+    # FIG19_TVSA, FIG19_LGSA = task19()
 
     # Run task 20 function
-    # FIG20 = task20()  # Dispersion of BK7 glass
+    # FIG20 = task20()
 
     plt.show()
