@@ -17,7 +17,7 @@ jobs:
         with:
           project: ProjectA
           src_dir: raytracer
-          python_version: 3.12
+          python_version: 3.13
       - name: run grading
         id: run-tests
         uses: alexanderrichards/pytest-ghclassroom-autograder@v1.0.0
