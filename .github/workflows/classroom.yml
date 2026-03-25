@@ -1,5 +1,9 @@
 name: GitHub Classroom Workflow
 
+# necessary as autograding-grading-reporter@v1 still not using Node24
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
 on: [push]
 
 
