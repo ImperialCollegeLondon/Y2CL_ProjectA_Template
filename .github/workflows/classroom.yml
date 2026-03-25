@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set-up for grading
-        uses: ImperialCollegeLondon/y2cl-setup@v2.0.0
+        uses: ImperialCollegeLondon/y2cl-setup@v2.0.1
         with:
           project: ProjectA
           src_dir: raytracer
