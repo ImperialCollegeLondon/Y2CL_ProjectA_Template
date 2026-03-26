@@ -21,7 +21,7 @@ class TestTask2:
         assert rays.__doc__ is not None
 
     def test_docstring_not_blank(self, rays):
-        assert rays.__doc__ != ""
+        assert (rays.__doc__ is not None) and (rays.__doc__ != "")
 
     def test_ray_exists(self, rays):
         assert "Ray" in vars(rays)
