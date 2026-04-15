@@ -1,4 +1,5 @@
 """Pytest fixtures."""
+import sys
 from importlib import import_module, reload
 from pathlib import Path
 from types import FunctionType
@@ -42,42 +43,52 @@ def rt():
 def plots_for_marking_dir():
     return Path(__file__).parent.parent / "plots_for_marking"
 
+@pytest.fixture(scope="function", autouse=True)
+def clear_import_cache():
+    modules = (import_module("raytracer.genpolar"),
+               import_module("raytracer.physics"),
+               import_module("raytracer.rays"),
+               import_module("raytracer.elements"),
+               import_module("raytracer.lenses"),
+               import_module("raytracer.analysis"))
+    # allow reload to make sure each test gets a fresh impoted module not a cached one
+    for i in modules:
+        sys.modules.pop(i, None)
 
 @pytest.fixture(scope="function")
 def ph():
-    # reload to make sure each test gets a fresh impoted module not a cached one
-    return reload(import_module("raytracer.physics"))
+    return import_module("raytracer.physics")
 
 
 @pytest.fixture(scope="function")
 def rays():
-    return reload(import_module("raytracer.rays"))
+    return import_module("raytracer.rays")
 
 
 @pytest.fixture(scope="function")
 def elements():
-    return reload(import_module("raytracer.elements"))
+    return import_module("raytracer.elements")
 
 
 @pytest.fixture(scope="function")
 def physics():
-    return reload(import_module("raytracer.physics"))
+    return import_module("raytracer.physics")
 
 @pytest.fixture(scope="function")
 def genpolar():
-    return reload(import_module("raytracer.genpolar"))
+    return import_module("raytracer.genpolar")
 
 
 @pytest.fixture(scope="function")
 def lenses():
-    return reload(import_module("raytracer.lenses"))
+    return import_module("raytracer.lenses")
 
 
 @pytest.fixture(scope="function")
 def an():
     with patch('raytracer._utils.decorators.SaveOutput') as pp:
         pp.return_value = lambda x: x
-        yield reload(import_module("raytracer.analysis"))
+        yield import_module("raytracer.analysis")
     plt.close('all')
 
 
