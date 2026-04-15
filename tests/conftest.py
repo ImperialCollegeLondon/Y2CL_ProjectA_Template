@@ -1,5 +1,5 @@
 """Pytest fixtures."""
-from importlib import import_module
+from importlib import import_module, reload
 from pathlib import Path
 from types import FunctionType
 from unittest.mock import MagicMock, patch, PropertyMock
@@ -45,38 +45,39 @@ def plots_for_marking_dir():
 
 @pytest.fixture(scope="function")
 def ph():
-    return import_module("raytracer.physics")
+    # reload to make sure each test gets a fresh impoted module not a cached one
+    return reload(import_module("raytracer.physics"))
 
 
 @pytest.fixture(scope="function")
 def rays():
-    return import_module("raytracer.rays")
+    return reload(import_module("raytracer.rays"))
 
 
 @pytest.fixture(scope="function")
 def elements():
-    return import_module("raytracer.elements")
+    return reload(import_module("raytracer.elements"))
 
 
 @pytest.fixture(scope="function")
 def physics():
-    return import_module("raytracer.physics")
+    return reload(import_module("raytracer.physics"))
 
 @pytest.fixture(scope="function")
 def genpolar():
-    return import_module("raytracer.genpolar")
+    return reload(import_module("raytracer.genpolar"))
 
 
 @pytest.fixture(scope="function")
 def lenses():
-    return import_module("raytracer.lenses")
+    return reload(import_module("raytracer.lenses"))
 
 
 @pytest.fixture(scope="function")
 def an():
     with patch('raytracer._utils.decorators.SaveOutput') as pp:
         pp.return_value = lambda x: x
-        yield import_module("raytracer.analysis")
+        yield reload(import_module("raytracer.analysis"))
     plt.close('all')
 
 
