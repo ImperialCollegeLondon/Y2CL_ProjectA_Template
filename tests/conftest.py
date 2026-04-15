@@ -43,17 +43,17 @@ def rt():
 def plots_for_marking_dir():
     return Path(__file__).parent.parent / "plots_for_marking"
 
-@pytest.fixture(scope="function", autouse=True)
-def clear_import_cache():
-    modules = (import_module("raytracer.genpolar"),
-               import_module("raytracer.physics"),
-               import_module("raytracer.rays"),
-               import_module("raytracer.elements"),
-               import_module("raytracer.lenses"),
-               import_module("raytracer.analysis"))
-    # allow reload to make sure each test gets a fresh impoted module not a cached one
-    for i in modules:
-        sys.modules.pop(i, None)
+# @pytest.fixture(scope="function", autouse=True)
+# def clear_import_cache():
+#     modules = (import_module("raytracer.genpolar"),
+#                import_module("raytracer.physics"),
+#                import_module("raytracer.rays"),
+#                import_module("raytracer.elements"),
+#                import_module("raytracer.lenses"),
+#                import_module("raytracer.analysis"))
+#     # allow reload to make sure each test gets a fresh impoted module not a cached one
+#     for i in modules:
+#         sys.modules.pop(i, None)
 
 @pytest.fixture(scope="function")
 def ph():
@@ -88,7 +88,7 @@ def lenses():
 def an():
     with patch('raytracer._utils.decorators.SaveOutput') as pp:
         pp.return_value = lambda x: x
-        yield import_module("raytracer.analysis")
+        yield reload(import_module("raytracer.analysis"))
     plt.close('all')
 
 
