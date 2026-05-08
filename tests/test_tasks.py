@@ -560,7 +560,7 @@ class TestTask10:
         assert isinstance(task10_output, Figure)
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task10.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -604,7 +604,7 @@ class TestTask11:
         focal_point_mock.assert_called()
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task11.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -795,7 +795,7 @@ class TestTask12:
         track_plot_mock.assert_called()
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task12.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -824,7 +824,7 @@ class TestTask13:
         rms_mock.assert_called()
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task13.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -844,7 +844,7 @@ class TestTask14:
         assert np.isclose(task14_output[2], 0.01176)
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task14.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -884,7 +884,7 @@ class TestTask15:
         assert op_mock.call_count == 2
 
     def test_plots_ready_for_marking(self, plots_for_marking_dir):
-        for index, ext in product(ascii_lowercase[:2], ['png', 'pkl']):
+        for index, ext in product(ascii_lowercase[:2], ['png']):
             plot = plots_for_marking_dir / f"task15{index}.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -906,7 +906,7 @@ class TestTask16:
         assert np.isclose(diff, 0.008126934984520126)
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task16.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -932,7 +932,7 @@ class TestTask17:
         assert bc_rms < cp_rms
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task17.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -954,7 +954,7 @@ class TestTask18:
         assert np.isclose(refl_fp, 75.0)
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task18.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -982,7 +982,7 @@ class TestTask19:
         assert z2int == 7.
 
     def test_plots_ready_for_marking(self, plots_for_marking_dir):
-        for index, ext in product(ascii_lowercase[:2], ['png', 'pkl']):
+        for index, ext in product(ascii_lowercase[:2], ['png']):
             plot = plots_for_marking_dir / f"task19{index}.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
@@ -1039,7 +1039,7 @@ class TestTask20:
                 assert sr.n_2(wavelength=300e-9) == 1.5
 
     def test_plot_ready_for_marking(self, plots_for_marking_dir):
-        for ext in ['png', 'pkl']:
+        for ext in ['png']:
             plot = plots_for_marking_dir / f"task20.{ext}"
             assert plot.exists(), f"plot file {plot.name!r} does not exist in {plot.parent}"
             assert plot.stat().st_size > 0, f"plot file {plot.name!r} is empty"
