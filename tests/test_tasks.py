@@ -973,12 +973,12 @@ class TestTask19:
         r1 = rays.Ray(pos=[4., 4., 0.], direc=[-1., -1., 1.])
         z1int = r1.z_int
         if isinstance(z1int, MethodType):
-            z1int = z1int()()
+            z1int = z1int()
         assert z1int == 4.
         r2 = rays.Ray(pos=[3., 4., 0.], direc=[-3./7, -4./7, 1.])
         z2int = r2.z_int
         if isinstance(z2int, MethodType):
-            z2int = z2int()()
+            z2int = z2int()
         assert z2int == 7.
 
     def test_plots_ready_for_marking(self, plots_for_marking_dir):
